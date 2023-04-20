@@ -40,7 +40,7 @@ mkvpropedit = "C:\Program Files\MKVToolNix\mkvpropedit.exe"
 
 
     def openFilesSelector( self, event ):
-        openFileDialog = wx.FileDialog(self, "Open", "test", "ttest", "All files (*.*)|*.*",
+        openFileDialog = wx.FileDialog(self, "Select files", "", "", "All files (*.*)|*.*",
            wx.FD_OPEN | wx.FD_FILE_MUST_EXIST|wx.FD_MULTIPLE)
         openFileDialog.ShowModal()
         # fileList = openFileDialog.GetFilenames()
