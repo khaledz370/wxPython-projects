@@ -22,7 +22,7 @@ dBtnToMkv = 1004
 fileTypesToMkv = 1005
 allToMkv = 1006
 convertToMkv = 1007
-currentFileTomkv = 1008
+currentFileToMkv = 1008
 pBarToMkv = 1009
 selectedFilesToAudio = 1010
 browseFilesToAudio = 1011
@@ -34,26 +34,51 @@ allToAudio = 1016
 convertToAudio = 1017
 currentFileToAudio = 1018
 pBarToAudio = 1019
+selectedFilesCorp = 1020
+browseFilesCorp = 1021
+browseFolderCorp = 1022
+selectAllCorp = 1023
+dBtnCorp = 1024
+fileTypesCorp = 1025
+allCorp = 1026
+cTop = 1027
+cRight = 1028
+cBottom = 1029
+cLeft = 1030
+corpVideo = 1031
+currentFileCorp = 1032
+pBarCorp = 1033
 true = True
 defaultfileTypesList = [".mkv" ,".ts" ,".mp4" ,".avi" ,".webm" ,".flv" ,".ogg" ,".mov" ,".mpeg-2"]
 mkvMerge = "C:\Program Files\MKVToolNix\mkvmerge.exe"
 mkvpropedit = "C:\Program Files\MKVToolNix\mkvpropedit.exe"
 
+###########################################################################
+## Class MyFrame1
+###########################################################################
+
         # Connect Events
         self.m_button3.Bind( wx.EVT_BUTTON, lambda event: self.openFilesSelector("ToMkv") )
         self.m_button11.Bind( wx.EVT_BUTTON, lambda event: self.selectFolder("ToMkv") )
         self.m_button15.Bind( wx.EVT_BUTTON, lambda event: self.selectAll("ToMkv") )
-        self.m_button111.Bind( wx.EVT_BUTTON, lambda event: self.deleteToMkv("ToMkv") )
+        self.m_button111.Bind( wx.EVT_BUTTON, lambda event: self.deleteFromList("ToMkv") )
         self.m_button7.Bind( wx.EVT_BUTTON, lambda event: self.checkAllTypes("ToMkv") )
         self.m_button9.Bind( wx.EVT_BUTTON, self.convertToMkv )
         self.m_button31.Bind( wx.EVT_BUTTON, lambda event: self.openFilesSelector("ToAudio") )
         self.m_button112.Bind( wx.EVT_BUTTON, lambda event: self.selectFolder("ToAudio") )
         self.m_button151.Bind( wx.EVT_BUTTON, lambda event: self.selectAll("ToAudio") )
-        self.m_button1111.Bind( wx.EVT_BUTTON, lambda event: self.deleteToMkv("ToAudio") )
+        self.m_button1111.Bind( wx.EVT_BUTTON, lambda event: self.deleteFromList("ToAudio") )
         self.m_button71.Bind( wx.EVT_BUTTON, lambda event: self.checkAllTypes("ToAudio") )
         self.m_button91.Bind( wx.EVT_BUTTON, self.convertToAudio )
+        self.m_button311.Bind( wx.EVT_BUTTON, lambda event: self.openFilesSelector("Corp") )
+        self.m_button1121.Bind( wx.EVT_BUTTON, lambda event: self.selectFolder("Corp") )
+        self.m_button1511.Bind( wx.EVT_BUTTON, lambda event: self.selectAll("Corp") )
+        self.m_button11111.Bind( wx.EVT_BUTTON, lambda event: self.deleteFromList("Corp") )
+        self.m_button711.Bind( wx.EVT_BUTTON, lambda event: self.checkAllTypes("Corp") )
+        self.m_button911.Bind( wx.EVT_BUTTON, self.corpVideo )
 
-    def deleteToMkv( self, event ):
+        # Virtual event handlers, override them in your derived class
+    def deleteFromList( self, event ):
         selectedFiles = eval(f"selectedFiles{event}")
         checkBoxListWindow = wx.FindWindowById(selectedFiles)
         allFilesInCheckBoxList = checkBoxListWindow.GetItems()
@@ -130,6 +155,7 @@ mkvpropedit = "C:\Program Files\MKVToolNix\mkvpropedit.exe"
             allFiles = checkBoxListWindow.GetItems()
             duplicateFiles = list(allFiles)
             for index, file in enumerate(allFiles):
+                currentFile.SetLabel(str(file))
                 selectedDir = os.path.dirname(file)
                 fName = os.path.basename(file)
                 fNameNoExt = os.path.splitext(fName)[0]
@@ -137,7 +163,6 @@ mkvpropedit = "C:\Program Files\MKVToolNix\mkvpropedit.exe"
                     os.makedirs((f"{selectedDir}\\mkvmerge_old"))
                 mkvmerge_old = (f"{selectedDir}\mkvmerge_old\{fName}")
                 shutil.move(file, mkvmerge_old)
-                currentFile.SetLabel(str(file))
                 mkvCommand = f"\"{mkvMerge}\" --output \"{selectedDir}\\{fNameNoExt}.mkv\" \"{selectedDir}\\mkvmerge_old\\{fName}\""
                 presentage = int(100*(index+1)/indexes)
                 print(presentage)
@@ -145,7 +170,69 @@ mkvpropedit = "C:\Program Files\MKVToolNix\mkvpropedit.exe"
                 runCommand(mkvCommand)
                 duplicateFiles.remove(duplicateFiles[0])
                 checkBoxListWindow.Set(duplicateFiles)
-        pBar.SetValue(0)
+        currentFile.SetLabel("")
+        
+    def convertToAudio( self, event ):
+        checkBoxListWindow = wx.FindWindowById(selectedFilesToAudio)
+        currentFile = wx.FindWindowById(currentFileToAudio)
+        indexes = checkBoxListWindow.GetCount()
+        pBar = wx.FindWindowById(pBarToAudio)
+        # print(indexes)
+        if indexes:
+            allFiles = checkBoxListWindow.GetItems()
+            duplicateFiles = list(allFiles)
+            for index, file in enumerate(allFiles):
+                currentFile.SetLabel(str(file))
+                selectedDir = os.path.dirname(file)
+                fName = os.path.basename(file)
+                fNameNoExt = os.path.splitext(fName)[0]
+                if not os.path.exists((f"{selectedDir}\\mkvmerge_audio")):
+                    os.makedirs((f"{selectedDir}\\mkvmerge_audio"))
+                audioCommand = f"\"{mkvMerge}\" --output \"{selectedDir}\\mkvmerge_audio\\{fNameNoExt}.mka\" --no-video --language 1:und  \"{selectedDir}\\{fName}\""
+                presentage = int(100*(index+1)/indexes)
+                pBar.SetValue((presentage))
+                runCommand(audioCommand)
+                duplicateFiles.remove(duplicateFiles[0])
+                checkBoxListWindow.Set(duplicateFiles)
+        currentFile.SetLabel("")
+
+    def corpVideo( self, event ):
+        print(event)
+        checkBoxListWindow = wx.FindWindowById(selectedFilesCorp)
+        currentFile = wx.FindWindowById(currentFileCorp)
+        indexes = checkBoxListWindow.GetCount()
+        pBar = wx.FindWindowById(pBarCorp)
+        cTopWindow = wx.FindWindowById(cTop)
+        cLeftWindow = wx.FindWindowById(cLeft)
+        cRightWindow = wx.FindWindowById(cRight)
+        cBottomWindow = wx.FindWindowById(cBottom)
+        cTopValue = int(cTopWindow.GetLineText())
+        cLeftValue = int(cLeftWindow.GetLineText())
+        cRightValue = int(cRightWindow.GetLineText())
+        cBottomValue = int(cBottomWindow.GetLineText())
+        # print(indexes)
+        if indexes:
+            allFiles = checkBoxListWindow.GetItems()
+            duplicateFiles = list(allFiles)
+            for index, file in enumerate(allFiles):
+                currentFile.SetLabel(str(file))
+                selectedDir = os.path.dirname(file)
+                fName = os.path.basename(file)
+                fNameNoExt = os.path.splitext(fName)[0]
+                fNameExt = os.path.splitext(fName)[1]
+                if not str(fNameExt).lower() ==".mkv":
+                    if not os.path.exists((f"{selectedDir}\\mkvmerge_old")):
+                        os.makedirs((f"{selectedDir}\\mkvmerge_old"))
+                    mkvmerge_old = (f"{selectedDir}\mkvmerge_old\{fName}")
+                    shutil.move(file, mkvmerge_old)
+                    mkvCommand = f"\"{mkvMerge}\" --output \"{selectedDir}\\{fNameNoExt}.mkv\" \"{selectedDir}\\mkvmerge_old\\{fName}\""
+                    runCommand(mkvCommand)  
+                mkvCorpCommand = f"\"{mkvpropedit}\" \"{selectedDir}\\{fNameNoExt}.mkv\" --edit track:v1 --set pixel-crop-top={int(cTopValue)} --set pixel-crop-left={int(cLeftValue)}  --set pixel-crop-right={int(cRightValue)} --set pixel-crop-bottom={int(cBottomValue)}"
+                presentage = int(100*(index+1)/indexes)
+                pBar.SetValue((presentage))
+                runCommand(mkvCorpCommand)
+                duplicateFiles.remove(duplicateFiles[0])
+                checkBoxListWindow.Set(duplicateFiles)
         currentFile.SetLabel("")
 
 
