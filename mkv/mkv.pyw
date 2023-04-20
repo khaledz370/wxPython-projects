@@ -22,7 +22,7 @@ dBtnToMkv = 1004
 fileTypesToMkv = 1005
 allToMkv = 1006
 convertToMkv = 1007
-currentFileTomkv = 1008
+currentFileToMkv = 1008
 pBarToMkv = 1009
 selectedFilesToAudio = 1010
 browseFilesToAudio = 1011
@@ -43,6 +43,9 @@ class MyFrame1 ( wx.Frame ):
 
     def __init__( self, parent ):
         wx.Frame.__init__ ( self, parent, id = wx.ID_ANY, title = wx.EmptyString, pos = wx.DefaultPosition, size = wx.Size( 760,462 ), style = wx.DEFAULT_FRAME_STYLE|wx.TAB_TRAVERSAL )
+        
+        # icon = wx.Icon("mkvmerge_old.ico")
+        # self.SetIcon(icon)
 
         self.SetSizeHints( wx.DefaultSize, wx.DefaultSize )
 
@@ -152,7 +155,7 @@ class MyFrame1 ( wx.Frame ):
         self.m_button9 = wx.Button( self.tomkv, convertToMkv, u"Convert to mkv", wx.DefaultPosition, wx.DefaultSize, 0 )
         bSizer12.Add( self.m_button9, 0, wx.ALL|wx.EXPAND, 5 )
 
-        self.m_staticText31 = wx.StaticText( self.tomkv, currentFileTomkv, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, 0 )
+        self.m_staticText31 = wx.StaticText( self.tomkv, currentFileToMkv, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, 0 )
         self.m_staticText31.Wrap( -1 )
 
         bSizer12.Add( self.m_staticText31, 1, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
@@ -399,7 +402,7 @@ class MyFrame1 ( wx.Frame ):
 
     def convertToMkv(self, event):
         checkBoxListWindow = wx.FindWindowById(selectedFilesToMkv)
-        currentFile = wx.FindWindowById(currentFileTomkv)
+        currentFile = wx.FindWindowById(currentFileToMkv)
         indexes = checkBoxListWindow.GetCount()
         pBar = wx.FindWindowById(pBarToMkv)
         # print(indexes)
@@ -417,7 +420,6 @@ class MyFrame1 ( wx.Frame ):
                 currentFile.SetLabel(str(file))
                 mkvCommand = f"\"{mkvMerge}\" --output \"{selectedDir}\\{fNameNoExt}.mkv\" \"{selectedDir}\\mkvmerge_old\\{fName}\""
                 presentage = int(100*(index+1)/indexes)
-                print(presentage)
                 pBar.SetValue((presentage))
                 runCommand(mkvCommand)
                 duplicateFiles.remove(duplicateFiles[0])
@@ -426,8 +428,29 @@ class MyFrame1 ( wx.Frame ):
         currentFile.SetLabel("")
         
     def convertToAudio( self, event ):
-        print(event)
-
+        checkBoxListWindow = wx.FindWindowById(selectedFilesToAudio)
+        currentFile = wx.FindWindowById(currentFileToAudio)
+        indexes = checkBoxListWindow.GetCount()
+        pBar = wx.FindWindowById(pBarToAudio)
+        # print(indexes)
+        if indexes:
+            allFiles = checkBoxListWindow.GetItems()
+            duplicateFiles = list(allFiles)
+            for index, file in enumerate(allFiles):
+                selectedDir = os.path.dirname(file)
+                fName = os.path.basename(file)
+                fNameNoExt = os.path.splitext(fName)[0]
+                if not os.path.exists((f"{selectedDir}\\mkvmerge_audio")):
+                    os.makedirs((f"{selectedDir}\\mkvmerge_audio"))
+                currentFile.SetLabel(str(file))
+                audioCommand = f"\"{mkvMerge}\" --output \"{selectedDir}\\mkvmerge_audio\\{fNameNoExt}.mka\" --no-video --language 1:und  \"{selectedDir}\\{fName}\""
+                presentage = int(100*(index+1)/indexes)
+                pBar.SetValue((presentage))
+                runCommand(audioCommand)
+                duplicateFiles.remove(duplicateFiles[0])
+                checkBoxListWindow.Set(duplicateFiles)
+        pBar.SetValue(0)
+        currentFile.SetLabel("")
 
 class MyFileDropTarget(wx.FileDropTarget):
     def __init__(self, window):
