@@ -34,20 +34,20 @@ allToAudio = 1016
 convertToAudio = 1017
 currentFileToAudio = 1018
 pBarToAudio = 1019
-selectedFilesCorp = 1020
-browseFilesCorp = 1021
-browseFolderCorp = 1022
-selectAllCorp = 1023
-dBtnCorp = 1024
-fileTypesCorp = 1025
-allCorp = 1026
+selectedFilesCrop = 1020
+browseFilesCrop = 1021
+browseFolderCrop = 1022
+selectAllCrop = 1023
+dBtnCrop = 1024
+fileTypesCrop = 1025
+allCrop = 1026
 cTop = 1027
 cRight = 1028
 cBottom = 1029
 cLeft = 1030
-corpVideo = 1031
-currentFileCorp = 1032
-pBarCorp = 1033
+cropVideo = 1031
+currentFileCrop = 1032
+pBarCrop = 1033
 true = True
 defaultfileTypesList = [".mkv" ,".ts" ,".mp4" ,".avi" ,".webm" ,".flv" ,".ogg" ,".mov" ,".mpeg-2"]
 mkvMerge = "C:\Program Files\MKVToolNix\mkvmerge.exe"
@@ -70,14 +70,14 @@ mkvpropedit = "C:\Program Files\MKVToolNix\mkvpropedit.exe"
         self.m_button1111.Bind( wx.EVT_BUTTON, lambda event: self.deleteFromList("ToAudio") )
         self.m_button71.Bind( wx.EVT_BUTTON, lambda event: self.checkAllTypes("ToAudio") )
         self.m_button91.Bind( wx.EVT_BUTTON, self.convertToAudio )
-        self.m_button311.Bind( wx.EVT_BUTTON, lambda event: self.openFilesSelector("Corp") )
-        self.m_button1121.Bind( wx.EVT_BUTTON, lambda event: self.selectFolder("Corp") )
-        self.m_button1511.Bind( wx.EVT_BUTTON, lambda event: self.selectAll("Corp") )
-        self.m_button11111.Bind( wx.EVT_BUTTON, lambda event: self.deleteFromList("Corp") )
-        self.m_button711.Bind( wx.EVT_BUTTON, lambda event: self.checkAllTypes("Corp") )
-        self.m_button911.Bind( wx.EVT_BUTTON, self.corpVideo )
+        self.m_button311.Bind( wx.EVT_BUTTON, lambda event: self.openFilesSelector("Crop") )
+        self.m_button1121.Bind( wx.EVT_BUTTON, lambda event: self.selectFolder("Crop") )
+        self.m_button1511.Bind( wx.EVT_BUTTON, lambda event: self.selectAll("Crop") )
+        self.m_button11111.Bind( wx.EVT_BUTTON, lambda event: self.deleteFromList("Crop") )
+        self.m_button711.Bind( wx.EVT_BUTTON, lambda event: self.checkAllTypes("Crop") )
+        self.m_button911.Bind( wx.EVT_BUTTON, self.cropVideo )
 
-        # Virtual event handlers, override them in your derived class
+    # Virtual event handlers, override them in your derived class
     def deleteFromList( self, event ):
         selectedFiles = eval(f"selectedFiles{event}")
         checkBoxListWindow = wx.FindWindowById(selectedFiles)
@@ -147,7 +147,7 @@ mkvpropedit = "C:\Program Files\MKVToolNix\mkvpropedit.exe"
 
     def convertToMkv(self, event):
         checkBoxListWindow = wx.FindWindowById(selectedFilesToMkv)
-        currentFile = wx.FindWindowById(currentFileTomkv)
+        currentFile = wx.FindWindowById(currentFileToMkv)
         indexes = checkBoxListWindow.GetCount()
         pBar = wx.FindWindowById(pBarToMkv)
         # print(indexes)
@@ -196,20 +196,19 @@ mkvpropedit = "C:\Program Files\MKVToolNix\mkvpropedit.exe"
                 checkBoxListWindow.Set(duplicateFiles)
         currentFile.SetLabel("")
 
-    def corpVideo( self, event ):
-        print(event)
-        checkBoxListWindow = wx.FindWindowById(selectedFilesCorp)
-        currentFile = wx.FindWindowById(currentFileCorp)
+    def cropVideo( self, event ):
+        checkBoxListWindow = wx.FindWindowById(selectedFilesCrop)
+        currentFile = wx.FindWindowById(currentFileCrop)
         indexes = checkBoxListWindow.GetCount()
-        pBar = wx.FindWindowById(pBarCorp)
+        pBar = wx.FindWindowById(pBarCrop)
         cTopWindow = wx.FindWindowById(cTop)
         cLeftWindow = wx.FindWindowById(cLeft)
         cRightWindow = wx.FindWindowById(cRight)
         cBottomWindow = wx.FindWindowById(cBottom)
-        cTopValue = int(cTopWindow.GetLineText())
-        cLeftValue = int(cLeftWindow.GetLineText())
-        cRightValue = int(cRightWindow.GetLineText())
-        cBottomValue = int(cBottomWindow.GetLineText())
+        cTopValue = int(cTopWindow.GetLineText(0))
+        cLeftValue = int(cLeftWindow.GetLineText(0))
+        cRightValue = int(cRightWindow.GetLineText(0))
+        cBottomValue = int(cBottomWindow.GetLineText(0))
         # print(indexes)
         if indexes:
             allFiles = checkBoxListWindow.GetItems()
@@ -226,11 +225,16 @@ mkvpropedit = "C:\Program Files\MKVToolNix\mkvpropedit.exe"
                     mkvmerge_old = (f"{selectedDir}\mkvmerge_old\{fName}")
                     shutil.move(file, mkvmerge_old)
                     mkvCommand = f"\"{mkvMerge}\" --output \"{selectedDir}\\{fNameNoExt}.mkv\" \"{selectedDir}\\mkvmerge_old\\{fName}\""
-                    runCommand(mkvCommand)  
-                mkvCorpCommand = f"\"{mkvpropedit}\" \"{selectedDir}\\{fNameNoExt}.mkv\" --edit track:v1 --set pixel-crop-top={int(cTopValue)} --set pixel-crop-left={int(cLeftValue)}  --set pixel-crop-right={int(cRightValue)} --set pixel-crop-bottom={int(cBottomValue)}"
+                    runCommand(mkvCommand)
+                
+                if cTopValue + cBottomValue + cLeftValue + cRightValue:
+                    mkvCropCommand = f"\"{mkvpropedit}\" \"{selectedDir}\\{fNameNoExt}.mkv\" --edit track:v1 --set pixel-crop-top={int(cTopValue)} --set pixel-crop-left={int(cLeftValue)}  --set pixel-crop-right={int(cRightValue)} --set pixel-crop-bottom={int(cBottomValue)}"
+                else:
+                    mkvCropCommand = f"\"{mkvpropedit}\" \"{selectedDir}\\{fNameNoExt}.mkv\" --edit track:v1 --delete pixel-crop-top --delete pixel-crop-left  --delete pixel-crop-right --delete pixel-crop-bottom"
+                
                 presentage = int(100*(index+1)/indexes)
                 pBar.SetValue((presentage))
-                runCommand(mkvCorpCommand)
+                runCommand(mkvCropCommand)
                 duplicateFiles.remove(duplicateFiles[0])
                 checkBoxListWindow.Set(duplicateFiles)
         currentFile.SetLabel("")

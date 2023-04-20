@@ -2619,7 +2619,7 @@
                         </object>
                         <object class="notebookpage" expanded="1">
                             <property name="bitmap"></property>
-                            <property name="label">corp</property>
+                            <property name="label">crop</property>
                             <property name="select">1</property>
                             <object class="wxPanel" expanded="0">
                                 <property name="BottomDockable">1</property>
@@ -2657,7 +2657,7 @@
                                 <property name="minimize_button">0</property>
                                 <property name="minimum_size"></property>
                                 <property name="moveable">1</property>
-                                <property name="name">corp</property>
+                                <property name="name">crop</property>
                                 <property name="pane_border">1</property>
                                 <property name="pane_position"></property>
                                 <property name="pane_size"></property>
@@ -2711,7 +2711,7 @@
                                             <property name="gripper">0</property>
                                             <property name="hidden">0</property>
                                             <property name="id">wxID_ANY</property>
-                                            <property name="label">corp video</property>
+                                            <property name="label">crop video</property>
                                             <property name="markup">0</property>
                                             <property name="max_size"></property>
                                             <property name="maximize_button">0</property>
@@ -3026,7 +3026,7 @@
                                                                                                     <property name="font"></property>
                                                                                                     <property name="gripper">0</property>
                                                                                                     <property name="hidden">0</property>
-                                                                                                    <property name="id">selectedFilesCorp</property>
+                                                                                                    <property name="id">selectedFilesCrop</property>
                                                                                                     <property name="max_size"></property>
                                                                                                     <property name="maximize_button">0</property>
                                                                                                     <property name="maximum_size"></property>
@@ -3156,7 +3156,7 @@
                                                                                                                 <property name="font"></property>
                                                                                                                 <property name="gripper">0</property>
                                                                                                                 <property name="hidden">0</property>
-                                                                                                                <property name="id">browseFilesCorp</property>
+                                                                                                                <property name="id">browseFilesCrop</property>
                                                                                                                 <property name="label">browse files</property>
                                                                                                                 <property name="margins"></property>
                                                                                                                 <property name="markup">0</property>
@@ -3190,7 +3190,7 @@
                                                                                                                 <property name="window_extra_style"></property>
                                                                                                                 <property name="window_name"></property>
                                                                                                                 <property name="window_style"></property>
-                                                                                                                <event name="OnButtonClick">openFilesSelector(&quot;Corp&quot;)</event>
+                                                                                                                <event name="OnButtonClick">openFilesSelector(&quot;Crop&quot;)</event>
                                                                                                             </object>
                                                                                                         </object>
                                                                                                         <object class="sizeritem" expanded="0">
@@ -3231,7 +3231,7 @@
                                                                                                                 <property name="font"></property>
                                                                                                                 <property name="gripper">0</property>
                                                                                                                 <property name="hidden">0</property>
-                                                                                                                <property name="id">browseFolderCorp</property>
+                                                                                                                <property name="id">browseFolderCrop</property>
                                                                                                                 <property name="label">select folder</property>
                                                                                                                 <property name="margins"></property>
                                                                                                                 <property name="markup">0</property>
@@ -3265,7 +3265,7 @@
                                                                                                                 <property name="window_extra_style"></property>
                                                                                                                 <property name="window_name"></property>
                                                                                                                 <property name="window_style"></property>
-                                                                                                                <event name="OnButtonClick">selectFolder(&quot;Corp&quot;)</event>
+                                                                                                                <event name="OnButtonClick">selectFolder(&quot;Crop&quot;)</event>
                                                                                                             </object>
                                                                                                         </object>
                                                                                                         <object class="sizeritem" expanded="0">
@@ -3306,7 +3306,7 @@
                                                                                                                 <property name="font"></property>
                                                                                                                 <property name="gripper">0</property>
                                                                                                                 <property name="hidden">0</property>
-                                                                                                                <property name="id">selectAllCorp</property>
+                                                                                                                <property name="id">selectAllCrop</property>
                                                                                                                 <property name="label">Select all</property>
                                                                                                                 <property name="margins"></property>
                                                                                                                 <property name="markup">0</property>
@@ -3340,7 +3340,7 @@
                                                                                                                 <property name="window_extra_style"></property>
                                                                                                                 <property name="window_name"></property>
                                                                                                                 <property name="window_style"></property>
-                                                                                                                <event name="OnButtonClick">selectAll(&quot;Corp&quot;)</event>
+                                                                                                                <event name="OnButtonClick">selectAll(&quot;Crop&quot;)</event>
                                                                                                             </object>
                                                                                                         </object>
                                                                                                         <object class="sizeritem" expanded="0">
@@ -3381,7 +3381,7 @@
                                                                                                                 <property name="font"></property>
                                                                                                                 <property name="gripper">0</property>
                                                                                                                 <property name="hidden">0</property>
-                                                                                                                <property name="id">dBtnCorp</property>
+                                                                                                                <property name="id">dBtnCrop</property>
                                                                                                                 <property name="label">Delete</property>
                                                                                                                 <property name="margins"></property>
                                                                                                                 <property name="markup">0</property>
@@ -3415,7 +3415,7 @@
                                                                                                                 <property name="window_extra_style"></property>
                                                                                                                 <property name="window_name"></property>
                                                                                                                 <property name="window_style"></property>
-                                                                                                                <event name="OnButtonClick">deleteFromList(&quot;Corp&quot;)</event>
+                                                                                                                <event name="OnButtonClick">deleteFromList(&quot;Crop&quot;)</event>
                                                                                                             </object>
                                                                                                         </object>
                                                                                                     </object>
@@ -3515,7 +3515,7 @@
                                                                                                                 <property name="font"></property>
                                                                                                                 <property name="gripper">0</property>
                                                                                                                 <property name="hidden">0</property>
-                                                                                                                <property name="id">fileTypesCorp</property>
+                                                                                                                <property name="id">fileTypesCrop</property>
                                                                                                                 <property name="max_size"></property>
                                                                                                                 <property name="maximize_button">0</property>
                                                                                                                 <property name="maximum_size"></property>
@@ -3584,7 +3584,7 @@
                                                                                                                 <property name="font"></property>
                                                                                                                 <property name="gripper">0</property>
                                                                                                                 <property name="hidden">0</property>
-                                                                                                                <property name="id">allCorp</property>
+                                                                                                                <property name="id">allCrop</property>
                                                                                                                 <property name="label">check all</property>
                                                                                                                 <property name="margins"></property>
                                                                                                                 <property name="markup">0</property>
@@ -3618,7 +3618,7 @@
                                                                                                                 <property name="window_extra_style"></property>
                                                                                                                 <property name="window_name"></property>
                                                                                                                 <property name="window_style"></property>
-                                                                                                                <event name="OnButtonClick">checkAllTypes(&quot;Corp&quot;)</event>
+                                                                                                                <event name="OnButtonClick">checkAllTypes(&quot;Crop&quot;)</event>
                                                                                                             </object>
                                                                                                         </object>
                                                                                                     </object>
@@ -4222,8 +4222,8 @@
                                                                     <property name="font"></property>
                                                                     <property name="gripper">0</property>
                                                                     <property name="hidden">0</property>
-                                                                    <property name="id">corpVideo</property>
-                                                                    <property name="label">Corp</property>
+                                                                    <property name="id">cropVideo</property>
+                                                                    <property name="label">Crop</property>
                                                                     <property name="margins"></property>
                                                                     <property name="markup">0</property>
                                                                     <property name="max_size"></property>
@@ -4256,7 +4256,7 @@
                                                                     <property name="window_extra_style"></property>
                                                                     <property name="window_name"></property>
                                                                     <property name="window_style"></property>
-                                                                    <event name="OnButtonClick">corpVideo</event>
+                                                                    <event name="OnButtonClick">cropVideo</event>
                                                                 </object>
                                                             </object>
                                                             <object class="sizeritem" expanded="0">
@@ -4355,7 +4355,7 @@
                                                             <property name="font"></property>
                                                             <property name="gripper">0</property>
                                                             <property name="hidden">0</property>
-                                                            <property name="id">pBarCorp</property>
+                                                            <property name="id">pBarCrop</property>
                                                             <property name="max_size"></property>
                                                             <property name="maximize_button">0</property>
                                                             <property name="maximum_size"></property>
