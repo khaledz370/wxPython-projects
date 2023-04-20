@@ -13,18 +13,27 @@ import os
 import subprocess
 import sys
 import shutil
-from tendo import singleton
 
 selectedFilesToMkv = 1000
 browseFilesToMkv = 1001
 browseFolderToMkv = 1002
 selectAllToMkv = 1003
-fileTypesToMkv = 1004
-allToMkv = 1005
-convertToMkv = 1006
-currentFileTomkv = 1007
-pBarToMkv = 1008
-dBtnToMkv = 1009
+dBtnToMkv = 1004
+fileTypesToMkv = 1005
+allToMkv = 1006
+convertToMkv = 1007
+currentFileTomkv = 1008
+pBarToMkv = 1009
+selectedFilesToAudio = 1010
+browseFilesToAudio = 1011
+browseFolderToAudio = 1012
+selectAllToAudio = 1013
+dBtnToAudio = 1014
+fileTypesToAudio = 1015
+allToAudio = 1016
+convertToAudio = 1017
+currentFileToAudio = 1018
+pBarToAudio = 1019
 true = True
 defaultfileTypesList = [".mkv" ,".ts" ,".mp4" ,".avi" ,".webm" ,".flv" ,".ogg" ,".mov" ,".mpeg-2"]
 mkvMerge = "C:\Program Files\MKVToolNix\mkvmerge.exe"
@@ -69,7 +78,7 @@ class MyFrame1 ( wx.Frame ):
 
         m_checkList1Choices = []
         self.m_checkList1 = wx.CheckListBox( self.m_panel71, selectedFilesToMkv, wx.DefaultPosition, wx.Size( 480,-1 ), m_checkList1Choices, 0 )
-        self.m_checkList1.DragAcceptFiles( True )
+        self.m_checkList1.DragAcceptFiles( true )
 
         bSizer81.Add( self.m_checkList1, 1, wx.ALL|wx.EXPAND, 5 )
 
@@ -99,7 +108,7 @@ class MyFrame1 ( wx.Frame ):
 
         m_checkList11Choices = [u"mkv", u"ts", u"mp4", u"avi", u"webm", u"flv", u"ogg", u"mov", u"mpeg-2"]
         self.m_checkList11 = wx.CheckListBox( self.m_panel81, fileTypesToMkv, wx.DefaultPosition, wx.DefaultSize, m_checkList11Choices, 0 )
-        self.m_checkList11.DragAcceptFiles( True )
+        self.m_checkList11.DragAcceptFiles( true )
 
         bSizer9.Add( self.m_checkList11, 1, wx.ALL|wx.EXPAND, 5 )
 
@@ -165,7 +174,133 @@ class MyFrame1 ( wx.Frame ):
         self.tomkv.SetSizer( bSizer4 )
         self.tomkv.Layout()
         bSizer4.Fit( self.tomkv )
-        self.m_notebook30.AddPage( self.tomkv, u"to mkv", True )
+        self.m_notebook30.AddPage( self.tomkv, u"to mkv", False )
+        self.toAudio = wx.Panel( self.m_notebook30, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.TAB_TRAVERSAL )
+        bSizer41 = wx.BoxSizer( wx.VERTICAL )
+
+        self.m_staticText32 = wx.StaticText( self.toAudio, wx.ID_ANY, u"Convert video to audio", wx.DefaultPosition, wx.DefaultSize, 0 )
+        self.m_staticText32.Wrap( -1 )
+
+        bSizer41.Add( self.m_staticText32, 0, wx.ALIGN_CENTER_HORIZONTAL|wx.ALL, 5 )
+
+        self.m_staticText51 = wx.StaticText( self.toAudio, wx.ID_ANY, u"Drop files here", wx.DefaultPosition, wx.DefaultSize, 0 )
+        self.m_staticText51.Wrap( -1 )
+
+        bSizer41.Add( self.m_staticText51, 0, wx.ALL|wx.ALIGN_CENTER_HORIZONTAL, 5 )
+
+        bSizer61 = wx.BoxSizer( wx.VERTICAL )
+
+        self.m_panel201 = wx.Panel( self.toAudio, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.TAB_TRAVERSAL )
+        bSizer72 = wx.BoxSizer( wx.VERTICAL )
+
+        self.m_panel72 = wx.Panel( self.m_panel201, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.TAB_TRAVERSAL )
+        bSizer51 = wx.BoxSizer( wx.HORIZONTAL )
+
+        self.m_panel82 = wx.Panel( self.m_panel72, wx.ID_ANY, wx.DefaultPosition, wx.Size( -1,-1 ), wx.TAB_TRAVERSAL )
+        bSizer82 = wx.BoxSizer( wx.HORIZONTAL )
+
+        self.m_panel711 = wx.Panel( self.m_panel82, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.TAB_TRAVERSAL )
+        bSizer811 = wx.BoxSizer( wx.HORIZONTAL )
+
+        m_checkList12Choices = []
+        self.m_checkList12 = wx.CheckListBox( self.m_panel711, selectedFilesToAudio, wx.DefaultPosition, wx.Size( 480,-1 ), m_checkList12Choices, 0 )
+        self.m_checkList12.DragAcceptFiles( true )
+
+        bSizer811.Add( self.m_checkList12, 1, wx.ALL|wx.EXPAND, 5 )
+
+        self.m_panel91 = wx.Panel( self.m_panel711, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.TAB_TRAVERSAL )
+        bSizer711 = wx.BoxSizer( wx.VERTICAL )
+
+        self.m_button31 = wx.Button( self.m_panel91, browseFilesToAudio, u"browse files", wx.DefaultPosition, wx.DefaultSize, 0 )
+        bSizer711.Add( self.m_button31, 1, wx.ALL|wx.ALIGN_CENTER_VERTICAL|wx.ALIGN_CENTER_HORIZONTAL|wx.EXPAND, 5 )
+
+        self.m_button112 = wx.Button( self.m_panel91, browseFolderToAudio, u"select folder", wx.DefaultPosition, wx.DefaultSize, 0 )
+        bSizer711.Add( self.m_button112, 1, wx.ALL|wx.EXPAND, 5 )
+
+        self.m_button151 = wx.Button( self.m_panel91, selectAllToAudio, u"Select all", wx.DefaultPosition, wx.DefaultSize, 0 )
+        bSizer711.Add( self.m_button151, 1, wx.ALL|wx.EXPAND, 5 )
+
+        self.m_button1111 = wx.Button( self.m_panel91, dBtnToAudio, u"Delete", wx.DefaultPosition, wx.DefaultSize, 0 )
+        bSizer711.Add( self.m_button1111, 1, wx.ALL|wx.ALIGN_CENTER_HORIZONTAL|wx.EXPAND, 5 )
+
+
+        self.m_panel91.SetSizer( bSizer711 )
+        self.m_panel91.Layout()
+        bSizer711.Fit( self.m_panel91 )
+        bSizer811.Add( self.m_panel91, 0, wx.EXPAND|wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
+
+        self.m_panel811 = wx.Panel( self.m_panel711, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.TAB_TRAVERSAL )
+        bSizer91 = wx.BoxSizer( wx.VERTICAL )
+
+        m_checkList111Choices = [u"mkv", u"ts", u"mp4", u"avi", u"webm", u"flv", u"ogg", u"mov", u"mpeg-2"]
+        self.m_checkList111 = wx.CheckListBox( self.m_panel811, fileTypesToAudio, wx.DefaultPosition, wx.DefaultSize, m_checkList111Choices, 0 )
+        self.m_checkList111.DragAcceptFiles( true )
+
+        bSizer91.Add( self.m_checkList111, 1, wx.ALL|wx.EXPAND, 5 )
+
+        self.m_button71 = wx.Button( self.m_panel811, allToAudio, u"check all", wx.DefaultPosition, wx.Size( -1,40 ), 0 )
+        bSizer91.Add( self.m_button71, 0, wx.ALL, 5 )
+
+
+        self.m_panel811.SetSizer( bSizer91 )
+        self.m_panel811.Layout()
+        bSizer91.Fit( self.m_panel811 )
+        bSizer811.Add( self.m_panel811, 1, wx.EXPAND |wx.ALL, 5 )
+
+
+        self.m_panel711.SetSizer( bSizer811 )
+        self.m_panel711.Layout()
+        bSizer811.Fit( self.m_panel711 )
+        bSizer82.Add( self.m_panel711, 1, wx.EXPAND |wx.ALL, 5 )
+
+
+        self.m_panel82.SetSizer( bSizer82 )
+        self.m_panel82.Layout()
+        bSizer82.Fit( self.m_panel82 )
+        bSizer51.Add( self.m_panel82, 1, wx.ALL|wx.EXPAND|wx.ALIGN_BOTTOM, 5 )
+
+
+        self.m_panel72.SetSizer( bSizer51 )
+        self.m_panel72.Layout()
+        bSizer51.Fit( self.m_panel72 )
+        bSizer72.Add( self.m_panel72, 1, wx.EXPAND |wx.ALL, 5 )
+
+
+        self.m_panel201.SetSizer( bSizer72 )
+        self.m_panel201.Layout()
+        bSizer72.Fit( self.m_panel201 )
+        bSizer61.Add( self.m_panel201, 1, wx.EXPAND |wx.ALL, 5 )
+
+        bSizer111 = wx.BoxSizer( wx.VERTICAL )
+
+        bSizer121 = wx.BoxSizer( wx.HORIZONTAL )
+
+        self.m_button91 = wx.Button( self.toAudio, convertToAudio, u"Convert to audio", wx.DefaultPosition, wx.DefaultSize, 0 )
+        bSizer121.Add( self.m_button91, 0, wx.ALL|wx.EXPAND, 5 )
+
+        self.m_staticText311 = wx.StaticText( self.toAudio, currentFileToAudio, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, 0 )
+        self.m_staticText311.Wrap( -1 )
+
+        bSizer121.Add( self.m_staticText311, 1, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
+
+
+        bSizer111.Add( bSizer121, 1, wx.EXPAND, 5 )
+
+        self.m_gauge11 = wx.Gauge( self.toAudio, pBarToAudio, 100, wx.DefaultPosition, wx.DefaultSize, wx.GA_HORIZONTAL )
+        self.m_gauge11.SetValue( 0 )
+        bSizer111.Add( self.m_gauge11, 1, wx.ALL|wx.EXPAND, 5 )
+
+
+        bSizer61.Add( bSizer111, 1, wx.EXPAND, 5 )
+
+
+        bSizer41.Add( bSizer61, 1, wx.EXPAND, 5 )
+
+
+        self.toAudio.SetSizer( bSizer41 )
+        self.toAudio.Layout()
+        bSizer41.Fit( self.toAudio )
+        self.m_notebook30.AddPage( self.toAudio, u"toAudio", True )
 
         bSizer2.Add( self.m_notebook30, 1, wx.EXPAND |wx.ALL, 5 )
 
@@ -173,7 +308,7 @@ class MyFrame1 ( wx.Frame ):
         self.SetSizer( bSizer2 )
         self.Layout()
 
-
+        self.m_notebook30.SetSelection(0)
         self.Centre( wx.BOTH )
 
         # Connect Events
@@ -183,6 +318,12 @@ class MyFrame1 ( wx.Frame ):
         self.m_button111.Bind( wx.EVT_BUTTON, lambda event: self.deleteToMkv("ToMkv") )
         self.m_button7.Bind( wx.EVT_BUTTON, lambda event: self.checkAllTypes("ToMkv") )
         self.m_button9.Bind( wx.EVT_BUTTON, self.convertToMkv )
+        self.m_button31.Bind( wx.EVT_BUTTON, lambda event: self.openFilesSelector("ToAudio") )
+        self.m_button112.Bind( wx.EVT_BUTTON, lambda event: self.selectFolder("ToAudio") )
+        self.m_button151.Bind( wx.EVT_BUTTON, lambda event: self.selectAll("ToAudio") )
+        self.m_button1111.Bind( wx.EVT_BUTTON, lambda event: self.deleteToMkv("ToAudio") )
+        self.m_button71.Bind( wx.EVT_BUTTON, lambda event: self.checkAllTypes("ToAudio") )
+        self.m_button91.Bind( wx.EVT_BUTTON, self.convertToAudio )
 
     def __del__( self ):
         pass
@@ -283,6 +424,9 @@ class MyFrame1 ( wx.Frame ):
                 checkBoxListWindow.Set(duplicateFiles)
         pBar.SetValue(0)
         currentFile.SetLabel("")
+        
+    def convertToAudio( self, event ):
+        print(event)
 
 
 class MyFileDropTarget(wx.FileDropTarget):
@@ -319,3 +463,4 @@ frame = MyFrame1(None)
 
 frame.Show(True)
 app.MainLoop()
+

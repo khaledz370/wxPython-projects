@@ -13,32 +13,47 @@ import os
 import subprocess
 import sys
 import shutil
-from tendo import singleton
 
 selectedFilesToMkv = 1000
 browseFilesToMkv = 1001
 browseFolderToMkv = 1002
 selectAllToMkv = 1003
-fileTypesToMkv = 1004
-allToMkv = 1005
-convertToMkv = 1006
-currentFileTomkv = 1007
-pBarToMkv = 1008
-dBtnToMkv = 1009
+dBtnToMkv = 1004
+fileTypesToMkv = 1005
+allToMkv = 1006
+convertToMkv = 1007
+currentFileTomkv = 1008
+pBarToMkv = 1009
+selectedFilesToAudio = 1010
+browseFilesToAudio = 1011
+browseFolderToAudio = 1012
+selectAllToAudio = 1013
+dBtnToAudio = 1014
+fileTypesToAudio = 1015
+allToAudio = 1016
+convertToAudio = 1017
+currentFileToAudio = 1018
+pBarToAudio = 1019
 true = True
 defaultfileTypesList = [".mkv" ,".ts" ,".mp4" ,".avi" ,".webm" ,".flv" ,".ogg" ,".mov" ,".mpeg-2"]
 mkvMerge = "C:\Program Files\MKVToolNix\mkvmerge.exe"
 mkvpropedit = "C:\Program Files\MKVToolNix\mkvpropedit.exe"
 
-# Connect Events
-self.m_button3.Bind( wx.EVT_BUTTON, lambda event: self.openFilesSelector("ToMkv") )
-self.m_button11.Bind( wx.EVT_BUTTON, lambda event: self.selectFolder("ToMkv") )
-self.m_button15.Bind( wx.EVT_BUTTON, lambda event: self.selectAll("ToMkv") )
-self.m_button111.Bind( wx.EVT_BUTTON, lambda event: self.deleteToMkv("ToMkv") )
-self.m_button7.Bind( wx.EVT_BUTTON, lambda event: self.checkAllTypes("ToMkv") )
-self.m_button9.Bind( wx.EVT_BUTTON, self.convertToMkv )
+        # Connect Events
+        self.m_button3.Bind( wx.EVT_BUTTON, lambda event: self.openFilesSelector("ToMkv") )
+        self.m_button11.Bind( wx.EVT_BUTTON, lambda event: self.selectFolder("ToMkv") )
+        self.m_button15.Bind( wx.EVT_BUTTON, lambda event: self.selectAll("ToMkv") )
+        self.m_button111.Bind( wx.EVT_BUTTON, lambda event: self.deleteToMkv("ToMkv") )
+        self.m_button7.Bind( wx.EVT_BUTTON, lambda event: self.checkAllTypes("ToMkv") )
+        self.m_button9.Bind( wx.EVT_BUTTON, self.convertToMkv )
+        self.m_button31.Bind( wx.EVT_BUTTON, lambda event: self.openFilesSelector("ToAudio") )
+        self.m_button112.Bind( wx.EVT_BUTTON, lambda event: self.selectFolder("ToAudio") )
+        self.m_button151.Bind( wx.EVT_BUTTON, lambda event: self.selectAll("ToAudio") )
+        self.m_button1111.Bind( wx.EVT_BUTTON, lambda event: self.deleteToMkv("ToAudio") )
+        self.m_button71.Bind( wx.EVT_BUTTON, lambda event: self.checkAllTypes("ToAudio") )
+        self.m_button91.Bind( wx.EVT_BUTTON, self.convertToAudio )
 
- def deleteToMkv( self, event ):
+    def deleteToMkv( self, event ):
         selectedFiles = eval(f"selectedFiles{event}")
         checkBoxListWindow = wx.FindWindowById(selectedFiles)
         allFilesInCheckBoxList = checkBoxListWindow.GetItems()
