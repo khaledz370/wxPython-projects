@@ -30,36 +30,46 @@ defaultfileTypesList = [".mkv" ,".ts" ,".mp4" ,".avi" ,".webm" ,".flv" ,".ogg" ,
 mkvMerge = "C:\Program Files\MKVToolNix\mkvmerge.exe"
 mkvpropedit = "C:\Program Files\MKVToolNix\mkvpropedit.exe"
 
-# Virtual event handlers, override them in your derived class
-    def deleteToMkv( self, event ):
-        checkBoxListWindow = wx.FindWindowById(selectedFilesToMkv)
+# Connect Events
+self.m_button3.Bind( wx.EVT_BUTTON, lambda event: self.openFilesSelector("ToMkv") )
+self.m_button11.Bind( wx.EVT_BUTTON, lambda event: self.selectFolder("ToMkv") )
+self.m_button15.Bind( wx.EVT_BUTTON, lambda event: self.selectAll("ToMkv") )
+self.m_button111.Bind( wx.EVT_BUTTON, lambda event: self.deleteToMkv("ToMkv") )
+self.m_button7.Bind( wx.EVT_BUTTON, lambda event: self.checkAllTypes("ToMkv") )
+self.m_button9.Bind( wx.EVT_BUTTON, self.convertToMkv )
+
+ def deleteToMkv( self, event ):
+        selectedFiles = eval(f"selectedFiles{event}")
+        checkBoxListWindow = wx.FindWindowById(selectedFiles)
         allFilesInCheckBoxList = checkBoxListWindow.GetItems()
         selectedFilesFromList = checkBoxListWindow.GetCheckedStrings()
         newList = list(filter(lambda file:str(file) not in selectedFilesFromList,allFilesInCheckBoxList))
         checkBoxListWindow.SetItems(newList)
 
-
     def openFilesSelector( self, event ):
+        selectedFiles = eval(f"selectedFiles{event}")
+        checkBoxListWindow = wx.FindWindowById(selectedFiles)
         openFileDialog = wx.FileDialog(self, "Select files", "", "", "All files (*.*)|*.*",
            wx.FD_OPEN | wx.FD_FILE_MUST_EXIST|wx.FD_MULTIPLE)
         openFileDialog.ShowModal()
-        # fileList = openFileDialog.GetFilenames()
-        self.m_checkList1.Set(openFileDialog.GetFilenames())
+        checkBoxListWindow.Set(openFileDialog.GetFilenames())
         openFileDialog.Destroy()
 
     def selectFolder( self, event ):
+        selectedFiles = eval(f"selectedFiles{event}")
+        fileTypes = eval(f"fileTypes{event}")
+        checkBoxListWindow = wx.FindWindowById(selectedFiles)
+        fileTypesList = wx.FindWindowById(fileTypes)
         openDirDialog = wx.DirDialog(self, "Choose folder",style=wx.DD_DIR_MUST_EXIST)
         openDirDialog.ShowModal()
         selectedDir = openDirDialog.GetPath()
         filesInDir = os.listdir(selectedDir)
         absFilesInDir = [f"{selectedDir}\\" + x for x in filesInDir]
-        fileTypesList = wx.FindWindowById(fileTypesToMkv)
         selectedFileTypes = fileTypesList.GetCheckedStrings()
         # print(selectedFileTypes)
         if not len(selectedFileTypes):
             selectedFileTypes = tuple(defaultfileTypesList)
         filterFilesInDir = list(filter(lambda file: str(file).endswith(selectedFileTypes),absFilesInDir))
-        checkBoxListWindow = wx.FindWindowById(selectedFilesToMkv)
         checkBoxListWindow.Set(filterFilesInDir)
         # print(filterFilesInDir)
 
@@ -68,8 +78,10 @@ mkvpropedit = "C:\Program Files\MKVToolNix\mkvpropedit.exe"
 
 
     def selectAll( self, event ):
-        thisButton = wx.FindWindowById(selectAllToMkv)
-        checkBoxListWindow = wx.FindWindowById(selectedFilesToMkv)
+        selectAll = eval(f"selectAll{event}")
+        selectedFiles = eval(f"selectedFiles{event}")
+        thisButton = wx.FindWindowById(selectAll)
+        checkBoxListWindow = wx.FindWindowById(selectedFiles)
         indexes = checkBoxListWindow.GetCount()
         selectedItems = checkBoxListWindow.GetCheckedItems()
         if indexes and indexes != len(selectedItems):
@@ -80,8 +92,10 @@ mkvpropedit = "C:\Program Files\MKVToolNix\mkvpropedit.exe"
             thisButton.SetLabel("Select all")
 
     def checkAllTypes( self, event ):
-        thisButton = wx.FindWindowById(allToMkv)
-        checkBoxListFileTypes = wx.FindWindowById(fileTypesToMkv)
+        fileTypes = eval(f"fileTypes{event}")
+        all = eval(f"all{event}")
+        thisButton = wx.FindWindowById(all)
+        checkBoxListFileTypes = wx.FindWindowById(fileTypes)
         indexes = checkBoxListFileTypes.GetCount()
         selectedItems = checkBoxListFileTypes.GetCheckedItems()
         if indexes and indexes != len(selectedItems):
@@ -111,6 +125,7 @@ mkvpropedit = "C:\Program Files\MKVToolNix\mkvpropedit.exe"
                 currentFile.SetLabel(str(file))
                 mkvCommand = f"\"{mkvMerge}\" --output \"{selectedDir}\\{fNameNoExt}.mkv\" \"{selectedDir}\\mkvmerge_old\\{fName}\""
                 presentage = int(100*(index+1)/indexes)
+                print(presentage)
                 pBar.SetValue((presentage))
                 runCommand(mkvCommand)
                 duplicateFiles.remove(duplicateFiles[0])

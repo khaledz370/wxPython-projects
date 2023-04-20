@@ -190,37 +190,34 @@ class MyFrame1 ( wx.Frame ):
 
     # Virtual event handlers, override them in your derived class
     def deleteToMkv( self, event ):
-        selectedFiles = eval(f"selectedFiles{event}")
-        checkBoxListWindow = wx.FindWindowById(selectedFiles)
+        checkBoxListWindow = wx.FindWindowById(selectedFilesToMkv)
         allFilesInCheckBoxList = checkBoxListWindow.GetItems()
         selectedFilesFromList = checkBoxListWindow.GetCheckedStrings()
         newList = list(filter(lambda file:str(file) not in selectedFilesFromList,allFilesInCheckBoxList))
         checkBoxListWindow.SetItems(newList)
 
+
     def openFilesSelector( self, event ):
-        selectedFiles = eval(f"selectedFiles{event}")
-        checkBoxListWindow = wx.FindWindowById(selectedFiles)
         openFileDialog = wx.FileDialog(self, "Select files", "", "", "All files (*.*)|*.*",
            wx.FD_OPEN | wx.FD_FILE_MUST_EXIST|wx.FD_MULTIPLE)
         openFileDialog.ShowModal()
+        checkBoxListWindow = wx.FindWindowById(selectedFilesToMkv)
         checkBoxListWindow.Set(openFileDialog.GetFilenames())
         openFileDialog.Destroy()
 
     def selectFolder( self, event ):
-        selectedFiles = eval(f"selectedFiles{event}")
-        fileTypes = eval(f"fileTypes{event}")
-        checkBoxListWindow = wx.FindWindowById(selectedFiles)
-        fileTypesList = wx.FindWindowById(fileTypes)
         openDirDialog = wx.DirDialog(self, "Choose folder",style=wx.DD_DIR_MUST_EXIST)
         openDirDialog.ShowModal()
         selectedDir = openDirDialog.GetPath()
         filesInDir = os.listdir(selectedDir)
         absFilesInDir = [f"{selectedDir}\\" + x for x in filesInDir]
+        fileTypesList = wx.FindWindowById(fileTypesToMkv)
         selectedFileTypes = fileTypesList.GetCheckedStrings()
         # print(selectedFileTypes)
         if not len(selectedFileTypes):
             selectedFileTypes = tuple(defaultfileTypesList)
         filterFilesInDir = list(filter(lambda file: str(file).endswith(selectedFileTypes),absFilesInDir))
+        checkBoxListWindow = wx.FindWindowById(selectedFilesToMkv)
         checkBoxListWindow.Set(filterFilesInDir)
         # print(filterFilesInDir)
 
@@ -229,10 +226,8 @@ class MyFrame1 ( wx.Frame ):
 
 
     def selectAll( self, event ):
-        selectAll = eval(f"selectAll{event}")
-        selectedFiles = eval(f"selectedFiles{event}")
-        thisButton = wx.FindWindowById(selectAll)
-        checkBoxListWindow = wx.FindWindowById(selectedFiles)
+        thisButton = wx.FindWindowById(selectAllToMkv)
+        checkBoxListWindow = wx.FindWindowById(selectedFilesToMkv)
         indexes = checkBoxListWindow.GetCount()
         selectedItems = checkBoxListWindow.GetCheckedItems()
         if indexes and indexes != len(selectedItems):
@@ -243,10 +238,8 @@ class MyFrame1 ( wx.Frame ):
             thisButton.SetLabel("Select all")
 
     def checkAllTypes( self, event ):
-        fileTypes = eval(f"fileTypes{event}")
-        all = eval(f"all{event}")
-        thisButton = wx.FindWindowById(all)
-        checkBoxListFileTypes = wx.FindWindowById(fileTypes)
+        thisButton = wx.FindWindowById(allToMkv)
+        checkBoxListFileTypes = wx.FindWindowById(fileTypesToMkv)
         indexes = checkBoxListFileTypes.GetCount()
         selectedItems = checkBoxListFileTypes.GetCheckedItems()
         if indexes and indexes != len(selectedItems):
@@ -276,7 +269,6 @@ class MyFrame1 ( wx.Frame ):
                 currentFile.SetLabel(str(file))
                 mkvCommand = f"\"{mkvMerge}\" --output \"{selectedDir}\\{fNameNoExt}.mkv\" \"{selectedDir}\\mkvmerge_old\\{fName}\""
                 presentage = int(100*(index+1)/indexes)
-                print(presentage)
                 pBar.SetValue((presentage))
                 runCommand(mkvCommand)
                 duplicateFiles.remove(duplicateFiles[0])

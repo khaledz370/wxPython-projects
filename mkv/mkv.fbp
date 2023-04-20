@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
 <wxFormBuilder_Project>
     <FileVersion major="1" minor="16" />
-    <object class="Project" expanded="1">
+    <object class="Project" expanded="0">
         <property name="class_decoration"></property>
         <property name="code_generation">Python</property>
         <property name="disconnect_events">1</property>
@@ -182,11 +182,11 @@
                                     <property name="name">bSizer4</property>
                                     <property name="orient">wxVERTICAL</property>
                                     <property name="permission">none</property>
-                                    <object class="sizeritem" expanded="0">
+                                    <object class="sizeritem" expanded="1">
                                         <property name="border">5</property>
                                         <property name="flag">wxALIGN_CENTER_HORIZONTAL|wxALL</property>
                                         <property name="proportion">0</property>
-                                        <object class="wxStaticText" expanded="0">
+                                        <object class="wxStaticText" expanded="1">
                                             <property name="BottomDockable">1</property>
                                             <property name="LeftDockable">1</property>
                                             <property name="RightDockable">1</property>
@@ -244,11 +244,11 @@
                                             <property name="wrap">-1</property>
                                         </object>
                                     </object>
-                                    <object class="sizeritem" expanded="0">
+                                    <object class="sizeritem" expanded="1">
                                         <property name="border">5</property>
                                         <property name="flag">wxALL|wxALIGN_CENTER_HORIZONTAL</property>
                                         <property name="proportion">0</property>
-                                        <object class="wxStaticText" expanded="0">
+                                        <object class="wxStaticText" expanded="1">
                                             <property name="BottomDockable">1</property>
                                             <property name="LeftDockable">1</property>
                                             <property name="RightDockable">1</property>
@@ -684,11 +684,11 @@
                                                                                                         <property name="name">bSizer71</property>
                                                                                                         <property name="orient">wxVERTICAL</property>
                                                                                                         <property name="permission">none</property>
-                                                                                                        <object class="sizeritem" expanded="0">
+                                                                                                        <object class="sizeritem" expanded="1">
                                                                                                             <property name="border">5</property>
                                                                                                             <property name="flag">wxALL|wxALIGN_CENTER_VERTICAL|wxALIGN_CENTER_HORIZONTAL|wxEXPAND</property>
                                                                                                             <property name="proportion">1</property>
-                                                                                                            <object class="wxButton" expanded="0">
+                                                                                                            <object class="wxButton" expanded="1">
                                                                                                                 <property name="BottomDockable">1</property>
                                                                                                                 <property name="LeftDockable">1</property>
                                                                                                                 <property name="RightDockable">1</property>
@@ -756,14 +756,14 @@
                                                                                                                 <property name="window_extra_style"></property>
                                                                                                                 <property name="window_name"></property>
                                                                                                                 <property name="window_style"></property>
-                                                                                                                <event name="OnButtonClick">openFilesSelector</event>
+                                                                                                                <event name="OnButtonClick">openFilesSelector(&quot;ToMkv&quot;)</event>
                                                                                                             </object>
                                                                                                         </object>
-                                                                                                        <object class="sizeritem" expanded="0">
+                                                                                                        <object class="sizeritem" expanded="1">
                                                                                                             <property name="border">5</property>
                                                                                                             <property name="flag">wxALL|wxEXPAND</property>
                                                                                                             <property name="proportion">1</property>
-                                                                                                            <object class="wxButton" expanded="0">
+                                                                                                            <object class="wxButton" expanded="1">
                                                                                                                 <property name="BottomDockable">1</property>
                                                                                                                 <property name="LeftDockable">1</property>
                                                                                                                 <property name="RightDockable">1</property>
@@ -831,14 +831,14 @@
                                                                                                                 <property name="window_extra_style"></property>
                                                                                                                 <property name="window_name"></property>
                                                                                                                 <property name="window_style"></property>
-                                                                                                                <event name="OnButtonClick">selectFolder</event>
+                                                                                                                <event name="OnButtonClick">selectFolder(&quot;ToMkv&quot;)</event>
                                                                                                             </object>
                                                                                                         </object>
-                                                                                                        <object class="sizeritem" expanded="0">
+                                                                                                        <object class="sizeritem" expanded="1">
                                                                                                             <property name="border">5</property>
                                                                                                             <property name="flag">wxALL|wxEXPAND</property>
                                                                                                             <property name="proportion">1</property>
-                                                                                                            <object class="wxButton" expanded="0">
+                                                                                                            <object class="wxButton" expanded="1">
                                                                                                                 <property name="BottomDockable">1</property>
                                                                                                                 <property name="LeftDockable">1</property>
                                                                                                                 <property name="RightDockable">1</property>
@@ -906,7 +906,7 @@
                                                                                                                 <property name="window_extra_style"></property>
                                                                                                                 <property name="window_name"></property>
                                                                                                                 <property name="window_style"></property>
-                                                                                                                <event name="OnButtonClick">selectAll</event>
+                                                                                                                <event name="OnButtonClick">selectAll(&quot;ToMkv&quot;)</event>
                                                                                                             </object>
                                                                                                         </object>
                                                                                                         <object class="sizeritem" expanded="1">
@@ -981,7 +981,7 @@
                                                                                                                 <property name="window_extra_style"></property>
                                                                                                                 <property name="window_name"></property>
                                                                                                                 <property name="window_style"></property>
-                                                                                                                <event name="OnButtonClick">deleteToMkv</event>
+                                                                                                                <event name="OnButtonClick">deleteToMkv(&quot;ToMkv&quot;)</event>
                                                                                                             </object>
                                                                                                         </object>
                                                                                                     </object>
@@ -991,7 +991,7 @@
                                                                                                 <property name="border">5</property>
                                                                                                 <property name="flag">wxEXPAND | wxALL</property>
                                                                                                 <property name="proportion">1</property>
-                                                                                                <object class="wxPanel" expanded="0">
+                                                                                                <object class="wxPanel" expanded="1">
                                                                                                     <property name="BottomDockable">1</property>
                                                                                                     <property name="LeftDockable">1</property>
                                                                                                     <property name="RightDockable">1</property>
@@ -1043,16 +1043,16 @@
                                                                                                     <property name="window_extra_style"></property>
                                                                                                     <property name="window_name"></property>
                                                                                                     <property name="window_style">wxTAB_TRAVERSAL</property>
-                                                                                                    <object class="wxBoxSizer" expanded="0">
+                                                                                                    <object class="wxBoxSizer" expanded="1">
                                                                                                         <property name="minimum_size"></property>
                                                                                                         <property name="name">bSizer9</property>
                                                                                                         <property name="orient">wxVERTICAL</property>
                                                                                                         <property name="permission">none</property>
-                                                                                                        <object class="sizeritem" expanded="0">
+                                                                                                        <object class="sizeritem" expanded="1">
                                                                                                             <property name="border">5</property>
                                                                                                             <property name="flag">wxALL|wxEXPAND</property>
                                                                                                             <property name="proportion">1</property>
-                                                                                                            <object class="wxCheckListBox" expanded="0">
+                                                                                                            <object class="wxCheckListBox" expanded="1">
                                                                                                                 <property name="BottomDockable">1</property>
                                                                                                                 <property name="LeftDockable">1</property>
                                                                                                                 <property name="RightDockable">1</property>
@@ -1112,11 +1112,11 @@
                                                                                                                 <property name="window_style"></property>
                                                                                                             </object>
                                                                                                         </object>
-                                                                                                        <object class="sizeritem" expanded="0">
+                                                                                                        <object class="sizeritem" expanded="1">
                                                                                                             <property name="border">5</property>
                                                                                                             <property name="flag">wxALL</property>
                                                                                                             <property name="proportion">0</property>
-                                                                                                            <object class="wxButton" expanded="0">
+                                                                                                            <object class="wxButton" expanded="1">
                                                                                                                 <property name="BottomDockable">1</property>
                                                                                                                 <property name="LeftDockable">1</property>
                                                                                                                 <property name="RightDockable">1</property>
@@ -1184,7 +1184,7 @@
                                                                                                                 <property name="window_extra_style"></property>
                                                                                                                 <property name="window_name"></property>
                                                                                                                 <property name="window_style"></property>
-                                                                                                                <event name="OnButtonClick">checkAllTypes</event>
+                                                                                                                <event name="OnButtonClick">checkAllTypes(&quot;ToMkv&quot;)</event>
                                                                                                             </object>
                                                                                                         </object>
                                                                                                     </object>
@@ -1220,11 +1220,11 @@
                                                             <property name="name">bSizer12</property>
                                                             <property name="orient">wxHORIZONTAL</property>
                                                             <property name="permission">none</property>
-                                                            <object class="sizeritem" expanded="0">
+                                                            <object class="sizeritem" expanded="1">
                                                                 <property name="border">5</property>
                                                                 <property name="flag">wxALL|wxEXPAND</property>
                                                                 <property name="proportion">0</property>
-                                                                <object class="wxButton" expanded="0">
+                                                                <object class="wxButton" expanded="1">
                                                                     <property name="BottomDockable">1</property>
                                                                     <property name="LeftDockable">1</property>
                                                                     <property name="RightDockable">1</property>
