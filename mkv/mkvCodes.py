@@ -13,7 +13,13 @@ import os
 import subprocess
 import sys
 import shutil
+import json
 
+true = True
+defaultfileTypesList = [".mkv" ,".ts" ,".mp4" ,".avi" ,".webm" ,".flv" ,".ogg" ,".mov" ,".mpeg-2"]
+fileTypesFillter = "Video files (*.mkv)|*.mkv|(*.mp4)|*.mp4|(*.ts)|*.ts|(*.flv)|*.flv|(*.avo)|*.avo|(*.webm)|*.webm|(*.ogg)|*.ogg|(*.mov)|*.mov|(*.mpeg-2)|*.mpeg-2"
+mkvMerge = "C:\Program Files\MKVToolNix\mkvmerge.exe"
+mkvpropedit = "C:\Program Files\MKVToolNix\mkvpropedit.exe"
 selectedFilesToMkv = 1000
 browseFilesToMkv = 1001
 browseFolderToMkv = 1002
@@ -48,10 +54,18 @@ cLeft = 1030
 cropVideo = 1031
 currentFileCrop = 1032
 pBarCrop = 1033
-true = True
-defaultfileTypesList = [".mkv" ,".ts" ,".mp4" ,".avi" ,".webm" ,".flv" ,".ogg" ,".mov" ,".mpeg-2"]
-mkvMerge = "C:\Program Files\MKVToolNix\mkvmerge.exe"
-mkvpropedit = "C:\Program Files\MKVToolNix\mkvpropedit.exe"
+selectedFilesOptions = 1034
+browseFilesOptions = 1035
+browseFolderOptions = 1036
+selectAllOptions = 1037
+dBtnOptions = 1038
+fileTypesOptions = 1039
+allOptions = 1040
+optionsFile = 1041
+runOption = 1042
+currentFileOptions = 1043
+pBarOptions = 1044
+tabContainer = 1045
 
 ###########################################################################
 ## Class MyFrame1
@@ -76,6 +90,15 @@ mkvpropedit = "C:\Program Files\MKVToolNix\mkvpropedit.exe"
         self.m_button11111.Bind( wx.EVT_BUTTON, lambda event: self.deleteFromList("Crop") )
         self.m_button711.Bind( wx.EVT_BUTTON, lambda event: self.checkAllTypes("Crop") )
         self.m_button911.Bind( wx.EVT_BUTTON, self.cropVideo )
+        self.m_button3111.Bind( wx.EVT_BUTTON, lambda event: self.openFilesSelector("Options") )
+        self.m_button11211.Bind( wx.EVT_BUTTON, lambda event: self.selectFolder("Options") )
+        self.m_button15111.Bind( wx.EVT_BUTTON, lambda event: self.selectAll("Options") )
+        self.m_button111111.Bind( wx.EVT_BUTTON, lambda event: self.deleteFromList("Options") )
+        self.m_button7111.Bind( wx.EVT_BUTTON, lambda event: self.checkAllTypes("Options") )
+        self.m_button9111.Bind( wx.EVT_BUTTON, self.runWithJson )
+
+    def __del__( self ):
+        pass
 
     # Virtual event handlers, override them in your derived class
     def deleteFromList( self, event ):
@@ -89,7 +112,7 @@ mkvpropedit = "C:\Program Files\MKVToolNix\mkvpropedit.exe"
     def openFilesSelector( self, event ):
         selectedFiles = eval(f"selectedFiles{event}")
         checkBoxListWindow = wx.FindWindowById(selectedFiles)
-        openFileDialog = wx.FileDialog(self, "Select files", "", "", "All files (*.*)|*.*",
+        openFileDialog = wx.FileDialog(self, "Select files", "", "",fileTypesFillter,
            wx.FD_OPEN | wx.FD_FILE_MUST_EXIST|wx.FD_MULTIPLE)
         openFileDialog.ShowModal()
         checkBoxListWindow.Set(openFileDialog.GetFilenames())
@@ -103,18 +126,17 @@ mkvpropedit = "C:\Program Files\MKVToolNix\mkvpropedit.exe"
         openDirDialog = wx.DirDialog(self, "Choose folder",style=wx.DD_DIR_MUST_EXIST)
         openDirDialog.ShowModal()
         selectedDir = openDirDialog.GetPath()
-        filesInDir = os.listdir(selectedDir)
-        absFilesInDir = [f"{selectedDir}\\" + x for x in filesInDir]
-        selectedFileTypes = fileTypesList.GetCheckedStrings()
-        # print(selectedFileTypes)
-        if not len(selectedFileTypes):
-            selectedFileTypes = tuple(defaultfileTypesList)
-        filterFilesInDir = list(filter(lambda file: str(file).endswith(selectedFileTypes),absFilesInDir))
-        checkBoxListWindow.Set(filterFilesInDir)
-        # print(filterFilesInDir)
-
-        # self.m_checkList1.Set(openFileDialog.GetFilenames())
-        openDirDialog.Destroy()
+        try:
+            filesInDir = os.listdir(selectedDir)
+            absFilesInDir = [f"{selectedDir}\\" + x for x in filesInDir]
+            selectedFileTypes = fileTypesList.GetCheckedStrings()
+            if not len(selectedFileTypes):
+                selectedFileTypes = tuple(defaultfileTypesList)
+            filterFilesInDir = list(filter(lambda file: str(file).endswith(selectedFileTypes),absFilesInDir))
+            checkBoxListWindow.Set(filterFilesInDir)
+            openDirDialog.Destroy()
+        except:
+            pass # no folder was selected
 
 
     def selectAll( self, event ):
@@ -238,8 +260,58 @@ mkvpropedit = "C:\Program Files\MKVToolNix\mkvpropedit.exe"
                 duplicateFiles.remove(duplicateFiles[0])
                 checkBoxListWindow.Set(duplicateFiles)
         currentFile.SetLabel("")
-
-
+        
+    def runWithJson( self, event ):
+        optionJson = wx.FindWindowById(optionsFile)
+        checkBoxListWindow = wx.FindWindowById(selectedFilesOptions)
+        currentFile = wx.FindWindowById(currentFileOptions)
+        indexes = checkBoxListWindow.GetCount()
+        pBar = wx.FindWindowById(pBarOptions)
+        jsonFile = optionJson.GetPath()
+        if os.path.exists(jsonFile):
+            jsonVar = open(jsonFile)
+            fileOptions = list(json.load(jsonVar))
+            try:
+                removeIndex = fileOptions.index('--output')
+                del fileOptions[removeIndex] # remove --output line
+                del fileOptions[removeIndex] # remove file line
+            except ValueError:
+                pass  # item not in list
+            try:
+                removeIndex = fileOptions.index('(')
+                del fileOptions[removeIndex] # remove ( line
+                del fileOptions[removeIndex] # remove what's between () line
+                del fileOptions[removeIndex] # remove ) line
+            except:
+                pass # item not in list
+            if fileOptions[0] != "--ui-language":
+                currentFile.SetLabel("wrong json file")
+                return
+            selectedJsonDir = os.path.dirname(jsonFile)
+            with open(f'{selectedJsonDir}\\options.json', 'w') as f:
+                json.dump(fileOptions, f)
+            jsonFile = f'{selectedJsonDir}\\options.json'
+            if indexes:
+                allFiles = checkBoxListWindow.GetItems()
+                duplicateFiles = list(allFiles)
+                for index, file in enumerate(allFiles):
+                    currentFile.SetLabel(str(file))
+                    selectedDir = os.path.dirname(file)
+                    fName = os.path.basename(file)
+                    fNameNoExt = os.path.splitext(fName)[0]
+                    if not os.path.exists((f"{selectedDir}\\mkvmerge_old")):
+                        os.makedirs((f"{selectedDir}\\mkvmerge_old"))
+                    mkvmerge_old = (f"{selectedDir}\mkvmerge_old\{fName}")
+                    shutil.move(file, mkvmerge_old)
+                    mkvCommand = f"\"{mkvMerge}\" @{jsonFile} -o \"{selectedDir}\\{fNameNoExt}.mkv\" \"{selectedDir}\\mkvmerge_old\\{fName}\""
+                    presentage = int(100*(index+1)/indexes)
+                    print(presentage)
+                    pBar.SetValue((presentage))
+                    runCommand(mkvCommand)
+                    duplicateFiles.remove(duplicateFiles[0])
+                    checkBoxListWindow.Set(duplicateFiles)
+                currentFile.SetLabel("")
+        
 class MyFileDropTarget(wx.FileDropTarget):
     def __init__(self, window):
         super().__init__()
@@ -274,3 +346,4 @@ frame = MyFrame1(None)
 
 frame.Show(True)
 app.MainLoop()
+
