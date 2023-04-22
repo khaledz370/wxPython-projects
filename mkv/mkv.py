@@ -166,7 +166,7 @@ class MyFrame1 ( wx.Frame ):
 		self.tomkv.SetSizer( bSizer4 )
 		self.tomkv.Layout()
 		bSizer4.Fit( self.tomkv )
-		self.m_notebook30.AddPage( self.tomkv, u"to mkv", True )
+		self.m_notebook30.AddPage( self.tomkv, u"to mkv", False )
 		self.toAudio = wx.Panel( self.m_notebook30, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.TAB_TRAVERSAL )
 		bSizer41 = wx.BoxSizer( wx.VERTICAL )
 
@@ -363,32 +363,32 @@ class MyFrame1 ( wx.Frame ):
 
 		bSizer46.Add( self.m_staticText15, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
 
-		self.m_textCtrl2 = wx.TextCtrl( self.crop, cTop, u"0", wx.DefaultPosition, wx.DefaultSize, 0 )
-		bSizer46.Add( self.m_textCtrl2, 1, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
+		self.m_spinCtrl4 = wx.SpinCtrl( self.crop, cTop, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, wx.ALIGN_RIGHT|wx.SP_ARROW_KEYS, 0, 2000, 0 )
+		bSizer46.Add( self.m_spinCtrl4, 1, wx.ALL, 5 )
 
 		self.m_staticText16 = wx.StaticText( self.crop, wx.ID_ANY, u"Right", wx.DefaultPosition, wx.DefaultSize, 0 )
 		self.m_staticText16.Wrap( -1 )
 
 		bSizer46.Add( self.m_staticText16, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
 
-		self.m_textCtrl3 = wx.TextCtrl( self.crop, cRight, u"0", wx.DefaultPosition, wx.DefaultSize, 0 )
-		bSizer46.Add( self.m_textCtrl3, 1, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
+		self.m_spinCtrl3 = wx.SpinCtrl( self.crop, cRight, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, wx.ALIGN_RIGHT|wx.SP_ARROW_KEYS, 0, 2000, 0 )
+		bSizer46.Add( self.m_spinCtrl3, 1, wx.ALL, 5 )
 
 		self.m_staticText17 = wx.StaticText( self.crop, wx.ID_ANY, u"Bottom", wx.DefaultPosition, wx.DefaultSize, 0 )
 		self.m_staticText17.Wrap( -1 )
 
 		bSizer46.Add( self.m_staticText17, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
 
-		self.m_textCtrl4 = wx.TextCtrl( self.crop, cBottom, u"0", wx.DefaultPosition, wx.DefaultSize, 0 )
-		bSizer46.Add( self.m_textCtrl4, 1, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
+		self.m_spinCtrl2 = wx.SpinCtrl( self.crop, cBottom, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, wx.ALIGN_RIGHT|wx.SP_ARROW_KEYS, 0, 2000, 0 )
+		bSizer46.Add( self.m_spinCtrl2, 1, wx.ALL, 5 )
 
 		self.m_staticText18 = wx.StaticText( self.crop, wx.ID_ANY, u"Left", wx.DefaultPosition, wx.DefaultSize, 0 )
 		self.m_staticText18.Wrap( -1 )
 
 		bSizer46.Add( self.m_staticText18, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
 
-		self.m_textCtrl5 = wx.TextCtrl( self.crop, cLeft, u"0", wx.DefaultPosition, wx.DefaultSize, 0 )
-		bSizer46.Add( self.m_textCtrl5, 1, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
+		self.m_spinCtrl1 = wx.SpinCtrl( self.crop, cLeft, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, wx.ALIGN_RIGHT|wx.SP_ARROW_KEYS, 0, 2000, 0 )
+		bSizer46.Add( self.m_spinCtrl1, 1, wx.ALL, 5 )
 
 
 		bSizer1111.Add( bSizer46, 0, wx.EXPAND, 5 )
@@ -421,7 +421,7 @@ class MyFrame1 ( wx.Frame ):
 		self.crop.SetSizer( bSizer411 )
 		self.crop.Layout()
 		bSizer411.Fit( self.crop )
-		self.m_notebook30.AddPage( self.crop, u"crop", False )
+		self.m_notebook30.AddPage( self.crop, u"crop", True )
 		self.mkvOptions = wx.Panel( self.m_notebook30, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.TAB_TRAVERSAL )
 		bSizer4111 = wx.BoxSizer( wx.VERTICAL )
 
