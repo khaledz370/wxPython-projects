@@ -737,6 +737,7 @@ class MyFrame1 ( wx.Frame ):
                     fName = os.path.basename(file)
                     fNameNoExt = os.path.splitext(fName)[0]
                     fNameExt = os.path.splitext(fName)[1]
+                    print(fNameExt)
                     if not str(fNameExt).lower() ==".mkv":
                         if not os.path.exists((f"{selectedDir}\\mkvmerge_old")):
                             os.makedirs((f"{selectedDir}\\mkvmerge_old"))
@@ -746,10 +747,11 @@ class MyFrame1 ( wx.Frame ):
                         runCommand(mkvCommand)
 
                     if cTopValue + cBottomValue + cLeftValue + cRightValue:
-                        mkvCropCommand = f"\"{mkvpropedit}\" \"{selectedDir}\\{fNameNoExt}.mkv\" --edit track:v1 --set pixel-crop-top={int(cTopValue)} --set pixel-crop-left=   {int(cLeftValue)}  --set pixel-crop-right={int(cRightValue)} --set pixel-crop-bottom={int(cBottomValue)}"
+                        mkvCropCommand = f"\"{mkvpropedit}\" \"{selectedDir}\\{fNameNoExt}.mkv\" --edit track:v1 --set pixel-crop-top={int(cTopValue)} --set pixel-crop-left={int(cLeftValue)}  --set pixel-crop-right={int(cRightValue)} --set pixel-crop-bottom={int(cBottomValue)}"
                     else:
-                        mkvCropCommand = f"\"{mkvpropedit}\" \"{selectedDir}\\{fNameNoExt}.mkv\" --edit track:v1 --delete pixel-crop-top --delete pixel-crop-left  --delete     pixel-crop-right --delete pixel-crop-bottom"
+                        mkvCropCommand = f"\"{mkvpropedit}\" \"{selectedDir}\\{fNameNoExt}.mkv\" --edit track:v1 --delete pixel-crop-top --delete pixel-crop-left  --delete pixel-crop-right --delete pixel-crop-bottom"
 
+                    print(mkvCropCommand)
                     presentage = int(100*(index+1)/indexes)
                     pBar.SetValue((presentage))
                     runCommand(mkvCropCommand)
