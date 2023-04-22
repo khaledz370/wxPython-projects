@@ -835,14 +835,6 @@ def runCommand(cmd, timeout=None, window=None):
         cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT,encoding='utf-8'
     )
     output = ""
-    # for line in p.stdout:
-    #     line = line.decode(
-    #         errors="replace" if (sys.version_info) < (
-    #             3, 5) else "backslashreplace"
-    #     ).rstrip()
-    #     output += line
-    #     print(line)
-    #     window.Refresh() if window else None  # yes, a 1-line if, so shoot me
     retval = p.wait(timeout)
     return (retval, output)
 
@@ -864,7 +856,7 @@ frame = MyFrame1(None)
 wx.FindWindowById(tabContainer).SetSelection(0)
 frame.m_checkList1.SetDropTarget(MyFileDropTarget(frame.m_checkList1,"ToMkv"))
 frame.m_checkList12.SetDropTarget(MyFileDropTarget(frame.m_checkList12,"ToAudio"))
-frame.m_checkList121.SetDropTarget(MyFileDropTarget(frame.m_checkList121,"Corp"))
+frame.m_checkList121.SetDropTarget(MyFileDropTarget(frame.m_checkList121,"Crop"))
 frame.m_checkList1211.SetDropTarget(MyFileDropTarget(frame.m_checkList1211,"Options"))
 frame.Show(True)
 app.MainLoop()
