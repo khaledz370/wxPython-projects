@@ -737,7 +737,6 @@ class MyFrame1 ( wx.Frame ):
                     fName = os.path.basename(file)
                     fNameNoExt = os.path.splitext(fName)[0]
                     fNameExt = os.path.splitext(fName)[1]
-                    print(fNameExt)
                     if not str(fNameExt).lower() ==".mkv":
                         if not os.path.exists((f"{selectedDir}\\mkvmerge_old")):
                             os.makedirs((f"{selectedDir}\\mkvmerge_old"))
@@ -751,7 +750,6 @@ class MyFrame1 ( wx.Frame ):
                     else:
                         mkvCropCommand = f"\"{mkvpropedit}\" \"{selectedDir}\\{fNameNoExt}.mkv\" --edit track:v1 --delete pixel-crop-top --delete pixel-crop-left  --delete pixel-crop-right --delete pixel-crop-bottom"
 
-                    print(mkvCropCommand)
                     presentage = int(100*(index+1)/indexes)
                     pBar.SetValue((presentage))
                     runCommand(mkvCropCommand)
