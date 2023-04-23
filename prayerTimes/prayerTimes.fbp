@@ -48,7 +48,7 @@
             <property name="minimum_size"></property>
             <property name="name">MyDialog1</property>
             <property name="pos"></property>
-            <property name="size">464,316</property>
+            <property name="size">346,298</property>
             <property name="style"></property>
             <property name="subclass">; ; forward_declare</property>
             <property name="title"></property>

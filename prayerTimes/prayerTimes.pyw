@@ -9,8 +9,6 @@
 
 import wx
 import wx.xrc
-from wx.adv import TaskBarIcon
-
 
 fajrTime = 1000
 dhuhrTime = 1001
@@ -28,15 +26,15 @@ nextPrayerTime = 1007
 class MyDialog1 ( wx.Dialog ):
 
     def __init__( self, parent ):
-        wx.Dialog.__init__ ( self, parent, id = wx.ID_ANY, title = wx.EmptyString, pos = wx.DefaultPosition, size = wx.Size( 464,316 ) )
-        self.taskbar_icon = MyTaskBarIcon(self)
-
+        wx.Dialog.__init__ ( self, parent, id = wx.ID_ANY, title = wx.EmptyString, pos = wx.DefaultPosition, size = wx.Size( 346,298 ), style = 0 )
         self.SetSizeHints( wx.DefaultSize, wx.DefaultSize )
+        self.SetFont(wx.Font(16, wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL))
 
         bSizer1 = wx.BoxSizer( wx.VERTICAL )
 
         self.m_staticText1 = wx.StaticText( self, wx.ID_ANY, u"Prayer times", wx.DefaultPosition, wx.DefaultSize, 0 )
         self.m_staticText1.Wrap( -1 )
+        
 
         bSizer1.Add( self.m_staticText1, 0, wx.ALL|wx.ALIGN_CENTER_HORIZONTAL, 5 )
 
@@ -48,6 +46,7 @@ class MyDialog1 ( wx.Dialog ):
 
         self.m_staticText3 = wx.StaticText( self, wx.ID_ANY, u"Fajr", wx.DefaultPosition, wx.DefaultSize, 0 )
         self.m_staticText3.Wrap( -1 )
+        # self.m_staticText3.SetFont(20)
 
         bSizer3.Add( self.m_staticText3, 1, wx.ALL, 5 )
 
@@ -160,75 +159,12 @@ class MyDialog1 ( wx.Dialog ):
         self.Layout()
 
         self.Centre( wx.BOTH )
+
     def __del__( self ):
         pass
-    
-    # Make the frame draggable
-        self.Bind(wx.EVT_LEFT_DOWN, self.on_left_down)
-        self.Bind(wx.EVT_LEFT_UP, self.on_left_up)
-        self.Bind(wx.EVT_MOTION, self.on_move)
-
-    def on_left_down(self, event):
-        # Save the window position and the mouse position
-        self.CaptureMouse()
-        position = self.GetPosition()
-        mouse_position = wx.GetMousePosition()
-        self.delta_x = mouse_position.x - position.x
-        self.delta_y = mouse_position.y - position.y
-
-    def on_left_up(self, event):
-        # Release the mouse
-        if self.HasCapture():
-            self.ReleaseMouse()
-
-    def on_move(self, event):
-        # Move the window by the mouse delta
-        if event.Dragging() and event.LeftIsDown():
-            mouse_position = wx.GetMousePosition()
-            new_position = (mouse_position.x - self.delta_x, mouse_position.y - self.delta_y)
-            self.Move(new_position)
-
-
-class MyTaskBarIcon(TaskBarIcon):
-     def __init__(self, frame):
-         TaskBarIcon.__init__(self)
- 
-         self.frame = frame
- 
-        #  self.SetIcon(wx.Icon('../icon.ico', wx.BITMAP_TYPE_PNG), 'Task bar icon')
- 
-         #------------
-         
-         self.Bind(wx.EVT_MENU, self.OnTaskBarActivate, id=1)
-         self.Bind(wx.EVT_MENU, self.OnTaskBarDeactivate, id=2)
-         self.Bind(wx.EVT_MENU, self.OnTaskBarClose, id=3)
- 
-     #-----------------------------------------------------------------------
-         
-     def CreatePopupMenu(self):
-         menu = wx.Menu()
-         menu.Append(1, 'Show')
-         menu.Append(2, 'Hide')
-         menu.Append(3, 'Close')
- 
-         return menu
- 
- 
-     def OnTaskBarClose(self, event):
-         self.frame.Close()
- 
- 
-     def OnTaskBarActivate(self, event):
-         if not self.dialog.IsShown():
-             self.frame.Show()
- 
- 
-     def OnTaskBarDeactivate(self, event):
-         if self.frame.IsShown():
-             self.frame.Hide()
 
 wx.SizerFlags.DisableConsistencyChecks()
-app = wx.App(False) 
-frame = MyDialog1(None) 
-frame.Show(True) 
-app.MainLoop() 
+app = wx.App()
+frame = MyDialog1(None)
+frame.Show()
+app.MainLoop()
