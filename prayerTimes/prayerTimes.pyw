@@ -22,14 +22,19 @@ from tendo import singleton
 
 me = singleton.SingleInstance()
 
-fajrTime = 1000
-dhuhrTime = 1001
-asrTime = 1002
-maghribTime = 1003
-ishaTime = 1004
-todayDate = 1005
-nextPrayerName = 1006
-nextPrayerTime = 1007
+fajrLabel = 1000
+dhuhrLabel = 1001
+asrLabel = 1002
+maghribLabel = 1003
+ishaLabel = 1004
+fajrTime = 1005
+dhuhrTime = 1006
+asrTime = 1007
+maghribTime = 1008
+ishaTime = 1009
+todayDate = 1010
+nextPrayerName = 1011
+nextPrayerTime = 1012
 
 prayersList = ["fajr", "dhuhr", "asr", "maghrib", "isha"]
 methods = ["MWL", "ISNA", "Egypt", "Makkah", "Karachi", "Tehran", "Jafari"]
@@ -61,12 +66,12 @@ except:
 
 try:
     settings = json.load(file)
-    print('load settings from config')
+    # print('load settings from config')
 except:
     settings = defaultSettings
     with open(appdataFile, 'w') as file:
         json.dump(defaultSettings, file)
-    print("Load default settings")    
+    # print("Load default settings")    
 
 ###########################################################################
 ## Class MyDialog1
@@ -96,38 +101,43 @@ class MyDialog1 ( wx.Dialog ):
 
         bSizer3 = wx.BoxSizer( wx.VERTICAL )
 
-        self.m_staticText3 = wx.StaticText( self, wx.ID_ANY, u"Fajr", wx.DefaultPosition, wx.DefaultSize, 0 )
+        self.m_staticText3 = wx.StaticText( self, fajrLabel, u"Fajr", wx.DefaultPosition, wx.DefaultSize, 0 )
         self.m_staticText3.Wrap( -1 )
 
         self.m_staticText3.SetFont( wx.Font( 16, wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False, wx.EmptyString ) )
+        self.m_staticText3.SetForegroundColour( wx.SystemSettings.GetColour( wx.SYS_COLOUR_BACKGROUND ) )
 
         bSizer3.Add( self.m_staticText3, 1, wx.ALL, 10 )
 
-        self.m_staticText4 = wx.StaticText( self, wx.ID_ANY, u"Dhuhr", wx.DefaultPosition, wx.DefaultSize, 0 )
+        self.m_staticText4 = wx.StaticText( self, dhuhrLabel, u"Dhuhr", wx.DefaultPosition, wx.DefaultSize, 0 )
         self.m_staticText4.Wrap( -1 )
 
         self.m_staticText4.SetFont( wx.Font( 16, wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False, wx.EmptyString ) )
+        self.m_staticText4.SetForegroundColour( wx.SystemSettings.GetColour( wx.SYS_COLOUR_BACKGROUND ) )
 
         bSizer3.Add( self.m_staticText4, 1, wx.ALL, 10 )
 
-        self.m_staticText5 = wx.StaticText( self, wx.ID_ANY, u"Asr", wx.DefaultPosition, wx.DefaultSize, 0 )
+        self.m_staticText5 = wx.StaticText( self, asrLabel, u"Asr", wx.DefaultPosition, wx.DefaultSize, 0 )
         self.m_staticText5.Wrap( -1 )
 
         self.m_staticText5.SetFont( wx.Font( 16, wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False, wx.EmptyString ) )
+        self.m_staticText5.SetForegroundColour( wx.SystemSettings.GetColour( wx.SYS_COLOUR_BACKGROUND ) )
 
         bSizer3.Add( self.m_staticText5, 1, wx.ALL, 10 )
 
-        self.m_staticText6 = wx.StaticText( self, wx.ID_ANY, u"Maghrib", wx.DefaultPosition, wx.DefaultSize, 0 )
+        self.m_staticText6 = wx.StaticText( self, maghribLabel, u"Maghrib", wx.DefaultPosition, wx.DefaultSize, 0 )
         self.m_staticText6.Wrap( -1 )
 
         self.m_staticText6.SetFont( wx.Font( 16, wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False, wx.EmptyString ) )
+        self.m_staticText6.SetForegroundColour( wx.SystemSettings.GetColour( wx.SYS_COLOUR_BACKGROUND ) )
 
         bSizer3.Add( self.m_staticText6, 1, wx.ALL, 10 )
 
-        self.m_staticText7 = wx.StaticText( self, wx.ID_ANY, u"Isha", wx.DefaultPosition, wx.DefaultSize, 0 )
+        self.m_staticText7 = wx.StaticText( self, ishaLabel, u"Isha", wx.DefaultPosition, wx.DefaultSize, 0 )
         self.m_staticText7.Wrap( -1 )
 
         self.m_staticText7.SetFont( wx.Font( 16, wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False, wx.EmptyString ) )
+        self.m_staticText7.SetForegroundColour( wx.SystemSettings.GetColour( wx.SYS_COLOUR_BACKGROUND ) )
 
         bSizer3.Add( self.m_staticText7, 1, wx.ALL, 10 )
 
@@ -140,6 +150,7 @@ class MyDialog1 ( wx.Dialog ):
         self.m_staticText14.Wrap( -1 )
 
         self.m_staticText14.SetFont( wx.Font( 16, wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False, wx.EmptyString ) )
+        self.m_staticText14.SetForegroundColour( wx.SystemSettings.GetColour( wx.SYS_COLOUR_BACKGROUND ) )
 
         bSizer5.Add( self.m_staticText14, 1, wx.ALL|wx.ALIGN_CENTER_HORIZONTAL, 10 )
 
@@ -147,6 +158,7 @@ class MyDialog1 ( wx.Dialog ):
         self.m_staticText141.Wrap( -1 )
 
         self.m_staticText141.SetFont( wx.Font( 16, wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False, wx.EmptyString ) )
+        self.m_staticText141.SetForegroundColour( wx.SystemSettings.GetColour( wx.SYS_COLOUR_BACKGROUND ) )
 
         bSizer5.Add( self.m_staticText141, 1, wx.ALL|wx.ALIGN_CENTER_HORIZONTAL, 10 )
 
@@ -154,6 +166,7 @@ class MyDialog1 ( wx.Dialog ):
         self.m_staticText142.Wrap( -1 )
 
         self.m_staticText142.SetFont( wx.Font( 16, wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False, wx.EmptyString ) )
+        self.m_staticText142.SetForegroundColour( wx.SystemSettings.GetColour( wx.SYS_COLOUR_BACKGROUND ) )
 
         bSizer5.Add( self.m_staticText142, 1, wx.ALL|wx.ALIGN_CENTER_HORIZONTAL, 10 )
 
@@ -161,6 +174,7 @@ class MyDialog1 ( wx.Dialog ):
         self.m_staticText144.Wrap( -1 )
 
         self.m_staticText144.SetFont( wx.Font( 16, wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False, wx.EmptyString ) )
+        self.m_staticText144.SetForegroundColour( wx.SystemSettings.GetColour( wx.SYS_COLOUR_BACKGROUND ) )
 
         bSizer5.Add( self.m_staticText144, 1, wx.ALL|wx.ALIGN_CENTER_HORIZONTAL, 10 )
 
@@ -168,6 +182,7 @@ class MyDialog1 ( wx.Dialog ):
         self.m_staticText143.Wrap( -1 )
 
         self.m_staticText143.SetFont( wx.Font( 16, wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False, wx.EmptyString ) )
+        self.m_staticText143.SetForegroundColour( wx.SystemSettings.GetColour( wx.SYS_COLOUR_BACKGROUND ) )
 
         bSizer5.Add( self.m_staticText143, 1, wx.ALL|wx.ALIGN_CENTER_HORIZONTAL, 10 )
 
@@ -198,8 +213,10 @@ class MyDialog1 ( wx.Dialog ):
         self.m_staticText11.Wrap( -1 )
 
         self.m_staticText11.SetFont( wx.Font( 16, wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False, wx.EmptyString ) )
+        self.m_staticText11.SetForegroundColour( wx.Colour( 255, 0, 0 ) )
+        self.m_staticText11.SetMinSize( wx.Size( 100,-1 ) )
 
-        bSizer71.Add( self.m_staticText11, 0, wx.ALL, 5 )
+        bSizer71.Add( self.m_staticText11, 1, wx.ALL|wx.EXPAND, 5 )
 
         self.m_staticText101 = wx.StaticText( self.m_panel3, wx.ID_ANY, u"after", wx.DefaultPosition, wx.DefaultSize, wx.ALIGN_CENTER_HORIZONTAL )
         self.m_staticText101.Wrap( -1 )
@@ -238,8 +255,9 @@ class MyDialog1 ( wx.Dialog ):
         self.Layout()
 
         self.Centre( wx.BOTH )
+
         
-        self.SetTransparent(150)
+        self.SetTransparent(500)
         # Make the frame draggable
         self.Bind(wx.EVT_LEFT_DOWN, self.on_left_down)
         self.Bind(wx.EVT_LEFT_UP, self.on_left_up)
@@ -348,9 +366,10 @@ def calcNextPrayer(prayer,index):
     return timeLeft
 
 class MyTaskBarIcon(TaskBarIcon):
-    def __init__(self, frame):
+    def __init__(self, frame,app):
         TaskBarIcon.__init__(self)
         self.frame = frame
+        self.app = app
         self.timer = wx.Timer(self)
         self.Bind(wx.EVT_TIMER, self.OnUpdateIcon)
         self.timer.Start(1000) # update every second
@@ -379,15 +398,8 @@ class MyTaskBarIcon(TaskBarIcon):
         self.RemoveIcon()
         # Close any open windows
         self.frame.Close(True)
-        # Schedule the release of resources and exit of main loop on the event loop
-        wx.CallAfter(self.ReleaseResources)
-
-    def ReleaseResources(self):
-        # Release resources associated with the wx.App object
-        wx.GetApp().ExitMainLoop()
-        wx.GetApp().Destroy()
-        # Exit the Python interpreter (optional)
-        sys.exit()
+        self.app.ExitMainLoop()
+        self.app.Destroy()
              
     def OnUpdateIcon(self, event):
         # update the tooltip text with current time
@@ -418,19 +430,46 @@ def calcPrayerTimes():
             maghrib = formatPrayerDate(pTimes["maghrib"])
             isha = formatPrayerDate(pTimes["isha"])
             nextprayer = prayersList[nexPrayerIndex]
-            fajrCtrl =  wx.FindWindowById(fajrTime)
-            dhuhrCtrl =  wx.FindWindowById(dhuhrTime)
-            asrCtrl =  wx.FindWindowById(asrTime)
-            maghribCtrl =  wx.FindWindowById(maghribTime)
-            ishaCtrl =  wx.FindWindowById(ishaTime)
-            TimeCtrl =  wx.FindWindowById(todayDate)
-            nextPrayerText =  wx.FindWindowById(nextPrayerName)
-            nextPrayerLeft =  wx.FindWindowById(nextPrayerTime)
+            TimeCtrl = wx.FindWindowById(todayDate)
+            nextPrayerText = wx.FindWindowById(nextPrayerName)
+            nextPrayerLeft = wx.FindWindowById(nextPrayerTime)
+            # prayer labels
+            fajrLbl = wx.FindWindowById(fajrLabel)
+            dhuhrLbl = wx.FindWindowById(dhuhrLabel)
+            asrLbl = wx.FindWindowById(asrLabel)
+            maghribLbl = wx.FindWindowById(maghribLabel)
+            ishaLbl = wx.FindWindowById(ishaLabel)
+            # prayer times
+            fajrCtrl = wx.FindWindowById(fajrTime)
+            dhuhrCtrl = wx.FindWindowById(dhuhrTime)
+            asrCtrl = wx.FindWindowById(asrTime)
+            maghribCtrl = wx.FindWindowById(maghribTime)
+            ishaCtrl = wx.FindWindowById(ishaTime)
+            # setColor
+            fajrLbl.SetForegroundColour(wx.Colour(255,0,0) if nexPrayerIndex == 0 else wx.BLACK)
+            dhuhrLbl.SetForegroundColour(wx.Colour(255,0,0) if nexPrayerIndex == 1 else wx.BLACK)
+            asrLbl.SetForegroundColour(wx.Colour(255,0,0) if nexPrayerIndex == 2 else wx.BLACK)
+            maghribLbl.SetForegroundColour(wx.Colour(255,0,0) if nexPrayerIndex == 3 else wx.BLACK)
+            ishaLbl.SetForegroundColour(wx.Colour(255,0,0) if nexPrayerIndex == 4 else wx.BLACK)
+            # set label color
+            fajrCtrl.SetForegroundColour(fajrLbl.GetForegroundColour())
+            dhuhrCtrl.SetForegroundColour(dhuhrLbl.GetForegroundColour())
+            asrCtrl.SetForegroundColour(asrLbl.GetForegroundColour())
+            maghribCtrl.SetForegroundColour(maghribLbl.GetForegroundColour())
+            ishaCtrl.SetForegroundColour(ishaLbl.GetForegroundColour())                  
+            # setLabel
             fajrCtrl.SetLabel(fajr)
             dhuhrCtrl.SetLabel(dhuhr)
             asrCtrl.SetLabel(asr)
             maghribCtrl.SetLabel(maghrib)
             ishaCtrl.SetLabel(isha)
+            
+            # fajrLbl.SetLabel("Fajr")
+            # dhuhrLbl.SetLabel("Dhuhr")
+            # asrLbl.SetLabel("Asr")
+            # maghribLbl.SetLabel("Maghrib")
+            # ishaLbl.SetLabel("Isha")
+            
             TimeCtrl.SetLabel(str((now.strftime("%d-%m-%Y, %I:%M:%S %p"))))
             leftTilNextPrayer = (calcNextPrayer(pTimes[prayersList[nexPrayerIndex]],nexPrayerIndex))
             nextPrayerText.SetLabel(f"{nextprayer}")
@@ -446,5 +485,5 @@ if __name__ == '__main__':
     app = wx.App(False) 
     frame = MyDialog1(None) 
     frame.Show(True) 
-    MyTaskBarIcon(frame)
+    MyTaskBarIcon(frame,app)
     app.MainLoop() 

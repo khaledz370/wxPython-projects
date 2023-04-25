@@ -10,14 +10,19 @@
 import wx
 import wx.xrc
 
-fajrTime = 1000
-dhuhrTime = 1001
-asrTime = 1002
-maghribTime = 1003
-ishaTime = 1004
-todayDate = 1005
-nextPrayerName = 1006
-nextPrayerTime = 1007
+fajrLabel = 1000
+dhuhrLabel = 1001
+asrLabel = 1002
+maghribLabel = 1003
+ishaLabel = 1004
+fajrTime = 1005
+dhuhrTime = 1006
+asrTime = 1007
+maghribTime = 1008
+ishaTime = 1009
+todayDate = 1010
+nextPrayerName = 1011
+nextPrayerTime = 1012
 
 ###########################################################################
 ## Class MyDialog1
@@ -47,38 +52,43 @@ class MyDialog1 ( wx.Dialog ):
 
 		bSizer3 = wx.BoxSizer( wx.VERTICAL )
 
-		self.m_staticText3 = wx.StaticText( self, wx.ID_ANY, u"Fajr", wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.m_staticText3 = wx.StaticText( self, fajrLabel, u"Fajr", wx.DefaultPosition, wx.DefaultSize, 0 )
 		self.m_staticText3.Wrap( -1 )
 
 		self.m_staticText3.SetFont( wx.Font( 16, wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False, wx.EmptyString ) )
+		self.m_staticText3.SetForegroundColour( wx.SystemSettings.GetColour( wx.SYS_COLOUR_BACKGROUND ) )
 
 		bSizer3.Add( self.m_staticText3, 1, wx.ALL, 10 )
 
-		self.m_staticText4 = wx.StaticText( self, wx.ID_ANY, u"Dhuhr", wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.m_staticText4 = wx.StaticText( self, dhuhrLabel, u"Dhuhr", wx.DefaultPosition, wx.DefaultSize, 0 )
 		self.m_staticText4.Wrap( -1 )
 
 		self.m_staticText4.SetFont( wx.Font( 16, wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False, wx.EmptyString ) )
+		self.m_staticText4.SetForegroundColour( wx.SystemSettings.GetColour( wx.SYS_COLOUR_BACKGROUND ) )
 
 		bSizer3.Add( self.m_staticText4, 1, wx.ALL, 10 )
 
-		self.m_staticText5 = wx.StaticText( self, wx.ID_ANY, u"Asr", wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.m_staticText5 = wx.StaticText( self, asrLabel, u"Asr", wx.DefaultPosition, wx.DefaultSize, 0 )
 		self.m_staticText5.Wrap( -1 )
 
 		self.m_staticText5.SetFont( wx.Font( 16, wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False, wx.EmptyString ) )
+		self.m_staticText5.SetForegroundColour( wx.SystemSettings.GetColour( wx.SYS_COLOUR_BACKGROUND ) )
 
 		bSizer3.Add( self.m_staticText5, 1, wx.ALL, 10 )
 
-		self.m_staticText6 = wx.StaticText( self, wx.ID_ANY, u"Maghrib", wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.m_staticText6 = wx.StaticText( self, maghribLabel, u"Maghrib", wx.DefaultPosition, wx.DefaultSize, 0 )
 		self.m_staticText6.Wrap( -1 )
 
 		self.m_staticText6.SetFont( wx.Font( 16, wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False, wx.EmptyString ) )
+		self.m_staticText6.SetForegroundColour( wx.SystemSettings.GetColour( wx.SYS_COLOUR_BACKGROUND ) )
 
 		bSizer3.Add( self.m_staticText6, 1, wx.ALL, 10 )
 
-		self.m_staticText7 = wx.StaticText( self, wx.ID_ANY, u"Isha", wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.m_staticText7 = wx.StaticText( self, ishaLabel, u"Isha", wx.DefaultPosition, wx.DefaultSize, 0 )
 		self.m_staticText7.Wrap( -1 )
 
 		self.m_staticText7.SetFont( wx.Font( 16, wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False, wx.EmptyString ) )
+		self.m_staticText7.SetForegroundColour( wx.SystemSettings.GetColour( wx.SYS_COLOUR_BACKGROUND ) )
 
 		bSizer3.Add( self.m_staticText7, 1, wx.ALL, 10 )
 
@@ -91,6 +101,7 @@ class MyDialog1 ( wx.Dialog ):
 		self.m_staticText14.Wrap( -1 )
 
 		self.m_staticText14.SetFont( wx.Font( 16, wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False, wx.EmptyString ) )
+		self.m_staticText14.SetForegroundColour( wx.SystemSettings.GetColour( wx.SYS_COLOUR_BACKGROUND ) )
 
 		bSizer5.Add( self.m_staticText14, 1, wx.ALL|wx.ALIGN_CENTER_HORIZONTAL, 10 )
 
@@ -98,6 +109,7 @@ class MyDialog1 ( wx.Dialog ):
 		self.m_staticText141.Wrap( -1 )
 
 		self.m_staticText141.SetFont( wx.Font( 16, wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False, wx.EmptyString ) )
+		self.m_staticText141.SetForegroundColour( wx.SystemSettings.GetColour( wx.SYS_COLOUR_BACKGROUND ) )
 
 		bSizer5.Add( self.m_staticText141, 1, wx.ALL|wx.ALIGN_CENTER_HORIZONTAL, 10 )
 
@@ -105,6 +117,7 @@ class MyDialog1 ( wx.Dialog ):
 		self.m_staticText142.Wrap( -1 )
 
 		self.m_staticText142.SetFont( wx.Font( 16, wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False, wx.EmptyString ) )
+		self.m_staticText142.SetForegroundColour( wx.SystemSettings.GetColour( wx.SYS_COLOUR_BACKGROUND ) )
 
 		bSizer5.Add( self.m_staticText142, 1, wx.ALL|wx.ALIGN_CENTER_HORIZONTAL, 10 )
 
@@ -112,6 +125,7 @@ class MyDialog1 ( wx.Dialog ):
 		self.m_staticText144.Wrap( -1 )
 
 		self.m_staticText144.SetFont( wx.Font( 16, wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False, wx.EmptyString ) )
+		self.m_staticText144.SetForegroundColour( wx.SystemSettings.GetColour( wx.SYS_COLOUR_BACKGROUND ) )
 
 		bSizer5.Add( self.m_staticText144, 1, wx.ALL|wx.ALIGN_CENTER_HORIZONTAL, 10 )
 
@@ -119,6 +133,7 @@ class MyDialog1 ( wx.Dialog ):
 		self.m_staticText143.Wrap( -1 )
 
 		self.m_staticText143.SetFont( wx.Font( 16, wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False, wx.EmptyString ) )
+		self.m_staticText143.SetForegroundColour( wx.SystemSettings.GetColour( wx.SYS_COLOUR_BACKGROUND ) )
 
 		bSizer5.Add( self.m_staticText143, 1, wx.ALL|wx.ALIGN_CENTER_HORIZONTAL, 10 )
 
@@ -149,8 +164,10 @@ class MyDialog1 ( wx.Dialog ):
 		self.m_staticText11.Wrap( -1 )
 
 		self.m_staticText11.SetFont( wx.Font( 16, wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False, wx.EmptyString ) )
+		self.m_staticText11.SetForegroundColour( wx.Colour( 255, 0, 0 ) )
+		self.m_staticText11.SetMinSize( wx.Size( 100,-1 ) )
 
-		bSizer71.Add( self.m_staticText11, 0, wx.ALL, 5 )
+		bSizer71.Add( self.m_staticText11, 1, wx.ALL|wx.EXPAND, 5 )
 
 		self.m_staticText101 = wx.StaticText( self.m_panel3, wx.ID_ANY, u"after", wx.DefaultPosition, wx.DefaultSize, wx.ALIGN_CENTER_HORIZONTAL )
 		self.m_staticText101.Wrap( -1 )

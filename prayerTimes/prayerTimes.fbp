@@ -178,12 +178,12 @@
                                                 <property name="docking">Left</property>
                                                 <property name="drag_accept_files">0</property>
                                                 <property name="enabled">1</property>
-                                                <property name="fg"></property>
+                                                <property name="fg">wxSYS_COLOUR_BACKGROUND</property>
                                                 <property name="floatable">1</property>
                                                 <property name="font">,90,400,16,70,0</property>
                                                 <property name="gripper">0</property>
                                                 <property name="hidden">0</property>
-                                                <property name="id">wxID_ANY</property>
+                                                <property name="id">fajrLabel</property>
                                                 <property name="label">Fajr</property>
                                                 <property name="markup">0</property>
                                                 <property name="max_size"></property>
@@ -240,12 +240,12 @@
                                                 <property name="docking">Left</property>
                                                 <property name="drag_accept_files">0</property>
                                                 <property name="enabled">1</property>
-                                                <property name="fg"></property>
+                                                <property name="fg">wxSYS_COLOUR_BACKGROUND</property>
                                                 <property name="floatable">1</property>
                                                 <property name="font">,90,400,16,70,0</property>
                                                 <property name="gripper">0</property>
                                                 <property name="hidden">0</property>
-                                                <property name="id">wxID_ANY</property>
+                                                <property name="id">dhuhrLabel</property>
                                                 <property name="label">Dhuhr</property>
                                                 <property name="markup">0</property>
                                                 <property name="max_size"></property>
@@ -302,12 +302,12 @@
                                                 <property name="docking">Left</property>
                                                 <property name="drag_accept_files">0</property>
                                                 <property name="enabled">1</property>
-                                                <property name="fg"></property>
+                                                <property name="fg">wxSYS_COLOUR_BACKGROUND</property>
                                                 <property name="floatable">1</property>
                                                 <property name="font">,90,400,16,70,0</property>
                                                 <property name="gripper">0</property>
                                                 <property name="hidden">0</property>
-                                                <property name="id">wxID_ANY</property>
+                                                <property name="id">asrLabel</property>
                                                 <property name="label">Asr</property>
                                                 <property name="markup">0</property>
                                                 <property name="max_size"></property>
@@ -364,12 +364,12 @@
                                                 <property name="docking">Left</property>
                                                 <property name="drag_accept_files">0</property>
                                                 <property name="enabled">1</property>
-                                                <property name="fg"></property>
+                                                <property name="fg">wxSYS_COLOUR_BACKGROUND</property>
                                                 <property name="floatable">1</property>
                                                 <property name="font">,90,400,16,70,0</property>
                                                 <property name="gripper">0</property>
                                                 <property name="hidden">0</property>
-                                                <property name="id">wxID_ANY</property>
+                                                <property name="id">maghribLabel</property>
                                                 <property name="label">Maghrib</property>
                                                 <property name="markup">0</property>
                                                 <property name="max_size"></property>
@@ -426,12 +426,12 @@
                                                 <property name="docking">Left</property>
                                                 <property name="drag_accept_files">0</property>
                                                 <property name="enabled">1</property>
-                                                <property name="fg"></property>
+                                                <property name="fg">wxSYS_COLOUR_BACKGROUND</property>
                                                 <property name="floatable">1</property>
                                                 <property name="font">,90,400,16,70,0</property>
                                                 <property name="gripper">0</property>
                                                 <property name="hidden">0</property>
-                                                <property name="id">wxID_ANY</property>
+                                                <property name="id">ishaLabel</property>
                                                 <property name="label">Isha</property>
                                                 <property name="markup">0</property>
                                                 <property name="max_size"></property>
@@ -499,7 +499,7 @@
                                                 <property name="docking">Left</property>
                                                 <property name="drag_accept_files">0</property>
                                                 <property name="enabled">1</property>
-                                                <property name="fg"></property>
+                                                <property name="fg">wxSYS_COLOUR_BACKGROUND</property>
                                                 <property name="floatable">1</property>
                                                 <property name="font">,90,400,16,70,0</property>
                                                 <property name="gripper">0</property>
@@ -561,7 +561,7 @@
                                                 <property name="docking">Left</property>
                                                 <property name="drag_accept_files">0</property>
                                                 <property name="enabled">1</property>
-                                                <property name="fg"></property>
+                                                <property name="fg">wxSYS_COLOUR_BACKGROUND</property>
                                                 <property name="floatable">1</property>
                                                 <property name="font">,90,400,16,70,0</property>
                                                 <property name="gripper">0</property>
@@ -623,7 +623,7 @@
                                                 <property name="docking">Left</property>
                                                 <property name="drag_accept_files">0</property>
                                                 <property name="enabled">1</property>
-                                                <property name="fg"></property>
+                                                <property name="fg">wxSYS_COLOUR_BACKGROUND</property>
                                                 <property name="floatable">1</property>
                                                 <property name="font">,90,400,16,70,0</property>
                                                 <property name="gripper">0</property>
@@ -685,7 +685,7 @@
                                                 <property name="docking">Left</property>
                                                 <property name="drag_accept_files">0</property>
                                                 <property name="enabled">1</property>
-                                                <property name="fg"></property>
+                                                <property name="fg">wxSYS_COLOUR_BACKGROUND</property>
                                                 <property name="floatable">1</property>
                                                 <property name="font">,90,400,16,70,0</property>
                                                 <property name="gripper">0</property>
@@ -747,7 +747,7 @@
                                                 <property name="docking">Left</property>
                                                 <property name="drag_accept_files">0</property>
                                                 <property name="enabled">1</property>
-                                                <property name="fg"></property>
+                                                <property name="fg">wxSYS_COLOUR_BACKGROUND</property>
                                                 <property name="floatable">1</property>
                                                 <property name="font">,90,400,16,70,0</property>
                                                 <property name="gripper">0</property>
@@ -981,8 +981,8 @@
                                                         <property name="permission">none</property>
                                                         <object class="sizeritem" expanded="1">
                                                             <property name="border">5</property>
-                                                            <property name="flag">wxALL</property>
-                                                            <property name="proportion">0</property>
+                                                            <property name="flag">wxALL|wxEXPAND</property>
+                                                            <property name="proportion">1</property>
                                                             <object class="wxStaticText" expanded="1">
                                                                 <property name="BottomDockable">1</property>
                                                                 <property name="LeftDockable">1</property>
@@ -1006,7 +1006,7 @@
                                                                 <property name="docking">Left</property>
                                                                 <property name="drag_accept_files">0</property>
                                                                 <property name="enabled">1</property>
-                                                                <property name="fg"></property>
+                                                                <property name="fg">255,0,0</property>
                                                                 <property name="floatable">1</property>
                                                                 <property name="font">,90,400,16,70,0</property>
                                                                 <property name="gripper">0</property>
@@ -1019,7 +1019,7 @@
                                                                 <property name="maximum_size"></property>
                                                                 <property name="min_size"></property>
                                                                 <property name="minimize_button">0</property>
-                                                                <property name="minimum_size"></property>
+                                                                <property name="minimum_size">100,-1</property>
                                                                 <property name="moveable">1</property>
                                                                 <property name="name">m_staticText11</property>
                                                                 <property name="pane_border">1</property>

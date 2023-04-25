@@ -680,8 +680,6 @@ class MyFrame1 ( wx.Frame ):
                     # print(presentage)
                     pBar.SetValue((presentage))
                     runCommand(mkvCommand)
-                    duplicateFiles.remove(duplicateFiles[0])
-                    checkBoxListWindow.Set(duplicateFiles)
             currentFile.SetLabel("")
         except Exception as e:
             print(e)
@@ -707,8 +705,6 @@ class MyFrame1 ( wx.Frame ):
                     presentage = int(100*(index+1)/indexes)
                     pBar.SetValue((presentage))
                     runCommand(audioCommand)
-                    duplicateFiles.remove(duplicateFiles[0])
-                    checkBoxListWindow.Set(duplicateFiles)
             currentFile.SetLabel("")
         except Exception as e:
             print(e)
@@ -750,8 +746,6 @@ class MyFrame1 ( wx.Frame ):
                     presentage = int(100*(index+1)/indexes)
                     pBar.SetValue((presentage))
                     runCommand(mkvCropCommand)
-                    duplicateFiles.remove(duplicateFiles[0])
-                    checkBoxListWindow.Set(duplicateFiles)
             currentFile.SetLabel("")
         except Exception as e:
             print(e)
@@ -804,8 +798,6 @@ class MyFrame1 ( wx.Frame ):
                         # print(presentage)
                         pBar.SetValue((presentage))
                         runCommand(mkvCommand)
-                        duplicateFiles.remove(duplicateFiles[0])
-                        checkBoxListWindow.Set(duplicateFiles)
                     currentFile.SetLabel("")
         except Exception as e:
             print(e)
