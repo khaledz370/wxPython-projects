@@ -18,10 +18,19 @@ from psgtray import SystemTray
 from playsound import playsound
 import os
 import json
+import sys, traceback
 from tendo import singleton
 
-
-me = singleton.SingleInstance()
+try:
+    me = singleton.SingleInstance()  # this raises an exception if another instance is running
+except singleton.SingleInstanceException:
+    app = wx.App(False) 
+    msg = "Another instance is already running, quitting."
+    caption = "Already running!"
+    dlg = wx.MessageDialog(None , msg, caption, wx.OK)
+    dlg.ShowModal()
+    dlg.Destroy()
+    sys.exit(1)
 
 fajrLabel = 1000
 fajrTime = 1001
@@ -784,5 +793,6 @@ if __name__ == '__main__':
     if not settings["minimized"]:
         frame.Show(True) 
     MyTaskBarIcon(frame,app)
+    
     playsound(f'{mainDir}\\resources\\audio\\Bismillah.wav')
     app.MainLoop() 
