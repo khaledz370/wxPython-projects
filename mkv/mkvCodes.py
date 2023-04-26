@@ -347,3 +347,21 @@ frame = MyFrame1(None)
 frame.Show(True)
 app.MainLoop()
 
+
+
+class MyApp(wx.App, wx.lib.mixins.inspection.InspectionMixin):
+     def OnInit(self):
+         self.Init()
+         frame = MyDialog1(None)
+         MyTaskBarIcon(frame,self)
+         frame.Show()
+         self.SetTopWindow(frame)
+         return True
+ 
+def main():
+    wx.SizerFlags.DisableConsistencyChecks()
+    app = MyApp(redirect=False)
+    app.MainLoop()
+
+if __name__ == '__main__':
+    main()
