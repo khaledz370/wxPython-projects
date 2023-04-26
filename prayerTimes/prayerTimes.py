@@ -33,6 +33,7 @@ fajrValue = 1019
 maghribValue = 1020
 ishaValue = 1021
 minimized = 1022
+trValue = 1023
 
 ###########################################################################
 ## Class MyDialog1
@@ -112,13 +113,13 @@ class MyDialog1 ( wx.Dialog ):
 
 		asrt_row.Add( self.asr_text, 1, wx.ALL|wx.EXPAND, 10 )
 
-		self.asr_text = wx.StaticText( self, asrTime, u"00:00", wx.DefaultPosition, wx.DefaultSize, wx.ALIGN_RIGHT )
-		self.asr_text.Wrap( -1 )
+		self.asr_time = wx.StaticText( self, asrTime, u"00:00", wx.DefaultPosition, wx.DefaultSize, wx.ALIGN_RIGHT )
+		self.asr_time.Wrap( -1 )
 
-		self.asr_text.SetFont( wx.Font( 16, wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False, wx.EmptyString ) )
-		self.asr_text.SetForegroundColour( wx.SystemSettings.GetColour( wx.SYS_COLOUR_BACKGROUND ) )
+		self.asr_time.SetFont( wx.Font( 16, wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False, wx.EmptyString ) )
+		self.asr_time.SetForegroundColour( wx.SystemSettings.GetColour( wx.SYS_COLOUR_BACKGROUND ) )
 
-		asrt_row.Add( self.asr_text, 1, wx.ALL|wx.ALIGN_CENTER_HORIZONTAL|wx.EXPAND, 10 )
+		asrt_row.Add( self.asr_time, 1, wx.ALL|wx.ALIGN_CENTER_HORIZONTAL|wx.EXPAND, 10 )
 
 
 		bSizer8.Add( asrt_row, 1, wx.EXPAND|wx.RIGHT|wx.LEFT, 20 )
@@ -377,6 +378,14 @@ class Settings ( wx.Frame ):
 		self.m_checkBox1 = wx.CheckBox( self, minimized, u"hide on start", wx.DefaultPosition, wx.DefaultSize, 0 )
 		self.m_checkBox1.SetValue(True)
 		bSizer155.Add( self.m_checkBox1, 1, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
+
+		self.m_staticText29 = wx.StaticText( self, wx.ID_ANY, u"Transparency", wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.m_staticText29.Wrap( -1 )
+
+		bSizer155.Add( self.m_staticText29, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
+
+		self.m_spinCtrl3 = wx.SpinCtrl( self, trValue, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, wx.SP_ARROW_KEYS, 0, 500, 300 )
+		bSizer155.Add( self.m_spinCtrl3, 1, wx.ALL|wx.EXPAND, 5 )
 
 
 		bSizer14.Add( bSizer155, 1, wx.ALIGN_CENTER_HORIZONTAL|wx.EXPAND, 5 )
