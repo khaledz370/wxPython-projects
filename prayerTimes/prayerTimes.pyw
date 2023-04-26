@@ -60,7 +60,7 @@ fontsize = 15
 font = ("Arial", fontsize)
 appSize = (340, 320)
 defaultSettings = {'lat': 29.9, 'long': 31.2, 'timeZone': 2, 'method': 'Egypt', 'fajr': 19.5, 'dhuhr': 0,
-                   'asr': 'Standard', 'maghrib': 1, 'isha': 17.5, 'minimized': 1, "trValue": 300}
+                   'asr': 'Standard', 'maghrib': 1, 'isha': 17.5, 'minimized': 1, "trValue": 400}
 appdataFolder = f"{os.getenv('APPDATA')}\prayerTimes"
 appdataFile = f"{appdataFolder}\config.json"
 appdataFolder = f"{os.getenv('APPDATA')}\prayerTimes"
