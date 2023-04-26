@@ -17,7 +17,6 @@ from datetime import datetime, timedelta
 from psgtray import SystemTray
 from playsound import playsound
 import os
-import sys
 import json
 from tendo import singleton
 
