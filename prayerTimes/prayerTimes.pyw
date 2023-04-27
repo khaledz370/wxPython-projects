@@ -53,8 +53,9 @@ dhuhrValue = 1018
 fajrValue = 1019
 maghribValue = 1020
 ishaValue = 1021
-minimized = 1022
-trValue = 1023
+trValue = 1022
+daylightSavingValue = 1023
+minimized = 1024
 
 prayersList = ["fajr", "dhuhr", "asr", "maghrib", "isha"]
 methods = ["MWL", "ISNA", "Egypt", "Makkah", "Karachi", "Tehran", "Jafari"]
@@ -68,7 +69,7 @@ fontsize = 15
 font = ("Arial", fontsize)
 appSize = (340, 320)
 defaultSettings = {'lat': 29.9, 'long': 31.2, 'timeZone': 2, 'method': 'Egypt', 'fajr': 19.5, 'dhuhr': 0,
-                   'asr': 'Standard', 'maghrib': 1, 'isha': 17.5, 'minimized': 1, "trValue": 400}
+                   'asr': 'Standard', 'maghrib': 1, 'isha': 17.5, 'minimized': 1, "trValue": 100, "daylightSaving": 1}
 appdataFolder = f"{os.getenv('APPDATA')}\prayerTimes"
 appdataFile = f"{appdataFolder}\config.json"
 appdataFolder = f"{os.getenv('APPDATA')}\prayerTimes"
@@ -92,13 +93,15 @@ except:
 
 try:
     settings = json.load(file)
+    if len(settings) != len(defaultSettings):
+        raise Exception("settings are incorrect")
     # print('load settings from config')
-except:
+except Exception as e:
     settings = defaultSettings
     with open(appdataFile, 'w') as file:
         json.dump(defaultSettings, file)
-    # print("Load default settings")    
-
+    # print("Load default settings") 
+        
 ###########################################################################
 ## Class MyDialog1
 ###########################################################################
@@ -296,7 +299,7 @@ class MyDialog1 ( wx.Dialog ):
 
         self.Centre( wx.BOTH )
         
-        self.SetTransparent(settings['trValue'])
+        self.SetTransparent(int(settings['trValue']*2.25))
         self.SetIcon(wx.Icon(appIcon, wx.BITMAP_TYPE_PNG))
         # Make the frame draggable
         self.Bind(wx.EVT_LEFT_DOWN, self.on_left_down)
@@ -474,20 +477,24 @@ class Settings ( wx.Frame ):
 
 
         bSizer14.Add( bSizer153, 1, wx.EXPAND, 5 )
-
-        bSizer155 = wx.BoxSizer( wx.HORIZONTAL )
         
-        self.m_checkBox1 = wx.CheckBox( self, minimized, u"start minimized", wx.DefaultPosition, wx.DefaultSize, 0 )
-        self.m_checkBox1.SetValue(True if int(settings["minimized"]) else False)
-        bSizer155.Add( self.m_checkBox1, 1, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
+        bSizer155 = wx.BoxSizer( wx.HORIZONTAL )
 
         self.m_staticText29 = wx.StaticText( self, wx.ID_ANY, u"Transparency", wx.DefaultPosition, wx.DefaultSize, 0 )
         self.m_staticText29.Wrap( -1 )
 
         bSizer155.Add( self.m_staticText29, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
-  
-        self.m_spinCtrl3 = wx.SpinCtrl( self, trValue, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, wx.SP_ARROW_KEYS, 0, 500, settings["trValue"] )
+
+        self.m_spinCtrl3 = wx.SpinCtrl( self, trValue, str(settings["trValue"]), wx.DefaultPosition, wx.DefaultSize, wx.SP_ARROW_KEYS, min = 0, max = 100)
         bSizer155.Add( self.m_spinCtrl3, 1, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
+
+        self.m_checkBox2 = wx.CheckBox( self, daylightSavingValue, u"Daylight saving", wx.DefaultPosition, wx.DefaultSize, 0 )
+        self.m_checkBox2.SetValue(True if int(settings["daylightSaving"]) else False)
+        bSizer155.Add( self.m_checkBox2, 1, wx.ALL|wx.EXPAND, 5 )
+
+        self.m_checkBox1 = wx.CheckBox( self, minimized, u"Start minimized", wx.DefaultPosition, wx.DefaultSize, 0 )
+        self.m_checkBox1.SetValue(True if int(settings["minimized"]) else False)
+        bSizer155.Add( self.m_checkBox1, 1, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
 
 
         bSizer14.Add( bSizer155, 1, wx.ALIGN_CENTER_HORIZONTAL|wx.EXPAND, 5 )
@@ -532,6 +539,7 @@ class Settings ( wx.Frame ):
         sisha = wx.FindWindowById(ishaValue)
         sminimized = wx.FindWindowById(minimized)
         strValue = wx.FindWindowById(trValue)
+        sdaylightSavingValue = wx.FindWindowById(daylightSavingValue)
         settings["lat"] = defaultSettings["lat"]
         settings["long"] = defaultSettings["long"]
         settings["timeZone"] = defaultSettings["timeZone"]
@@ -542,7 +550,8 @@ class Settings ( wx.Frame ):
         settings["maghrib"] = defaultSettings["maghrib"]
         settings["isha"] = defaultSettings["isha"]
         settings["minimized"] = defaultSettings["minimized"]
-        settings["strValue"] = defaultSettings["trValue"]
+        settings["trValue"] = defaultSettings["trValue"]
+        settings["daylightSaving"] = defaultSettings["daylightSaving"]
         # print(slat)
         slat.SetValue(float(defaultSettings["lat"]))
         slong.SetValue(float(defaultSettings["long"]))
@@ -555,6 +564,7 @@ class Settings ( wx.Frame ):
         sisha.SetValue(float(defaultSettings["isha"]))
         sminimized.SetValue(defaultSettings["minimized"])
         strValue.SetValue(defaultSettings["trValue"])
+        sdaylightSavingValue.SetValue(defaultSettings["daylightSaving"])
 
     def saveSettings( self, event ):
         slat = wx.FindWindowById(latValue)
@@ -568,6 +578,7 @@ class Settings ( wx.Frame ):
         sisha = wx.FindWindowById(ishaValue)
         sminimized = wx.FindWindowById(minimized)
         strValue = wx.FindWindowById(trValue)
+        sdaylightSavingValue = wx.FindWindowById(daylightSavingValue)
 
         settings["lat"] = slat.GetValue()
         settings["long"] = slong.GetValue()
@@ -580,6 +591,7 @@ class Settings ( wx.Frame ):
         settings["isha"] = sisha.GetValue()
         settings["trValue"] = strValue.GetValue()
         settings["minimized"] = 1 if sminimized.GetValue() else 0
+        settings["daylightSaving"] = 1 if sdaylightSavingValue.GetValue() else 0
         with open(appdataFile, 'w') as file:
             json.dump(settings, file)
         setTr(settings['trValue'])
@@ -623,15 +635,15 @@ def getPrayerTimes(index=1):
     if not index and int(hour) > 12:
         try:
             datetime(year,month,day+1)
-            prayerTimesList = pT.getTimes([year, month, day+1], [float(settings["lat"]), float(settings["long"])], settings["timeZone"])
+            prayerTimesList = pT.getTimes([year, month, day+1], [float(settings["lat"]), float(settings["long"])], settings["timeZone"], int(settings["daylightSaving"]))
         except:
             try:
                 datetime(year,month+1,1)
-                prayerTimesList = pT.getTimes([year, month+1, 1], [float(settings["lat"]), float(settings["long"])], settings["timeZone"])
+                prayerTimesList = pT.getTimes([year, month+1, 1], [float(settings["lat"]), float(settings["long"])], settings["timeZone"], int(settings["daylightSaving"]))
             except:
-                prayerTimesList = pT.getTimes([year+1, 1, 1], [float(settings["lat"]), float(settings["long"])], settings["timeZone"])
+                prayerTimesList = pT.getTimes([year+1, 1, 1], [float(settings["lat"]), float(settings["long"])], settings["timeZone"], int(settings["daylightSaving"]))
     else:
-        prayerTimesList = pT.getTimes([year, month, day], [float(settings["lat"]), float(settings["long"])], settings["timeZone"])
+        prayerTimesList = pT.getTimes([year, month, day], [float(settings["lat"]), float(settings["long"])], settings["timeZone"], int(settings["daylightSaving"]))
     return prayerTimesList
 
 
@@ -654,7 +666,7 @@ def calcNextPrayer(prayer,index):
     return timeLeft
 
 class MyTaskBarIcon(TaskBarIcon):
-    def __init__(self, frame,app):
+    def __init__(self, frame, app):
         TaskBarIcon.__init__(self)
         self.frame = frame
         self.app = app
@@ -776,7 +788,7 @@ if __name__ == '__main__':
     def Rpccallfunction(val): 
             wx.CallAfter( frame.UpdateLayout ) 
     def setTr(val): 
-              frame.SetTransparent(val)
+              frame.SetTransparent(int(val*2.25))
     if not settings["minimized"]:
         frame.Show(True) 
     MyTaskBarIcon(frame,app)

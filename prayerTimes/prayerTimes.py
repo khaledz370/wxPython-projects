@@ -32,8 +32,9 @@ dhuhrValue = 1018
 fajrValue = 1019
 maghribValue = 1020
 ishaValue = 1021
-minimized = 1022
-trValue = 1023
+trValue = 1022
+daylightSavingValue = 1023
+minimized = 1024
 
 ###########################################################################
 ## Class MyDialog1
@@ -271,7 +272,7 @@ class Settings ( wx.Frame ):
 
 		self.latValue = wx.SpinCtrlDouble( self, latValue, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, wx.SP_ARROW_KEYS, 0, 1000, 2.000000, 1 )
 		self.latValue.SetDigits( 3 )
-		bSizer151.Add( self.latValue, 1, wx.ALL|wx.EXPAND, 5 )
+		bSizer151.Add( self.latValue, 1, wx.ALL, 5 )
 
 		self.Long = wx.StaticText( self, wx.ID_ANY, u"Long:", wx.DefaultPosition, wx.DefaultSize, 0 )
 		self.Long.Wrap( -1 )
@@ -280,7 +281,7 @@ class Settings ( wx.Frame ):
 
 		self.LongValue = wx.SpinCtrlDouble( self, longValue, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, wx.SP_ARROW_KEYS, 0, 100, 0.000000, 1 )
 		self.LongValue.SetDigits( 3 )
-		bSizer151.Add( self.LongValue, 1, wx.ALL|wx.EXPAND, 5 )
+		bSizer151.Add( self.LongValue, 1, wx.ALL, 5 )
 
 		self.timeZone = wx.StaticText( self, wx.ID_ANY, u"TimeZone:", wx.DefaultPosition, wx.DefaultSize, 0 )
 		self.timeZone.Wrap( -1 )
@@ -288,7 +289,7 @@ class Settings ( wx.Frame ):
 		bSizer151.Add( self.timeZone, 1, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
 
 		self.m_spinCtrl1 = wx.SpinCtrl( self, timeZoneValue, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, wx.SP_ARROW_KEYS, -12, 12, 0 )
-		bSizer151.Add( self.m_spinCtrl1, 1, wx.ALL|wx.EXPAND, 5 )
+		bSizer151.Add( self.m_spinCtrl1, 1, wx.ALL, 5 )
 
 
 		bSizer14.Add( bSizer151, 1, wx.EXPAND, 5 )
@@ -303,7 +304,7 @@ class Settings ( wx.Frame ):
 		methodsChoices = [ u"MWL", u"ISNA", u"Egypt", u"Makkah", u"Karachi", u"Tehran", u"Jafari" ]
 		self.methods = wx.Choice( self, methodValue, wx.DefaultPosition, wx.DefaultSize, methodsChoices, 0 )
 		self.methods.SetSelection( 0 )
-		bSizer152.Add( self.methods, 1, wx.ALL|wx.EXPAND, 5 )
+		bSizer152.Add( self.methods, 1, wx.ALL, 5 )
 
 		self.m_staticText21 = wx.StaticText( self, wx.ID_ANY, u"Asr method:", wx.DefaultPosition, wx.DefaultSize, 0 )
 		self.m_staticText21.Wrap( -1 )
@@ -313,7 +314,7 @@ class Settings ( wx.Frame ):
 		m_choice2Choices = [ u"Standard", u"Hanafi" ]
 		self.m_choice2 = wx.Choice( self, asrValue, wx.DefaultPosition, wx.DefaultSize, m_choice2Choices, 0 )
 		self.m_choice2.SetSelection( 0 )
-		bSizer152.Add( self.m_choice2, 1, wx.ALL|wx.EXPAND, 5 )
+		bSizer152.Add( self.m_choice2, 1, wx.ALL, 5 )
 
 		self.m_staticText28 = wx.StaticText( self, wx.ID_ANY, u"Dhuhr:", wx.DefaultPosition, wx.DefaultSize, 0 )
 		self.m_staticText28.Wrap( -1 )
@@ -321,7 +322,7 @@ class Settings ( wx.Frame ):
 		bSizer152.Add( self.m_staticText28, 1, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
 
 		self.m_spinCtrl2 = wx.SpinCtrl( self, dhuhrValue, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, wx.SP_ARROW_KEYS, 0, 60, 0 )
-		bSizer152.Add( self.m_spinCtrl2, 1, wx.ALL|wx.EXPAND, 5 )
+		bSizer152.Add( self.m_spinCtrl2, 1, wx.ALL, 5 )
 
 
 		bSizer14.Add( bSizer152, 1, wx.EXPAND, 5 )
@@ -335,7 +336,7 @@ class Settings ( wx.Frame ):
 
 		self.m_spinCtrlDouble3 = wx.SpinCtrlDouble( self, fajrValue, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, wx.SP_ARROW_KEYS, 0, 100, 30.500000, 0.5 )
 		self.m_spinCtrlDouble3.SetDigits( 2 )
-		bSizer153.Add( self.m_spinCtrlDouble3, 1, wx.ALL|wx.EXPAND, 5 )
+		bSizer153.Add( self.m_spinCtrlDouble3, 1, wx.ALL, 5 )
 
 		self.m_staticText24 = wx.StaticText( self, wx.ID_ANY, u"Deg", wx.DefaultPosition, wx.DefaultSize, 0 )
 		self.m_staticText24.Wrap( -1 )
@@ -349,7 +350,7 @@ class Settings ( wx.Frame ):
 
 		self.m_spinCtrlDouble5 = wx.SpinCtrlDouble( self, maghribValue, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, wx.SP_ARROW_KEYS, 0, 100, 0, 1 )
 		self.m_spinCtrlDouble5.SetDigits( 0 )
-		bSizer153.Add( self.m_spinCtrlDouble5, 1, wx.ALL|wx.EXPAND, 5 )
+		bSizer153.Add( self.m_spinCtrlDouble5, 1, wx.ALL, 5 )
 
 		self.m_staticText27 = wx.StaticText( self, wx.ID_ANY, u"Deg", wx.DefaultPosition, wx.DefaultSize, 0 )
 		self.m_staticText27.Wrap( -1 )
@@ -363,7 +364,7 @@ class Settings ( wx.Frame ):
 
 		self.m_spinCtrlDouble4 = wx.SpinCtrlDouble( self, ishaValue, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, wx.SP_ARROW_KEYS, 0, 100, 0, 1 )
 		self.m_spinCtrlDouble4.SetDigits( 0 )
-		bSizer153.Add( self.m_spinCtrlDouble4, 1, wx.ALL|wx.EXPAND, 5 )
+		bSizer153.Add( self.m_spinCtrlDouble4, 1, wx.ALL, 5 )
 
 		self.m_staticText26 = wx.StaticText( self, wx.ID_ANY, u"Deg", wx.DefaultPosition, wx.DefaultSize, 0 )
 		self.m_staticText26.Wrap( -1 )
@@ -375,17 +376,20 @@ class Settings ( wx.Frame ):
 
 		bSizer155 = wx.BoxSizer( wx.HORIZONTAL )
 
-		self.m_checkBox1 = wx.CheckBox( self, minimized, u"hide on start", wx.DefaultPosition, wx.DefaultSize, 0 )
-		self.m_checkBox1.SetValue(True)
-		bSizer155.Add( self.m_checkBox1, 1, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
-
 		self.m_staticText29 = wx.StaticText( self, wx.ID_ANY, u"Transparency", wx.DefaultPosition, wx.DefaultSize, 0 )
 		self.m_staticText29.Wrap( -1 )
 
 		bSizer155.Add( self.m_staticText29, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
 
-		self.m_spinCtrl3 = wx.SpinCtrl( self, trValue, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, wx.SP_ARROW_KEYS, 0, 500, 300 )
-		bSizer155.Add( self.m_spinCtrl3, 1, wx.ALL|wx.EXPAND, 5 )
+		self.m_spinCtrl3 = wx.SpinCtrl( self, trValue, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, wx.SP_ARROW_KEYS, 0, 100, 100 )
+		bSizer155.Add( self.m_spinCtrl3, 1, wx.ALL, 5 )
+
+		self.m_checkBox2 = wx.CheckBox( self, daylightSavingValue, u"Daylight saving", wx.DefaultPosition, wx.DefaultSize, 0 )
+		bSizer155.Add( self.m_checkBox2, 1, wx.ALL|wx.EXPAND, 5 )
+
+		self.m_checkBox1 = wx.CheckBox( self, minimized, u"Start minimized", wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.m_checkBox1.SetValue(True)
+		bSizer155.Add( self.m_checkBox1, 1, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
 
 
 		bSizer14.Add( bSizer155, 1, wx.ALIGN_CENTER_HORIZONTAL|wx.EXPAND, 5 )
