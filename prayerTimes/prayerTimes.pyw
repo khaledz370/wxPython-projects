@@ -671,6 +671,7 @@ class MyTaskBarIcon(TaskBarIcon):
         self.frame = frame
         self.app = app
         self.timer = wx.Timer(self)
+        self.settingsFrame = Settings(None)
         self.Bind(wx.EVT_TIMER, self.autoUpdate)
         self.timer.Start(1000) # update every second
         self.SetIcon(wx.Icon(appIcon, wx.BITMAP_TYPE_PNG), 'Loading...')
@@ -691,8 +692,12 @@ class MyTaskBarIcon(TaskBarIcon):
              self.frame.Hide()
     
     def OnSettings(self,event):
-        settingsFrame = Settings(None)
-        settingsFrame.Show()
+        try:
+            if not self.settingsFrame.IsShown():
+                  self.settingsFrame.Show()
+        except:
+            self.settingsFrame = Settings(None)
+            self.settingsFrame.Show()
         
     def ExitApp(self, event):
         # Exit the application cleanly
