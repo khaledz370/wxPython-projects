@@ -14,6 +14,8 @@ import subprocess
 import sys
 import shutil
 import json
+import threading
+import time
 
 true = True
 defaultfileTypesList = [".mkv" ,".ts" ,".mp4" ,".avi" ,".webm" ,".flv" ,".ogg" ,".mov" ,".mpeg-2"]
@@ -575,25 +577,31 @@ class MyFrame1 ( wx.Frame ):
         self.m_button11.Bind( wx.EVT_BUTTON, lambda event: self.selectFolder("ToMkv") )
         self.m_button15.Bind( wx.EVT_BUTTON, lambda event: self.selectAll("ToMkv") )
         self.m_button111.Bind( wx.EVT_BUTTON, lambda event: self.deleteFromList("ToMkv") )
-        self.m_button9.Bind( wx.EVT_BUTTON, self.convertToMkv )
+        self.m_button9.Bind( wx.EVT_BUTTON, lambda event: self.processThread("self.convertToMkv "))
         self.m_button31.Bind( wx.EVT_BUTTON, lambda event: self.openFilesSelector("ToAudio") )
         self.m_button112.Bind( wx.EVT_BUTTON, lambda event: self.selectFolder("ToAudio") )
         self.m_button151.Bind( wx.EVT_BUTTON, lambda event: self.selectAll("ToAudio") )
         self.m_button1111.Bind( wx.EVT_BUTTON, lambda event: self.deleteFromList("ToAudio") )
-        self.m_button91.Bind( wx.EVT_BUTTON, self.convertToAudio )
+        self.m_button91.Bind( wx.EVT_BUTTON, lambda event: self.processThread("self.convertToAudio") )
         self.m_button311.Bind( wx.EVT_BUTTON, lambda event: self.openFilesSelector("Crop") )
         self.m_button1121.Bind( wx.EVT_BUTTON, lambda event: self.selectFolder("Crop") )
         self.m_button1511.Bind( wx.EVT_BUTTON, lambda event: self.selectAll("Crop") )
         self.m_button11111.Bind( wx.EVT_BUTTON, lambda event: self.deleteFromList("Crop") )
-        self.m_button911.Bind( wx.EVT_BUTTON, self.cropVideo )
+        self.m_button911.Bind( wx.EVT_BUTTON, lambda event: self.processThread("self.cropVideo") )
         self.m_button3111.Bind( wx.EVT_BUTTON, lambda event: self.openFilesSelector("Options") )
         self.m_button11211.Bind( wx.EVT_BUTTON, lambda event: self.selectFolder("Options") )
         self.m_button15111.Bind( wx.EVT_BUTTON, lambda event: self.selectAll("Options") )
         self.m_button111111.Bind( wx.EVT_BUTTON, lambda event: self.deleteFromList("Options") )
-        self.m_button9111.Bind( wx.EVT_BUTTON, self.runWithJson )
+        self.m_button9111.Bind( wx.EVT_BUTTON, lambda event: self.processThread("self.runWithJson") )
 
     def __del__( self ):
         pass
+    
+    def processThread( self, event ):
+        process= eval(event)
+        t = threading.Thread(target=process)
+        t.daemon = True # set thread as daemon to terminate when main thread ends
+        t.start()
 
     # Virtual event handlers, override them in your derived class
     def deleteFromList( self, event ):
@@ -709,7 +717,7 @@ class MyFrame1 ( wx.Frame ):
         except Exception as e:
             print(e)
 
-    def cropVideo( self, event ):
+    def cropVideo( self ):
         try:
             checkBoxListWindow = wx.FindWindowById(selectedFilesCrop)
             currentFile = wx.FindWindowById(currentFileCrop)
