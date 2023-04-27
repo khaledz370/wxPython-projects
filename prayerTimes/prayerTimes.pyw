@@ -11,15 +11,14 @@ import wx
 import wx.xrc
 from wx.adv import TaskBarIcon
 import wx.lib.mixins.inspection
-from threading import Timer
 from praytimes import PrayTimes
 from datetime import datetime, timedelta
-from psgtray import SystemTray
-from playsound import playsound
-import os
-import json
-import sys, traceback
 from tendo import singleton
+import json
+import sys
+import os
+os.environ['PYGAME_HIDE_SUPPORT_PROMPT'] = "hide"
+from pygame import mixer
 
 try:
     me = singleton.SingleInstance()  # this raises an exception if another instance is running
@@ -75,6 +74,9 @@ appdataFile = f"{appdataFolder}\config.json"
 appdataFolder = f"{os.getenv('APPDATA')}\prayerTimes"
 appdataFile = f"{appdataFolder}\config.json"
 mainDir = f"{os.path.dirname(__file__)}"
+audioFile = f'{mainDir}\\resources\\audio\\Bismillah.wav'
+appIcon = f"{mainDir}\\resources\img\prayertimes.png"
+settingsIcon = f"{mainDir}\\resources\img\prayertimesSettings.png"
 
 activePrayercolor = wx.Colour(30, 129, 176)
 
@@ -107,8 +109,6 @@ class MyDialog1 ( wx.Dialog ):
         wx.Dialog.__init__ ( self, parent, id = wx.ID_ANY, title = wx.EmptyString, pos = wx.DefaultPosition, size = wx.Size( 358,375 ), style = wx.RESIZE_BORDER )
 
         self.SetSizeHints( wx.Size( 358,375 ),wx.Size( 358,375 ) )
-        # self.SetForegroundColour( wx.SystemSettings.GetColour( wx.SYS_COLOUR_GRAYTEXT ) )
-        # self.SetBackgroundColour( wx.SystemSettings.GetColour( wx.SYS_COLOUR_INACTIVECAPTION ) )
 
         bSizer1 = wx.BoxSizer( wx.VERTICAL )
 
@@ -297,7 +297,7 @@ class MyDialog1 ( wx.Dialog ):
         self.Centre( wx.BOTH )
         
         self.SetTransparent(settings['trValue'])
-        self.SetIcon(wx.Icon(f"{mainDir}\\resources\img\prayertimes.png", wx.BITMAP_TYPE_PNG))
+        self.SetIcon(wx.Icon(appIcon, wx.BITMAP_TYPE_PNG))
         # Make the frame draggable
         self.Bind(wx.EVT_LEFT_DOWN, self.on_left_down)
         self.Bind(wx.EVT_LEFT_UP, self.on_left_up)
@@ -341,196 +341,6 @@ class MyDialog1 ( wx.Dialog ):
         
     def __del__( self ):
         pass
-
-
-def formatPrayerDate(prayer):
-    nowDate = datetime.now()
-    prayerTxt = str(prayer).split(":")
-    hour = int(prayerTxt[0])
-    minute = int(prayerTxt[1])
-    formatedDate = nowDate.replace(
-        hour=hour, minute=minute).strftime("%I:%M %p")
-    # print(formatedDate)
-    return formatedDate
-
-
-def nextPrayer():
-    now = datetime.now()
-    pTimes = getPrayerTimes()
-    prayers = [pTimes["fajr"], pTimes["dhuhr"],
-               pTimes["asr"], pTimes["maghrib"], pTimes["isha"]]
-    nowHrMn = now.strftime("%H:%M")
-    # print(prayers)
-    prayers.append(str(nowHrMn))
-    sortedTimes = sorted(prayers)
-    prayerIndex = sortedTimes.index(str(nowHrMn))
-    # print(prayerIndex)
-    if prayerIndex > 4:
-        prayerIndex = 0
-    return prayerIndex
-
-
-def getPrayerTimes(index=1):
-    now = datetime.now()
-    hour = now.strftime("%H")
-    year = int(now.strftime("%Y"))
-    month = int(now.strftime("%m"))
-    day = int(now.strftime("%d"))
-    pT = PrayTimes("Egypt")
-    s_dhuhr = settings["dhuhr"]
-    pT.adjust({"fajr": settings["fajr"], "dhuhr": f"{s_dhuhr} min",
-              "asr": settings["asr"], "maghrib": settings["maghrib"], "isha": settings["isha"]})
-    if not index and int(hour) > 12:
-        try:
-            datetime(year,month,day+1)
-            prayerTimesList = pT.getTimes([year, month, day+1], [float(settings["lat"]), float(settings["long"])], settings["timeZone"])
-        except:
-            try:
-                datetime(year,month+1,1)
-                prayerTimesList = pT.getTimes([year, month+1, 1], [float(settings["lat"]), float(settings["long"])], settings["timeZone"])
-            except:
-                prayerTimesList = pT.getTimes([year+1, 1, 1], [float(settings["lat"]), float(settings["long"])], settings["timeZone"])
-    else:
-        prayerTimesList = pT.getTimes([year, month, day], [float(settings["lat"]), float(settings["long"])], settings["timeZone"])
-    return prayerTimesList
-
-
-def calcNextPrayer(prayer,index):
-    # print(prayer)
-    d1 = datetime.now()
-    d1h = d1.strftime("%H")
-    d1m = d1.strftime("%M")
-    d1s = d1.strftime("%S")
-    totalSec1 = int(d1h)*60*60+int(d1m)*60+int(d1s)
-    prayerTxt = str(prayer).split(":")
-    d2h = int(prayerTxt[0])
-    d2m = int(prayerTxt[1])
-    d2s = 0
-    totalSec2 = int(d2h)*60*60+int(d2m)*60+int(d2s)
-    if not index and int(d1h) > 12:
-        difSec = secondsInDay-abs(totalSec1-totalSec2)
-    else:
-        difSec = abs(totalSec1-totalSec2)
-    timeLeft = str(timedelta(seconds=(difSec)))
-    return timeLeft
-
-class MyTaskBarIcon(TaskBarIcon):
-    def __init__(self, frame,app):
-        TaskBarIcon.__init__(self)
-        self.frame = frame
-        self.app = app
-        self.timer = wx.Timer(self)
-        self.Bind(wx.EVT_TIMER, self.OnUpdateIcon)
-        self.timer.Start(1000) # update every second
-        self.SetIcon(wx.Icon(f"{mainDir}\\resources\img\prayertimes.png", wx.BITMAP_TYPE_PNG), 'Loading...')
-        self.Bind(wx.adv.EVT_TASKBAR_LEFT_DCLICK, self.OnDoubleClick)
-        self.Bind(wx.EVT_MENU, self.ExitApp, id=2)
-        self.Bind(wx.EVT_MENU, self.OnSettings, id=1)
-         
-    def CreatePopupMenu(self):
-         menu = wx.Menu()
-         menu.Append(1, 'Settings')
-         menu.Append(2, 'Exit')
-         return menu
- 
-    def OnDoubleClick(self, event):
-        if not self.frame.IsShown():
-             self.frame.Show()
-        else:
-             self.frame.Hide()
-    
-    def OnSettings(self,event):
-        settingsFrame = Settings(None)
-        settingsFrame.Show()
-        
-    def ExitApp(self, event):
-        # Exit the application cleanly
-        self.RemoveIcon()
-        # Close any open windows
-        self.frame.Close(True)
-        self.app.ExitMainLoop()
-        self.app.Destroy()
-             
-    def OnUpdateIcon(self, event):
-        # update the tooltip text with current time
-        fajrCtrl =  wx.FindWindowById(fajrTime).GetLabel()
-        dhuhrCtrl =  wx.FindWindowById(dhuhrTime).GetLabel()
-        asrCtrl =  wx.FindWindowById(asrTime).GetLabel()
-        maghribCtrl =  wx.FindWindowById(maghribTime).GetLabel()
-        ishaCtrl =  wx.FindWindowById(ishaTime).GetLabel()
-        nextPrayerText =  wx.FindWindowById(nextPrayerName).GetLabel()
-        nextPrayerLeft =  wx.FindWindowById(nextPrayerTime).GetLabel()
-        l1 = f"fajr:  {fajrCtrl}"
-        l2 = f"duhr:  {dhuhrCtrl}"
-        l3 = f"asr:  {asrCtrl}"
-        l4 = f"maghrib  {maghribCtrl}"
-        l5 = f"isha:  {ishaCtrl}"
-        l6 = f"{nextPrayerText} is after {nextPrayerLeft}"
-        tooltip = f"{l1}\n{l2}\n{l3}\n{l4}\n{l5}\n\n{l6}"
-        self.SetIcon(wx.Icon(f"{mainDir}\\resources\img\prayertimes.png"), tooltip)
-
-
-def calcPrayerTimes():
-            now = datetime.now()
-            nexPrayerIndex = nextPrayer()
-            pTimes = getPrayerTimes(nexPrayerIndex)
-            fajr = formatPrayerDate(pTimes["fajr"])
-            dhuhr = formatPrayerDate(pTimes["dhuhr"])
-            asr = formatPrayerDate(pTimes["asr"])
-            maghrib = formatPrayerDate(pTimes["maghrib"])
-            isha = formatPrayerDate(pTimes["isha"])
-            nextprayer = prayersList[nexPrayerIndex]
-            TimeCtrl = wx.FindWindowById(todayDate)
-            nextPrayerText = wx.FindWindowById(nextPrayerName)
-            nextPrayerLeft = wx.FindWindowById(nextPrayerTime)
-            # prayer times
-            fajrCtrl = wx.FindWindowById(fajrTime)
-            fajrLbl = wx.FindWindowById(fajrLabel)
-            
-            dhuhrCtrl = wx.FindWindowById(dhuhrTime)
-            dhuhrLbl = wx.FindWindowById(dhuhrLabel)
-            
-            asrCtrl = wx.FindWindowById(asrTime)
-            asrLbl = wx.FindWindowById(asrLabel)
-            
-            maghribCtrl = wx.FindWindowById(maghribTime)
-            maghribLbl = wx.FindWindowById(maghribLabel)
-            
-            ishaCtrl = wx.FindWindowById(ishaTime)
-            ishaLbl = wx.FindWindowById(ishaLabel)
-            # setColor
-            fajrCtrl.SetForegroundColour(activePrayercolor if nexPrayerIndex == 0 else wx.BLACK)
-            fajrLbl.SetForegroundColour(activePrayercolor if nexPrayerIndex == 0 else wx.BLACK)
-            
-            dhuhrCtrl.SetForegroundColour(activePrayercolor if nexPrayerIndex == 1 else wx.BLACK)
-            dhuhrLbl.SetForegroundColour(activePrayercolor if nexPrayerIndex == 1 else wx.BLACK)
-            
-            asrCtrl.SetForegroundColour(activePrayercolor if nexPrayerIndex == 2 else wx.BLACK)
-            asrLbl.SetForegroundColour(activePrayercolor if nexPrayerIndex == 2 else wx.BLACK)
-            
-            maghribCtrl.SetForegroundColour(activePrayercolor if nexPrayerIndex == 3 else wx.BLACK)
-            maghribLbl.SetForegroundColour(activePrayercolor if nexPrayerIndex == 3 else wx.BLACK)
-            
-            ishaCtrl.SetForegroundColour(activePrayercolor if nexPrayerIndex == 4 else wx.BLACK)
-            ishaLbl.SetForegroundColour(activePrayercolor if nexPrayerIndex == 4 else wx.BLACK)
-            # setLabel
-            fajrCtrl.SetLabel(fajr)
-            dhuhrCtrl.SetLabel(dhuhr)
-            asrCtrl.SetLabel(asr)
-            maghribCtrl.SetLabel(maghrib)
-            ishaCtrl.SetLabel(isha)
-            
-            TimeCtrl.SetLabel(str((now.strftime("%d-%m-%Y, %I:%M:%S %p"))))
-            leftTilNextPrayer = (calcNextPrayer(pTimes[prayersList[nexPrayerIndex]],nexPrayerIndex))
-            nextPrayerText.SetLabel(f"{nextprayer}")
-            nextPrayerLeft.SetLabel(f"{leftTilNextPrayer}")
-            counterId = Timer(1.0, calcPrayerTimes)
-            settings["thread"] = counterId
-            counterId.start()
-            counterId = ""
-            Rpccallfunction(nexPrayerIndex)
-Timer(1.0, calcPrayerTimes).start()
-
 
 class Settings ( wx.Frame ):
 
@@ -699,7 +509,7 @@ class Settings ( wx.Frame ):
 
         self.Centre( wx.BOTH )
 
-        self.SetIcon(wx.Icon(f"{mainDir}\\resources\img\prayertimesSettings.png", wx.BITMAP_TYPE_PNG))
+        self.SetIcon(wx.Icon(settingsIcon, wx.BITMAP_TYPE_PNG))
 
         # Connect Events
         self.m_button1.Bind( wx.EVT_BUTTON, self.setDefault )
@@ -769,18 +579,195 @@ class Settings ( wx.Frame ):
         settings["maghrib"] = smaghrib.GetValue()
         settings["isha"] = sisha.GetValue()
         settings["trValue"] = strValue.GetValue()
-        if sminimized.GetValue():
-            settings["minimized"] = 1
-        else:
-            settings["minimized"] = 0
-        del settings["thread"]
+        settings["minimized"] = 1 if sminimized.GetValue() else 0
         with open(appdataFile, 'w') as file:
             json.dump(settings, file)
         setTr(settings['trValue'])
        
 
-def play_sound():
-    playsound(f'{mainDir}\\resources\\audio\\Bismillah.wav')
+def formatPrayerDate(prayer):
+    nowDate = datetime.now()
+    prayerTxt = str(prayer).split(":")
+    hour = int(prayerTxt[0])
+    minute = int(prayerTxt[1])
+    formatedDate = nowDate.replace(
+        hour=hour, minute=minute).strftime("%I:%M %p")
+    # print(formatedDate)
+    return formatedDate
+
+
+def nextPrayer():
+    now = datetime.now()
+    pTimes = getPrayerTimes()
+    prayers = [pTimes["fajr"], pTimes["dhuhr"],
+               pTimes["asr"], pTimes["maghrib"], pTimes["isha"]]
+    nowHrMn = now.strftime("%H:%M")
+    prayers.append(str(nowHrMn))
+    sortedTimes = sorted(prayers)
+    prayerIndex = sortedTimes.index(str(nowHrMn))
+    if prayerIndex > 4:
+        prayerIndex = 0
+    return prayerIndex
+
+
+def getPrayerTimes(index=1):
+    now = datetime.now()
+    hour = now.strftime("%H")
+    year = int(now.strftime("%Y"))
+    month = int(now.strftime("%m"))
+    day = int(now.strftime("%d"))
+    pT = PrayTimes("Egypt")
+    s_dhuhr = settings["dhuhr"]
+    pT.adjust({"fajr": settings["fajr"], "dhuhr": f"{s_dhuhr} min",
+              "asr": settings["asr"], "maghrib": settings["maghrib"], "isha": settings["isha"]})
+    if not index and int(hour) > 12:
+        try:
+            datetime(year,month,day+1)
+            prayerTimesList = pT.getTimes([year, month, day+1], [float(settings["lat"]), float(settings["long"])], settings["timeZone"])
+        except:
+            try:
+                datetime(year,month+1,1)
+                prayerTimesList = pT.getTimes([year, month+1, 1], [float(settings["lat"]), float(settings["long"])], settings["timeZone"])
+            except:
+                prayerTimesList = pT.getTimes([year+1, 1, 1], [float(settings["lat"]), float(settings["long"])], settings["timeZone"])
+    else:
+        prayerTimesList = pT.getTimes([year, month, day], [float(settings["lat"]), float(settings["long"])], settings["timeZone"])
+    return prayerTimesList
+
+
+def calcNextPrayer(prayer,index):
+    d1 = datetime.now()
+    d1h = d1.strftime("%H")
+    d1m = d1.strftime("%M")
+    d1s = d1.strftime("%S")
+    totalSec1 = int(d1h)*60*60+int(d1m)*60+int(d1s)
+    prayerTxt = str(prayer).split(":")
+    d2h = int(prayerTxt[0])
+    d2m = int(prayerTxt[1])
+    d2s = 0
+    totalSec2 = int(d2h)*60*60+int(d2m)*60+int(d2s)
+    if not index and int(d1h) > 12:
+        difSec = secondsInDay-abs(totalSec1-totalSec2)
+    else:
+        difSec = abs(totalSec1-totalSec2)
+    timeLeft = str(timedelta(seconds=(difSec)))
+    return timeLeft
+
+class MyTaskBarIcon(TaskBarIcon):
+    def __init__(self, frame,app):
+        TaskBarIcon.__init__(self)
+        self.frame = frame
+        self.app = app
+        self.timer = wx.Timer(self)
+        self.Bind(wx.EVT_TIMER, self.autoUpdate)
+        self.timer.Start(1000) # update every second
+        self.SetIcon(wx.Icon(appIcon, wx.BITMAP_TYPE_PNG), 'Loading...')
+        self.Bind(wx.adv.EVT_TASKBAR_LEFT_DCLICK, self.OnDoubleClick)
+        self.Bind(wx.EVT_MENU, self.ExitApp, id=2)
+        self.Bind(wx.EVT_MENU, self.OnSettings, id=1)
+         
+    def CreatePopupMenu(self):
+         menu = wx.Menu()
+         menu.Append(1, 'Settings')
+         menu.Append(2, 'Exit')
+         return menu
+ 
+    def OnDoubleClick(self, event):
+        if not self.frame.IsShown():
+             self.frame.Show()
+        else:
+             self.frame.Hide()
+    
+    def OnSettings(self,event):
+        settingsFrame = Settings(None)
+        settingsFrame.Show()
+        
+    def ExitApp(self, event):
+        # Exit the application cleanly
+        self.RemoveIcon()
+        # Close any open windows
+        self.frame.Close(True)
+        self.app.ExitMainLoop()
+        self.app.Destroy()
+             
+    def autoUpdate(self, event):
+        calcPrayerTimes()
+        fajrCtrl =  wx.FindWindowById(fajrTime).GetLabel()
+        dhuhrCtrl =  wx.FindWindowById(dhuhrTime).GetLabel()
+        asrCtrl =  wx.FindWindowById(asrTime).GetLabel()
+        maghribCtrl =  wx.FindWindowById(maghribTime).GetLabel()
+        ishaCtrl =  wx.FindWindowById(ishaTime).GetLabel()
+        nextPrayerText =  wx.FindWindowById(nextPrayerName).GetLabel()
+        nextPrayerLeft =  wx.FindWindowById(nextPrayerTime).GetLabel()
+        l1 = f"fajr:  {fajrCtrl}"
+        l2 = f"duhr:  {dhuhrCtrl}"
+        l3 = f"asr:  {asrCtrl}"
+        l4 = f"maghrib  {maghribCtrl}"
+        l5 = f"isha:  {ishaCtrl}"
+        l6 = f"{nextPrayerText} is after {nextPrayerLeft}"
+        tooltip = f"{l1}\n{l2}\n{l3}\n{l4}\n{l5}\n\n{l6}"
+        self.SetIcon(wx.Icon(appIcon), tooltip)
+
+
+def calcPrayerTimes():
+            now = datetime.now()
+            nexPrayerIndex = nextPrayer()
+            pTimes = getPrayerTimes(nexPrayerIndex)
+            fajr = formatPrayerDate(pTimes["fajr"])
+            dhuhr = formatPrayerDate(pTimes["dhuhr"])
+            asr = formatPrayerDate(pTimes["asr"])
+            maghrib = formatPrayerDate(pTimes["maghrib"])
+            isha = formatPrayerDate(pTimes["isha"])
+            nextprayer = prayersList[nexPrayerIndex]
+            TimeCtrl = wx.FindWindowById(todayDate)
+            nextPrayerText = wx.FindWindowById(nextPrayerName)
+            nextPrayerLeft = wx.FindWindowById(nextPrayerTime)
+            # prayer times
+            fajrCtrl = wx.FindWindowById(fajrTime)
+            fajrLbl = wx.FindWindowById(fajrLabel)
+            
+            dhuhrCtrl = wx.FindWindowById(dhuhrTime)
+            dhuhrLbl = wx.FindWindowById(dhuhrLabel)
+            
+            asrCtrl = wx.FindWindowById(asrTime)
+            asrLbl = wx.FindWindowById(asrLabel)
+            
+            maghribCtrl = wx.FindWindowById(maghribTime)
+            maghribLbl = wx.FindWindowById(maghribLabel)
+            
+            ishaCtrl = wx.FindWindowById(ishaTime)
+            ishaLbl = wx.FindWindowById(ishaLabel)
+            # setColor
+            fajrCtrl.SetForegroundColour(activePrayercolor if nexPrayerIndex == 0 else wx.BLACK)
+            fajrLbl.SetForegroundColour(activePrayercolor if nexPrayerIndex == 0 else wx.BLACK)
+            
+            dhuhrCtrl.SetForegroundColour(activePrayercolor if nexPrayerIndex == 1 else wx.BLACK)
+            dhuhrLbl.SetForegroundColour(activePrayercolor if nexPrayerIndex == 1 else wx.BLACK)
+            
+            asrCtrl.SetForegroundColour(activePrayercolor if nexPrayerIndex == 2 else wx.BLACK)
+            asrLbl.SetForegroundColour(activePrayercolor if nexPrayerIndex == 2 else wx.BLACK)
+            
+            maghribCtrl.SetForegroundColour(activePrayercolor if nexPrayerIndex == 3 else wx.BLACK)
+            maghribLbl.SetForegroundColour(activePrayercolor if nexPrayerIndex == 3 else wx.BLACK)
+            
+            ishaCtrl.SetForegroundColour(activePrayercolor if nexPrayerIndex == 4 else wx.BLACK)
+            ishaLbl.SetForegroundColour(activePrayercolor if nexPrayerIndex == 4 else wx.BLACK)
+            # setLabel
+            fajrCtrl.SetLabel(fajr)
+            dhuhrCtrl.SetLabel(dhuhr)
+            asrCtrl.SetLabel(asr)
+            maghribCtrl.SetLabel(maghrib)
+            ishaCtrl.SetLabel(isha)
+            TimeCtrl.SetLabel(str((now.strftime("%d-%m-%Y, %I:%M:%S %p"))))
+            leftTilNextPrayer = (calcNextPrayer(pTimes[prayersList[nexPrayerIndex]],nexPrayerIndex))
+            nextPrayerText.SetLabel(f"{nextprayer}")
+            nextPrayerLeft.SetLabel(f"{leftTilNextPrayer}")
+            Rpccallfunction(nexPrayerIndex)
+
+def playAudio():
+    mixer.init()
+    mixer.music.load(audioFile)
+    mixer.music.play()
  
 if __name__ == '__main__':
     wx.SizerFlags.DisableConsistencyChecks()
@@ -793,6 +780,5 @@ if __name__ == '__main__':
     if not settings["minimized"]:
         frame.Show(True) 
     MyTaskBarIcon(frame,app)
-    
-    playsound(f'{mainDir}\\resources\\audio\\Bismillah.wav')
+    playAudio()
     app.MainLoop() 
