@@ -15,11 +15,10 @@ passLength = 1000
 symbols = 1001
 numbers = 1002
 lowerCase = 1003
-quantity = 1004
-uperCase = 1005
-ambiguousChar = 1006
-noDuplicates = 1007
-passwordTxt = 1008
+upperCase = 1004
+ambiguousChar = 1005
+noDuplicates = 1006
+passwordTxt = 1007
 
 ###########################################################################
 ## Class MyFrame1
@@ -53,6 +52,9 @@ class MyFrame1 ( wx.Frame ):
 
 		Password_lengthChoices = []
 		self.Password_length = wx.ComboBox( self, passLength, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, Password_lengthChoices, 0 )
+		self.Password_length.SetSelection( 0 )
+		self.Password_length.Enable( False )
+
 		bSizer11.Add( self.Password_length, 1, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
 
 
@@ -74,20 +76,11 @@ class MyFrame1 ( wx.Frame ):
 
 		bSizer17 = wx.BoxSizer( wx.HORIZONTAL )
 
-		self.quantity1 = wx.StaticText( self, wx.ID_ANY, u"quantity", wx.DefaultPosition, wx.DefaultSize, 0 )
-		self.quantity1.Wrap( -1 )
-
-		bSizer17.Add( self.quantity1, 1, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
-
-		quantityChoices = []
-		self.quantity = wx.ComboBox( self, quantity, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, quantityChoices, 0 )
-		bSizer17.Add( self.quantity, 1, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
-
 
 		bSizer12.Add( bSizer17, 1, wx.EXPAND, 5 )
 
-		self.uperCase = wx.CheckBox( self, uperCase, u"Include Uppercase Characters:  ( e.g. ABCDEFGH )", wx.DefaultPosition, wx.DefaultSize, 0 )
-		bSizer12.Add( self.uperCase, 1, wx.ALL|wx.EXPAND, 5 )
+		self.upperCase = wx.CheckBox( self, upperCase, u"Include Uppercase Characters:  ( e.g. ABCDEFGH )", wx.DefaultPosition, wx.DefaultSize, 0 )
+		bSizer12.Add( self.upperCase, 1, wx.ALL|wx.EXPAND, 5 )
 
 		self.ambiguousChar = wx.CheckBox( self, ambiguousChar, u"Exclude Ambiguous Characters:  ( { } [ ] ( ) /  ' \" ` ~ , ; : . < > )", wx.DefaultPosition, wx.DefaultSize, 0 )
 		bSizer12.Add( self.ambiguousChar, 1, wx.ALL|wx.EXPAND, 5 )
@@ -148,8 +141,3 @@ class MyFrame1 ( wx.Frame ):
 		event.Skip()
 
 
-wx.SizerFlags.DisableConsistencyChecks()
-app = wx.App(False) 
-frame = MyFrame1(None) 
-frame.Show(True) 
-app.MainLoop() 

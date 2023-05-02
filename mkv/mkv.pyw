@@ -11,11 +11,9 @@ import wx
 import wx.xrc
 import os
 import subprocess
-import sys
 import shutil
 import json
 import threading
-import time
 
 true = True
 defaultfileTypesList = [".mkv" ,".ts" ,".mp4" ,".avi" ,".webm" ,".flv" ,".ogg" ,".mov" ,".mpeg-2"]
