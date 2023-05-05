@@ -69,7 +69,7 @@ pBarOptions = 1044
 tabContainer = 1045
 
 mainDir = f"{os.path.dirname(__file__)}"
-settingsIcon = f"{mainDir}\\resources\mkv.ico"
+settingsIcon = f"{mainDir}\\mkv.ico"
 
 
 ###########################################################################
