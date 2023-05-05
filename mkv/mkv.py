@@ -16,38 +16,42 @@ browseFilesToMkv = 1002
 browseFolderToMkv = 1003
 selectAllToMkv = 1004
 dBtnToMkv = 1005
-convertToMkv = 1006
-currentFileToMkv = 1007
-pBarToMkv = 1008
-selectedFilesToAudio = 1009
-browseFilesToAudio = 1010
-browseFolderToAudio = 1011
-selectAllToAudio = 1012
-dBtnToAudio = 1013
-convertToAudio = 1014
-currentFileToAudio = 1015
-pBarToAudio = 1016
-selectedFilesCrop = 1017
-browseFilesCrop = 1018
-browseFolderCrop = 1019
-selectAllCrop = 1020
-dBtnCrop = 1021
-cTop = 1022
-cRight = 1023
-cBottom = 1024
-cLeft = 1025
-cropVideo = 1026
-currentFileCrop = 1027
-pBarCrop = 1028
-selectedFilesOptions = 1029
-browseFilesOptions = 1030
-browseFolderOptions = 1031
-selectAllOptions = 1032
-dBtnOptions = 1033
-optionsFile = 1034
-runOption = 1035
-currentFileOptions = 1036
-pBarOptions = 1037
+clearListToMkv = 1006
+convertToMkv = 1007
+currentFileToMkv = 1008
+pBarToMkv = 1009
+selectedFilesToAudio = 1010
+browseFilesToAudio = 1011
+browseFolderToAudio = 1012
+selectAllToAudio = 1013
+dBtnToAudio = 1014
+clearListToAudio = 1015
+convertToAudio = 1016
+currentFileToAudio = 1017
+pBarToAudio = 1018
+selectedFilesCrop = 1019
+browseFilesCrop = 1020
+browseFolderCrop = 1021
+selectAllCrop = 1022
+dBtnCrop = 1023
+clearListCrop = 1024
+cTop = 1025
+cRight = 1026
+cBottom = 1027
+cLeft = 1028
+cropVideo = 1029
+currentFileCrop = 1030
+pBarCrop = 1031
+selectedFilesOptions = 1032
+browseFilesOptions = 1033
+browseFolderOptions = 1034
+selectAllOptions = 1035
+dBtnOptions = 1036
+clearListOptions = 1037
+optionsFile = 1038
+runOption = 1039
+currentFileOptions = 1040
+pBarOptions = 1041
 
 ###########################################################################
 ## Class MyFrame1
@@ -130,6 +134,9 @@ class MyFrame1 ( wx.Frame ):
 		self.m_panel7.Layout()
 		bSizer5.Fit( self.m_panel7 )
 		bSizer7.Add( self.m_panel7, 1, wx.EXPAND |wx.ALL, 5 )
+
+		self.clearList = wx.CheckBox( self.m_panel20, clearListToMkv, u"Clear list after complete", wx.DefaultPosition, wx.DefaultSize, 0 )
+		bSizer7.Add( self.clearList, 0, wx.ALL, 5 )
 
 
 		self.m_panel20.SetSizer( bSizer7 )
@@ -236,6 +243,9 @@ class MyFrame1 ( wx.Frame ):
 		bSizer51.Fit( self.m_panel72 )
 		bSizer72.Add( self.m_panel72, 1, wx.EXPAND |wx.ALL, 5 )
 
+		self.clearList1 = wx.CheckBox( self.m_panel201, clearListToAudio, u"Clear list after complete", wx.DefaultPosition, wx.DefaultSize, 0 )
+		bSizer72.Add( self.clearList1, 0, wx.ALL, 5 )
+
 
 		self.m_panel201.SetSizer( bSizer72 )
 		self.m_panel201.Layout()
@@ -272,7 +282,7 @@ class MyFrame1 ( wx.Frame ):
 		self.toAudio.SetSizer( bSizer41 )
 		self.toAudio.Layout()
 		bSizer41.Fit( self.toAudio )
-		self.m_notebook30.AddPage( self.toAudio, u"toAudio", False )
+		self.m_notebook30.AddPage( self.toAudio, u"toAudio", True )
 		self.crop = wx.Panel( self.m_notebook30, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.TAB_TRAVERSAL )
 		bSizer411 = wx.BoxSizer( wx.VERTICAL )
 
@@ -346,6 +356,9 @@ class MyFrame1 ( wx.Frame ):
 
 
 		bSizer721.Add( bSizer43, 1, wx.EXPAND, 5 )
+
+		self.clearList2 = wx.CheckBox( self.m_panel2011, clearListCrop, u"Clear list after complete", wx.DefaultPosition, wx.DefaultSize, 0 )
+		bSizer721.Add( self.clearList2, 0, wx.ALL, 5 )
 
 
 		self.m_panel2011.SetSizer( bSizer721 )
@@ -421,7 +434,7 @@ class MyFrame1 ( wx.Frame ):
 		self.crop.SetSizer( bSizer411 )
 		self.crop.Layout()
 		bSizer411.Fit( self.crop )
-		self.m_notebook30.AddPage( self.crop, u"crop", True )
+		self.m_notebook30.AddPage( self.crop, u"crop", False )
 		self.mkvOptions = wx.Panel( self.m_notebook30, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.TAB_TRAVERSAL )
 		bSizer4111 = wx.BoxSizer( wx.VERTICAL )
 
@@ -496,6 +509,9 @@ class MyFrame1 ( wx.Frame ):
 
 
 		bSizer7211.Add( bSizer431, 1, wx.EXPAND, 5 )
+
+		self.clearList3 = wx.CheckBox( self.m_panel20111, clearListOptions, u"Clear list after complete", wx.DefaultPosition, wx.DefaultSize, 0 )
+		bSizer7211.Add( self.clearList3, 0, wx.ALL, 5 )
 
 
 		self.m_panel20111.SetSizer( bSizer7211 )

@@ -21,6 +21,7 @@ defaultfileTypesList = [".mkv" ,".ts" ,".mp4" ,".avi" ,".webm" ,".flv" ,".ogg" ,
 defaultFileTypeFillter = "Videos|*.mkv;*.ts;*.mp4;*.avi;*.webm;*.flv;*.ogg;*.mov;*.mpeg-2|All files (*.*)|*.*"
 mkvMerge = "C:\Program Files\MKVToolNix\mkvmerge.exe"
 mkvpropedit = "C:\Program Files\MKVToolNix\mkvpropedit.exe"
+
 selectedFilesToMkv = 1000
 browseFilesToMkv = 1001
 browseFolderToMkv = 1002
@@ -67,6 +68,10 @@ runOption = 1042
 currentFileOptions = 1043
 pBarOptions = 1044
 tabContainer = 1045
+clearListToMkv = 1046
+clearListToAudio = 1047
+clearListCrop = 1048
+clearListOptions = 1049
 
 mainDir = f"{os.path.dirname(__file__)}"
 settingsIcon = f"{mainDir}\\mkv.ico"
@@ -153,7 +158,9 @@ class MyFrame1 ( wx.Frame ):
         self.m_panel7.Layout()
         bSizer5.Fit( self.m_panel7 )
         bSizer7.Add( self.m_panel7, 1, wx.EXPAND |wx.ALL, 5 )
-
+        
+        self.clearList = wx.CheckBox( self.m_panel20, clearListToMkv, u"Clear list after complete", wx.DefaultPosition, wx.DefaultSize, 0 )
+        bSizer7.Add( self.clearList, 0, wx.ALL, 5 )
 
         self.m_panel20.SetSizer( bSizer7 )
         self.m_panel20.Layout()
@@ -253,12 +260,13 @@ class MyFrame1 ( wx.Frame ):
         bSizer82.Fit( self.m_panel82 )
         bSizer51.Add( self.m_panel82, 1, wx.ALL|wx.EXPAND|wx.ALIGN_BOTTOM, 5 )
 
-
         self.m_panel72.SetSizer( bSizer51 )
         self.m_panel72.Layout()
         bSizer51.Fit( self.m_panel72 )
         bSizer72.Add( self.m_panel72, 1, wx.EXPAND |wx.ALL, 5 )
-
+        
+        self.clearList1 = wx.CheckBox( self.m_panel201, clearListToAudio, u"Clear list after complete", wx.DefaultPosition, wx.DefaultSize, 0 )
+        bSizer72.Add( self.clearList1, 0, wx.ALL, 5 )
 
         self.m_panel201.SetSizer( bSizer72 )
         self.m_panel201.Layout()
@@ -370,6 +378,8 @@ class MyFrame1 ( wx.Frame ):
 
         bSizer721.Add( bSizer43, 1, wx.EXPAND, 5 )
 
+        self.clearList2 = wx.CheckBox( self.m_panel2011, clearListCrop, u"Clear list after complete", wx.DefaultPosition, wx.DefaultSize, 0 )
+        bSizer721.Add( self.clearList2, 0, wx.ALL, 5 )
 
         self.m_panel2011.SetSizer( bSizer721 )
         self.m_panel2011.Layout()
@@ -519,7 +529,9 @@ class MyFrame1 ( wx.Frame ):
 
 
         bSizer7211.Add( bSizer431, 1, wx.EXPAND, 5 )
-
+        
+        self.clearList3 = wx.CheckBox( self.m_panel20111, clearListOptions, u"Clear list after complete", wx.DefaultPosition, wx.DefaultSize, 0 )
+        bSizer7211.Add( self.clearList3, 0, wx.ALL, 5 )
 
         self.m_panel20111.SetSizer( bSizer7211 )
         self.m_panel20111.Layout()
@@ -692,6 +704,8 @@ class MyFrame1 ( wx.Frame ):
                     pBar.SetValue((presentage))
                     runCommand(mkvCommand)
             currentFile.SetLabel("")
+            pBar.SetValue(0)
+            checkBoxListWindow.SetItems([])
         except Exception as e:
             print(e)
         
@@ -717,6 +731,8 @@ class MyFrame1 ( wx.Frame ):
                     pBar.SetValue((presentage))
                     runCommand(audioCommand)
             currentFile.SetLabel("")
+            pBar.SetValue(0)
+            checkBoxListWindow.SetItems([])
         except Exception as e:
             print(e)
 
@@ -758,6 +774,8 @@ class MyFrame1 ( wx.Frame ):
                     pBar.SetValue((presentage))
                     runCommand(mkvCropCommand)
             currentFile.SetLabel("")
+            pBar.SetValue(0)
+            checkBoxListWindow.SetItems([])
         except Exception as e:
             print(e)
         
@@ -810,6 +828,8 @@ class MyFrame1 ( wx.Frame ):
                         pBar.SetValue((presentage))
                         runCommand(mkvCommand)
                     currentFile.SetLabel("")
+                    pBar.SetValue(0)
+                    checkBoxListWindow.SetItems([])
         except Exception as e:
             print(e)
         
