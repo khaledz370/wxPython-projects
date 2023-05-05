@@ -68,6 +68,10 @@ currentFileOptions = 1043
 pBarOptions = 1044
 tabContainer = 1045
 
+mainDir = f"{os.path.dirname(__file__)}"
+settingsIcon = f"{mainDir}\\resources\mkv.ico"
+
+
 ###########################################################################
 ## Class MyFrame1
 ###########################################################################
@@ -563,7 +567,8 @@ class MyFrame1 ( wx.Frame ):
 
         bSizer2.Add( self.m_notebook30, 1, wx.EXPAND |wx.ALL, 5 )
 
-
+        self.SetIcon(wx.Icon(settingsIcon, wx.BITMAP_TYPE_ICO))
+        
         self.SetSizer( bSizer2 )
         self.Layout()
 
@@ -662,7 +667,7 @@ class MyFrame1 ( wx.Frame ):
         except Exception as e:
             print(e)
 
-    def convertToMkv(self, event):
+    def convertToMkv(self):
         try:
             checkBoxListWindow = wx.FindWindowById(selectedFilesToMkv)
             currentFile = wx.FindWindowById(currentFileToMkv)
@@ -690,7 +695,7 @@ class MyFrame1 ( wx.Frame ):
         except Exception as e:
             print(e)
         
-    def convertToAudio( self, event ):
+    def convertToAudio( self ):
         try:
             checkBoxListWindow = wx.FindWindowById(selectedFilesToAudio)
             currentFile = wx.FindWindowById(currentFileToAudio)
@@ -756,7 +761,7 @@ class MyFrame1 ( wx.Frame ):
         except Exception as e:
             print(e)
         
-    def runWithJson( self, event ):
+    def runWithJson( self ):
         try:
             optionJson = wx.FindWindowById(optionsFile)
             checkBoxListWindow = wx.FindWindowById(selectedFilesOptions)
@@ -855,4 +860,3 @@ frame.m_checkList121.SetDropTarget(MyFileDropTarget(frame.m_checkList121,"Crop")
 frame.m_checkList1211.SetDropTarget(MyFileDropTarget(frame.m_checkList1211,"Options"))
 frame.Show(True)
 app.MainLoop()
-
