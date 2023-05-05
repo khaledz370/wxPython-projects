@@ -84,9 +84,9 @@ settingsIcon = f"{mainDir}\\mkv.ico"
 class MyFrame1 ( wx.Frame ):
 
     def __init__( self, parent ):
-        wx.Frame.__init__ ( self, parent, id = wx.ID_ANY, title = wx.EmptyString, pos = wx.DefaultPosition, size = wx.Size( 664,644 ), style = wx.DEFAULT_FRAME_STYLE|wx.RESIZE_BORDER|wx.TAB_TRAVERSAL )
+        wx.Frame.__init__ ( self, parent, id = wx.ID_ANY, title = wx.EmptyString, pos = wx.DefaultPosition, size = wx.Size( 664,600 ), style = wx.DEFAULT_FRAME_STYLE|wx.RESIZE_BORDER|wx.TAB_TRAVERSAL )
 
-        self.SetSizeHints( wx.Size( 660,440 ), wx.Size( 660,700 ) )
+        self.SetSizeHints( wx.Size( 660,600 ))
 
         bSizer2 = wx.BoxSizer( wx.VERTICAL )
 
@@ -853,6 +853,7 @@ class MyFileDropTarget(wx.FileDropTarget):
 
     def OnDropFiles(self, x, y, filenames):
         allFiles = filenames
+        fileTypesList = defaultfileTypesList
         if os.path.isdir(filenames[0]):
             allFiles = []
             for root, dirs, files in os.walk(filenames[0]):
@@ -864,7 +865,11 @@ class MyFileDropTarget(wx.FileDropTarget):
         oldfiles = checkBoxList.GetItems()
         allFiles = list(oldfiles) + filenames
         allFiles = list(dict.fromkeys(allFiles))
-        allFiles = list(filter(lambda file: str(file).endswith(tuple(defaultfileTypesList)),allFiles))
+        if self.tab == "ToMkv":
+            fileTypesList.remove(".mkv")
+            # print(fileTypesList)
+        allFiles = list(filter(lambda file: str(file).endswith(tuple(fileTypesList)),allFiles))
+        fileTypesList = defaultfileTypesList
         checkBoxList.Set(allFiles)
         return True
 
