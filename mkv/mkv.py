@@ -17,41 +17,45 @@ browseFolderToMkv = 1003
 selectAllToMkv = 1004
 dBtnToMkv = 1005
 clearListToMkv = 1006
-convertToMkv = 1007
-currentFileToMkv = 1008
-pBarToMkv = 1009
-selectedFilesToAudio = 1010
-browseFilesToAudio = 1011
-browseFolderToAudio = 1012
-selectAllToAudio = 1013
-dBtnToAudio = 1014
-clearListToAudio = 1015
-convertToAudio = 1016
-currentFileToAudio = 1017
-pBarToAudio = 1018
-selectedFilesCrop = 1019
-browseFilesCrop = 1020
-browseFolderCrop = 1021
-selectAllCrop = 1022
-dBtnCrop = 1023
-clearListCrop = 1024
-cTop = 1025
-cRight = 1026
-cBottom = 1027
-cLeft = 1028
-cropVideo = 1029
-currentFileCrop = 1030
-pBarCrop = 1031
-selectedFilesOptions = 1032
-browseFilesOptions = 1033
-browseFolderOptions = 1034
-selectAllOptions = 1035
-dBtnOptions = 1036
-clearListOptions = 1037
-optionsFile = 1038
-runOption = 1039
-currentFileOptions = 1040
-pBarOptions = 1041
+mkvmergeTomkv = 1007
+mkvmergeOldFolderToMkv = 1008
+convertToMkv = 1009
+currentFileToMkv = 1010
+pBarToMkv = 1011
+selectedFilesToAudio = 1012
+browseFilesToAudio = 1013
+browseFolderToAudio = 1014
+selectAllToAudio = 1015
+dBtnToAudio = 1016
+clearListToAudio = 1017
+convertToAudio = 1018
+currentFileToAudio = 1019
+pBarToAudio = 1020
+selectedFilesCrop = 1021
+browseFilesCrop = 1022
+browseFolderCrop = 1023
+selectAllCrop = 1024
+dBtnCrop = 1025
+clearListCrop = 1026
+cTop = 1027
+cRight = 1028
+cBottom = 1029
+cLeft = 1030
+cropVideo = 1031
+currentFileCrop = 1032
+pBarCrop = 1033
+selectedFilesOptions = 1034
+browseFilesOptions = 1035
+browseFolderOptions = 1036
+mkvmergeOptions = 1037
+selectAllOptions = 1038
+dBtnOptions = 1039
+clearListOptions = 1040
+mkvmergeOldFolderOptions = 1041
+optionsFile = 1042
+runOption = 1043
+currentFileOptions = 1044
+pBarOptions = 1045
 
 ###########################################################################
 ## Class MyFrame1
@@ -60,7 +64,7 @@ pBarOptions = 1041
 class MyFrame1 ( wx.Frame ):
 
 	def __init__( self, parent ):
-		wx.Frame.__init__ ( self, parent, id = wx.ID_ANY, title = wx.EmptyString, pos = wx.DefaultPosition, size = wx.Size( 660,440 ), style = wx.DEFAULT_FRAME_STYLE|wx.RESIZE_BORDER|wx.TAB_TRAVERSAL )
+		wx.Frame.__init__ ( self, parent, id = wx.ID_ANY, title = wx.EmptyString, pos = wx.DefaultPosition, size = wx.Size( 660,590 ), style = wx.DEFAULT_FRAME_STYLE|wx.RESIZE_BORDER|wx.TAB_TRAVERSAL )
 
 		self.SetSizeHints( wx.Size( 660,440 ), wx.Size( 660,700 ) )
 
@@ -135,8 +139,23 @@ class MyFrame1 ( wx.Frame ):
 		bSizer5.Fit( self.m_panel7 )
 		bSizer7.Add( self.m_panel7, 1, wx.EXPAND |wx.ALL, 5 )
 
+		bSizer42 = wx.BoxSizer( wx.HORIZONTAL )
+
 		self.clearList = wx.CheckBox( self.m_panel20, clearListToMkv, u"Clear list after complete", wx.DefaultPosition, wx.DefaultSize, 0 )
-		bSizer7.Add( self.clearList, 0, wx.ALL, 5 )
+		bSizer42.Add( self.clearList, 0, wx.ALL|wx.EXPAND, 5 )
+
+		self.m_button211 = wx.Button( self.m_panel20, mkvmergeTomkv, u"mkvmerge old", wx.DefaultPosition, wx.DefaultSize, 0 )
+		bSizer42.Add( self.m_button211, 0, wx.ALL|wx.EXPAND, 5 )
+
+		self.m_staticText13 = wx.StaticText( self.m_panel20, mkvmergeOldFolderToMkv, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, wx.ALIGN_RIGHT )
+		self.m_staticText13.Wrap( -1 )
+
+		self.m_staticText13.SetForegroundColour( wx.SystemSettings.GetColour( wx.SYS_COLOUR_HIGHLIGHT ) )
+
+		bSizer42.Add( self.m_staticText13, 1, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
+
+
+		bSizer7.Add( bSizer42, 0, wx.EXPAND, 5 )
 
 
 		self.m_panel20.SetSizer( bSizer7 )
@@ -282,7 +301,7 @@ class MyFrame1 ( wx.Frame ):
 		self.toAudio.SetSizer( bSizer41 )
 		self.toAudio.Layout()
 		bSizer41.Fit( self.toAudio )
-		self.m_notebook30.AddPage( self.toAudio, u"toAudio", True )
+		self.m_notebook30.AddPage( self.toAudio, u"toAudio", False )
 		self.crop = wx.Panel( self.m_notebook30, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.TAB_TRAVERSAL )
 		bSizer411 = wx.BoxSizer( wx.VERTICAL )
 
@@ -475,6 +494,9 @@ class MyFrame1 ( wx.Frame ):
 		self.m_button11211 = wx.Button( self.m_panel9111, browseFolderOptions, u"select folder", wx.DefaultPosition, wx.DefaultSize, 0 )
 		bSizer71111.Add( self.m_button11211, 1, wx.ALL|wx.EXPAND, 5 )
 
+		self.m_button212 = wx.Button( self.m_panel9111, mkvmergeOptions, u"mkvmerge old", wx.DefaultPosition, wx.DefaultSize, 0 )
+		bSizer71111.Add( self.m_button212, 0, wx.ALL, 5 )
+
 		self.m_button15111 = wx.Button( self.m_panel9111, selectAllOptions, u"Select all", wx.DefaultPosition, wx.DefaultSize, 0 )
 		bSizer71111.Add( self.m_button15111, 1, wx.ALL|wx.EXPAND, 5 )
 
@@ -505,13 +527,21 @@ class MyFrame1 ( wx.Frame ):
 		bSizer5111.Fit( self.m_panel7211 )
 		bSizer7211.Add( self.m_panel7211, 1, wx.EXPAND |wx.ALL, 5 )
 
-		bSizer431 = wx.BoxSizer( wx.VERTICAL )
-
-
-		bSizer7211.Add( bSizer431, 1, wx.EXPAND, 5 )
+		bSizer421 = wx.BoxSizer( wx.HORIZONTAL )
 
 		self.clearList3 = wx.CheckBox( self.m_panel20111, clearListOptions, u"Clear list after complete", wx.DefaultPosition, wx.DefaultSize, 0 )
-		bSizer7211.Add( self.clearList3, 0, wx.ALL, 5 )
+		bSizer421.Add( self.clearList3, 0, wx.ALL|wx.EXPAND, 5 )
+
+		self.m_button2111 = wx.Button( self.m_panel20111, mkvmergeOptions, u"mkvmerge old", wx.DefaultPosition, wx.DefaultSize, 0 )
+		bSizer421.Add( self.m_button2111, 0, wx.ALL|wx.EXPAND, 5 )
+
+		self.m_staticText131 = wx.StaticText( self.m_panel20111, mkvmergeOldFolderOptions, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.m_staticText131.Wrap( -1 )
+
+		bSizer421.Add( self.m_staticText131, 1, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
+
+
+		bSizer7211.Add( bSizer421, 0, wx.EXPAND, 5 )
 
 
 		self.m_panel20111.SetSizer( bSizer7211 )
@@ -556,7 +586,7 @@ class MyFrame1 ( wx.Frame ):
 		self.mkvOptions.SetSizer( bSizer4111 )
 		self.mkvOptions.Layout()
 		bSizer4111.Fit( self.mkvOptions )
-		self.m_notebook30.AddPage( self.mkvOptions, u"mkvOptions", False )
+		self.m_notebook30.AddPage( self.mkvOptions, u"mkvOptions", True )
 
 		bSizer2.Add( self.m_notebook30, 1, wx.EXPAND |wx.ALL, 5 )
 
@@ -572,6 +602,7 @@ class MyFrame1 ( wx.Frame ):
 		self.m_button11.Bind( wx.EVT_BUTTON, self.selectFolder("ToMkv") )
 		self.m_button15.Bind( wx.EVT_BUTTON, self.selectAll("ToMkv") )
 		self.m_button111.Bind( wx.EVT_BUTTON, self.deleteFromList("ToMkv") )
+		self.m_button211.Bind( wx.EVT_BUTTON, self.setMkvMergeFolder )
 		self.m_button9.Bind( wx.EVT_BUTTON, self.convertToMkv )
 		self.m_button31.Bind( wx.EVT_BUTTON, self.openFilesSelector("ToAudio") )
 		self.m_button112.Bind( wx.EVT_BUTTON, self.selectFolder("ToAudio") )
@@ -585,8 +616,10 @@ class MyFrame1 ( wx.Frame ):
 		self.m_button911.Bind( wx.EVT_BUTTON, self.cropVideo )
 		self.m_button3111.Bind( wx.EVT_BUTTON, self.openFilesSelector("Options") )
 		self.m_button11211.Bind( wx.EVT_BUTTON, self.selectFolder("Options") )
+		self.m_button212.Bind( wx.EVT_BUTTON, self.setMkvMergeFolder )
 		self.m_button15111.Bind( wx.EVT_BUTTON, self.selectAll("Options") )
 		self.m_button111111.Bind( wx.EVT_BUTTON, self.deleteFromList("Options") )
+		self.m_button2111.Bind( wx.EVT_BUTTON, self.setMkvMergeFolder )
 		self.m_button9111.Bind( wx.EVT_BUTTON, self.runWithJson )
 
 	def __del__( self ):
@@ -604,6 +637,9 @@ class MyFrame1 ( wx.Frame ):
 		event.Skip()
 
 	def deleteFromList("ToMkv")( self, event ):
+		event.Skip()
+
+	def setMkvMergeFolder( self, event ):
 		event.Skip()
 
 	def convertToMkv( self, event ):
@@ -645,11 +681,13 @@ class MyFrame1 ( wx.Frame ):
 	def selectFolder("Options")( self, event ):
 		event.Skip()
 
+
 	def selectAll("Options")( self, event ):
 		event.Skip()
 
 	def deleteFromList("Options")( self, event ):
 		event.Skip()
+
 
 	def runWithJson( self, event ):
 		event.Skip()

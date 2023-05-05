@@ -29,7 +29,7 @@ selectAllToMkv = 1003
 dBtnToMkv = 1004
 fileTypesToMkv = 1005
 allToMkv = 1006
-convertToMkv = 1007
+runToMkv = 1007
 currentFileToMkv = 1008
 pBarToMkv = 1009
 selectedFilesToAudio = 1010
@@ -39,7 +39,7 @@ selectAllToAudio = 1013
 dBtnToAudio = 1014
 fileTypesToAudio = 1015
 allToAudio = 1016
-convertToAudio = 1017
+runToAudio = 1017
 currentFileToAudio = 1018
 pBarToAudio = 1019
 selectedFilesCrop = 1020
@@ -53,7 +53,7 @@ cTop = 1027
 cRight = 1028
 cBottom = 1029
 cLeft = 1030
-cropVideo = 1031
+runCrop = 1031
 currentFileCrop = 1032
 pBarCrop = 1033
 selectedFilesOptions = 1034
@@ -64,7 +64,7 @@ dBtnOptions = 1038
 fileTypesOptions = 1039
 allOptions = 1040
 optionsFile = 1041
-runOption = 1042
+runOptions = 1042
 currentFileOptions = 1043
 pBarOptions = 1044
 tabContainer = 1045
@@ -72,6 +72,10 @@ clearListToMkv = 1046
 clearListToAudio = 1047
 clearListCrop = 1048
 clearListOptions = 1049
+mkvmergeTomkv = 1050
+mkvmergeOptions = 1051
+mkvmergeOldFolderOptions = 1052
+mkvmergeOldFolderToMkv = 1053
 
 mainDir = f"{os.path.dirname(__file__)}"
 settingsIcon = f"{mainDir}\\mkv.ico"
@@ -129,12 +133,13 @@ class MyFrame1 ( wx.Frame ):
         self.m_button11 = wx.Button( self.m_panel9, browseFolderToMkv, u"select folder", wx.DefaultPosition, wx.DefaultSize, 0 )
         bSizer71.Add( self.m_button11, 1, wx.ALL|wx.EXPAND, 5 )
 
-        self.m_button15 = wx.Button( self.m_panel9, selectAllToMkv, u"Select all", wx.DefaultPosition, wx.DefaultSize, 0 )
+        self.m_button15 = wx.Button( self.m_panel9, selectAllToMkv, u"Select all / none", wx.DefaultPosition, wx.DefaultSize, 0 )
         bSizer71.Add( self.m_button15, 1, wx.ALL|wx.EXPAND, 5 )
-
+        self.m_button15.Disable()
+        
         self.m_button111 = wx.Button( self.m_panel9, dBtnToMkv, u"Delete", wx.DefaultPosition, wx.DefaultSize, 0 )
         bSizer71.Add( self.m_button111, 1, wx.ALL|wx.ALIGN_CENTER_HORIZONTAL|wx.EXPAND, 5 )
-
+        self.m_button111.Disable()
 
         self.m_panel9.SetSizer( bSizer71 )
         self.m_panel9.Layout()
@@ -159,9 +164,21 @@ class MyFrame1 ( wx.Frame ):
         bSizer5.Fit( self.m_panel7 )
         bSizer7.Add( self.m_panel7, 1, wx.EXPAND |wx.ALL, 5 )
         
-        self.clearList = wx.CheckBox( self.m_panel20, clearListToMkv, u"Clear list after complete", wx.DefaultPosition, wx.DefaultSize, 0 )
-        bSizer7.Add( self.clearList, 0, wx.ALL, 5 )
+        bSizer42 = wx.BoxSizer( wx.HORIZONTAL )
 
+        self.clearList = wx.CheckBox( self.m_panel20, clearListToMkv, u"Clear list after complete", wx.DefaultPosition, wx.DefaultSize, 0 )
+        bSizer42.Add( self.clearList, 0, wx.ALL|wx.EXPAND, 5 )
+
+        self.m_button211 = wx.Button( self.m_panel20, mkvmergeTomkv, u"mkvmerge old", wx.DefaultPosition, wx.DefaultSize, 0 )
+        bSizer42.Add( self.m_button211, 0, wx.ALL|wx.EXPAND, 5 )
+        
+        self.m_staticText13 = wx.StaticText( self.m_panel20, mkvmergeOldFolderToMkv, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, wx.ALIGN_RIGHT)
+        self.m_staticText13.Wrap( -1 )
+        self.m_staticText13.SetForegroundColour( wx.SystemSettings.GetColour( wx.SYS_COLOUR_HIGHLIGHT ) )
+
+        bSizer42.Add( self.m_staticText13, 1, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
+
+        bSizer7.Add( bSizer42, 0, wx.EXPAND, 5 )
         self.m_panel20.SetSizer( bSizer7 )
         self.m_panel20.Layout()
         bSizer7.Fit( self.m_panel20 )
@@ -171,8 +188,9 @@ class MyFrame1 ( wx.Frame ):
 
         bSizer12 = wx.BoxSizer( wx.HORIZONTAL )
 
-        self.m_button9 = wx.Button( self.tomkv, convertToMkv, u"Convert to mkv", wx.DefaultPosition, wx.Size( -1,30 ), 0 )
+        self.m_button9 = wx.Button( self.tomkv, runToMkv, u"Convert to mkv", wx.DefaultPosition, wx.Size( -1,30 ), 0 )
         bSizer12.Add( self.m_button9, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
+        self.m_button9.Disable()
 
         self.m_staticText31 = wx.StaticText( self.tomkv, currentFileToMkv, wx.EmptyString, wx.DefaultPosition, wx.Size( -1,30 ), 0 )
         self.m_staticText31.Wrap( -1 )
@@ -236,12 +254,13 @@ class MyFrame1 ( wx.Frame ):
         self.m_button112 = wx.Button( self.m_panel91, browseFolderToAudio, u"select folder", wx.DefaultPosition, wx.DefaultSize, 0 )
         bSizer711.Add( self.m_button112, 1, wx.ALL|wx.EXPAND, 5 )
 
-        self.m_button151 = wx.Button( self.m_panel91, selectAllToAudio, u"Select all", wx.DefaultPosition, wx.DefaultSize, 0 )
+        self.m_button151 = wx.Button( self.m_panel91, selectAllToAudio, u"Select all / none", wx.DefaultPosition, wx.DefaultSize, 0 )
         bSizer711.Add( self.m_button151, 1, wx.ALL|wx.EXPAND, 5 )
-
+        self.m_button151.Disable()
+        
         self.m_button1111 = wx.Button( self.m_panel91, dBtnToAudio, u"Delete", wx.DefaultPosition, wx.DefaultSize, 0 )
         bSizer711.Add( self.m_button1111, 1, wx.ALL|wx.ALIGN_CENTER_HORIZONTAL|wx.EXPAND, 5 )
-
+        self.m_button1111.Disable()
 
         self.m_panel91.SetSizer( bSizer711 )
         self.m_panel91.Layout()
@@ -278,8 +297,9 @@ class MyFrame1 ( wx.Frame ):
         bSizer121 = wx.BoxSizer( wx.HORIZONTAL )
 
         bSizer121.SetMinSize( wx.Size( -1,30 ) )
-        self.m_button91 = wx.Button( self.toAudio, convertToAudio, u"Convert to audio", wx.DefaultPosition, wx.Size( -1,30 ), 0 )
+        self.m_button91 = wx.Button( self.toAudio, runToAudio, u"Convert to audio", wx.DefaultPosition, wx.Size( -1,30 ), 0 )
         bSizer121.Add( self.m_button91, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
+        self.m_button91.Disable()
 
         self.m_staticText311 = wx.StaticText( self.toAudio, currentFileToAudio, wx.EmptyString, wx.DefaultPosition, wx.Size( -1,30 ), 0 )
         self.m_staticText311.Wrap( -1 )
@@ -343,12 +363,13 @@ class MyFrame1 ( wx.Frame ):
         self.m_button1121 = wx.Button( self.m_panel911, browseFolderCrop, u"select folder", wx.DefaultPosition, wx.DefaultSize, 0 )
         bSizer7111.Add( self.m_button1121, 1, wx.ALL|wx.EXPAND, 5 )
 
-        self.m_button1511 = wx.Button( self.m_panel911, selectAllCrop, u"Select all", wx.DefaultPosition, wx.DefaultSize, 0 )
+        self.m_button1511 = wx.Button( self.m_panel911, selectAllCrop, u"Select all / none", wx.DefaultPosition, wx.DefaultSize, 0 )
         bSizer7111.Add( self.m_button1511, 1, wx.ALL|wx.EXPAND, 5 )
+        self.m_button1511.Disable()
 
         self.m_button11111 = wx.Button( self.m_panel911, dBtnCrop, u"Delete", wx.DefaultPosition, wx.DefaultSize, 0 )
         bSizer7111.Add( self.m_button11111, 1, wx.ALL|wx.ALIGN_CENTER_HORIZONTAL|wx.EXPAND, 5 )
-
+        self.m_button11111.Disable()
 
         self.m_panel911.SetSizer( bSizer7111 )
         self.m_panel911.Layout()
@@ -429,8 +450,9 @@ class MyFrame1 ( wx.Frame ):
         bSizer1211 = wx.BoxSizer( wx.HORIZONTAL )
 
         bSizer1211.SetMinSize( wx.Size( -1,30 ) )
-        self.m_button911 = wx.Button( self.crop, cropVideo, u"Crop", wx.DefaultPosition, wx.Size( -1,30 ), 0 )
+        self.m_button911 = wx.Button( self.crop, runCrop, u"Crop", wx.DefaultPosition, wx.Size( -1,30 ), 0 )
         bSizer1211.Add( self.m_button911, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL|wx.EXPAND, 5 )
+        self.m_button911.Disable()
 
         self.m_staticText3111 = wx.StaticText( self.crop, currentFileCrop, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, 0 )
         self.m_staticText3111.Wrap( -1 )
@@ -494,13 +516,14 @@ class MyFrame1 ( wx.Frame ):
 
         self.m_button11211 = wx.Button( self.m_panel9111, browseFolderOptions, u"select folder", wx.DefaultPosition, wx.DefaultSize, 0 )
         bSizer71111.Add( self.m_button11211, 1, wx.ALL|wx.EXPAND, 5 )
-
-        self.m_button15111 = wx.Button( self.m_panel9111, selectAllOptions, u"Select all", wx.DefaultPosition, wx.DefaultSize, 0 )
+        
+        self.m_button15111 = wx.Button( self.m_panel9111, selectAllOptions, u"Select all / none", wx.DefaultPosition, wx.DefaultSize, 0 )
         bSizer71111.Add( self.m_button15111, 1, wx.ALL|wx.EXPAND, 5 )
+        self.m_button15111.Disable()
 
         self.m_button111111 = wx.Button( self.m_panel9111, dBtnOptions, u"Delete", wx.DefaultPosition, wx.DefaultSize, 0 )
         bSizer71111.Add( self.m_button111111, 1, wx.ALL|wx.ALIGN_CENTER_HORIZONTAL|wx.EXPAND, 5 )
-
+        self.m_button111111.Disable()
 
         self.m_panel9111.SetSizer( bSizer71111 )
         self.m_panel9111.Layout()
@@ -525,13 +548,21 @@ class MyFrame1 ( wx.Frame ):
         bSizer5111.Fit( self.m_panel7211 )
         bSizer7211.Add( self.m_panel7211, 1, wx.EXPAND |wx.ALL, 5 )
 
-        bSizer431 = wx.BoxSizer( wx.VERTICAL )
+        bSizer421 = wx.BoxSizer( wx.HORIZONTAL )
 
-
-        bSizer7211.Add( bSizer431, 1, wx.EXPAND, 5 )
-        
         self.clearList3 = wx.CheckBox( self.m_panel20111, clearListOptions, u"Clear list after complete", wx.DefaultPosition, wx.DefaultSize, 0 )
-        bSizer7211.Add( self.clearList3, 0, wx.ALL, 5 )
+        bSizer421.Add( self.clearList3, 0, wx.ALL|wx.EXPAND, 5 )
+
+        self.m_button2111 = wx.Button( self.m_panel20111, mkvmergeOptions, u"mkvmerge old", wx.DefaultPosition, wx.DefaultSize, 0 )
+        bSizer421.Add( self.m_button2111, 0, wx.ALL|wx.EXPAND, 5 )
+        
+        self.m_staticText131 = wx.StaticText( self.m_panel20111, mkvmergeOldFolderOptions, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, wx.ALIGN_RIGHT )
+        self.m_staticText131.Wrap( -1 )
+        self.m_staticText131.SetForegroundColour( wx.SystemSettings.GetColour( wx.SYS_COLOUR_HIGHLIGHT ) )
+
+        bSizer421.Add( self.m_staticText131, 1, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
+
+        bSizer7211.Add( bSizer421, 0, wx.EXPAND, 5 )
 
         self.m_panel20111.SetSizer( bSizer7211 )
         self.m_panel20111.Layout()
@@ -550,8 +581,9 @@ class MyFrame1 ( wx.Frame ):
 
         bSizer12111 = wx.BoxSizer( wx.HORIZONTAL )
 
-        self.m_button9111 = wx.Button( self.mkvOptions, runOption, u"Run", wx.DefaultPosition, wx.Size( -1,30 ), 0 )
+        self.m_button9111 = wx.Button( self.mkvOptions, runOptions, u"Run", wx.DefaultPosition, wx.Size( -1,30 ), 0 )
         bSizer12111.Add( self.m_button9111, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
+        self.m_button9111.Disable()
 
         self.m_staticText31111 = wx.StaticText( self.mkvOptions, currentFileOptions, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, 0 )
         self.m_staticText31111.Wrap( -1 )
@@ -591,23 +623,25 @@ class MyFrame1 ( wx.Frame ):
         self.m_button3.Bind( wx.EVT_BUTTON, lambda event: self.openFilesSelector("ToMkv") )
         self.m_button11.Bind( wx.EVT_BUTTON, lambda event: self.selectFolder("ToMkv") )
         self.m_button15.Bind( wx.EVT_BUTTON, lambda event: self.selectAll("ToMkv") )
+        self.m_button211.Bind( wx.EVT_BUTTON, lambda event: self.setMkvMergeFolder("ToMkv") )
         self.m_button111.Bind( wx.EVT_BUTTON, lambda event: self.deleteFromList("ToMkv") )
-        self.m_button9.Bind( wx.EVT_BUTTON, lambda event: self.processThread("self.convertToMkv "))
+        self.m_button9.Bind( wx.EVT_BUTTON, lambda event: self.processThread("self.runToMkv "))
         self.m_button31.Bind( wx.EVT_BUTTON, lambda event: self.openFilesSelector("ToAudio") )
         self.m_button112.Bind( wx.EVT_BUTTON, lambda event: self.selectFolder("ToAudio") )
         self.m_button151.Bind( wx.EVT_BUTTON, lambda event: self.selectAll("ToAudio") )
         self.m_button1111.Bind( wx.EVT_BUTTON, lambda event: self.deleteFromList("ToAudio") )
-        self.m_button91.Bind( wx.EVT_BUTTON, lambda event: self.processThread("self.convertToAudio") )
+        self.m_button91.Bind( wx.EVT_BUTTON, lambda event: self.processThread("self.runToAudio") )
         self.m_button311.Bind( wx.EVT_BUTTON, lambda event: self.openFilesSelector("Crop") )
         self.m_button1121.Bind( wx.EVT_BUTTON, lambda event: self.selectFolder("Crop") )
         self.m_button1511.Bind( wx.EVT_BUTTON, lambda event: self.selectAll("Crop") )
         self.m_button11111.Bind( wx.EVT_BUTTON, lambda event: self.deleteFromList("Crop") )
-        self.m_button911.Bind( wx.EVT_BUTTON, lambda event: self.processThread("self.cropVideo") )
+        self.m_button911.Bind( wx.EVT_BUTTON, lambda event: self.processThread("self.runCrop") )
         self.m_button3111.Bind( wx.EVT_BUTTON, lambda event: self.openFilesSelector("Options") )
         self.m_button11211.Bind( wx.EVT_BUTTON, lambda event: self.selectFolder("Options") )
         self.m_button15111.Bind( wx.EVT_BUTTON, lambda event: self.selectAll("Options") )
+        self.m_button2111.Bind( wx.EVT_BUTTON, lambda event: self.setMkvMergeFolder("Options") )
         self.m_button111111.Bind( wx.EVT_BUTTON, lambda event: self.deleteFromList("Options") )
-        self.m_button9111.Bind( wx.EVT_BUTTON, lambda event: self.processThread("self.runWithJson") )
+        self.m_button9111.Bind( wx.EVT_BUTTON, lambda event: self.processThread("self.runOptions") )
 
     def __del__( self ):
         pass
@@ -628,7 +662,23 @@ class MyFrame1 ( wx.Frame ):
         checkBoxListWindow.SetItems(newList)
         selectAll = eval(f"selectAll{event}")
         thisButton = wx.FindWindowById(selectAll)
-        thisButton.SetLabel("Select none")
+        buttonId = eval(f"run{event}")
+        selectAllId = eval(f"selectAll{event}")
+        delBtnId = eval(f"dBtn{event}")
+        delBtnWindow = wx.FindWindowById(delBtnId)
+        buttonWindow = wx.FindWindowById(buttonId)
+        selectAllWindow = wx.FindWindowById(selectAllId)
+        if len(checkBoxListWindow.GetItems()):
+            buttonWindow.Enable()
+            selectAllWindow.Enable()
+            if len(checkBoxListWindow.GetCheckedItems()):
+                delBtnWindow.Enable()
+            else:
+                delBtnWindow.Disable() 
+        else:
+            delBtnWindow.Disable() 
+            buttonWindow.Disable() 
+            selectAllWindow.Disable() 
 
     def openFilesSelector( self, event ):
         try:
@@ -643,6 +693,23 @@ class MyFrame1 ( wx.Frame ):
             allFiles = list(filter(lambda file: str(file).endswith(tuple(defaultfileTypesList)),allFiles))
             checkBoxListWindow.Set(allFiles)
             openFileDialog.Destroy()
+            buttonId = eval(f"run{event}")
+            selectAllId = eval(f"selectAll{event}")
+            delBtnId = eval(f"dBtn{event}")
+            delBtnWindow = wx.FindWindowById(delBtnId)
+            buttonWindow = wx.FindWindowById(buttonId)
+            selectAllWindow = wx.FindWindowById(selectAllId)
+            if len(checkBoxListWindow.GetItems()):
+                buttonWindow.Enable()
+                selectAllWindow.Enable()
+                if len(checkBoxListWindow.GetCheckedItems()):
+                    delBtnWindow.Enable()
+                else:
+                    delBtnWindow.Disable() 
+            else:
+                delBtnWindow.Disable() 
+                buttonWindow.Disable() 
+                selectAllWindow.Disable() 
         except Exception as e:
             print(e)
 
@@ -658,6 +725,36 @@ class MyFrame1 ( wx.Frame ):
             filterFilesInDir = list(filter(lambda file: str(file).endswith(tuple(defaultfileTypesList)),absFilesInDir))
             checkBoxListWindow.Set(filterFilesInDir)
             openDirDialog.Destroy()
+            buttonId = eval(f"run{event}")
+            selectAllId = eval(f"selectAll{event}")
+            delBtnId = eval(f"dBtn{event}")
+            delBtnWindow = wx.FindWindowById(delBtnId)
+            buttonWindow = wx.FindWindowById(buttonId)
+            selectAllWindow = wx.FindWindowById(selectAllId)
+            if len(checkBoxListWindow.GetItems()):
+                buttonWindow.Enable()
+                selectAllWindow.Enable()
+                if len(checkBoxListWindow.GetCheckedItems()):
+                    delBtnWindow.Enable()
+                else:
+                    delBtnWindow.Disable() 
+            else:
+                delBtnWindow.Disable() 
+                buttonWindow.Disable() 
+                selectAllWindow.Disable() 
+        except Exception as e:
+            print(e)
+            
+    def setMkvMergeFolder( self, event ):
+        try:
+            openDirDialog = wx.DirDialog(self, "Choose folder",style=wx.DD_DIR_MUST_EXIST)
+            openDirDialog.ShowModal()
+            selectedDir = openDirDialog.GetPath()
+            dirTxt = wx.FindWindowById(eval(f"mkvmergeOldFolder{event}"))
+            dirTxt.SetLabel(str(selectedDir))
+            style = dirTxt.GetWindowStyleFlag()
+            style  &= ~wx.ALIGN_RIGHT
+            openDirDialog.Destroy()
         except Exception as e:
             print(e)
 
@@ -672,14 +769,21 @@ class MyFrame1 ( wx.Frame ):
             selectedItems = checkBoxListWindow.GetCheckedItems()
             if indexes and indexes != len(selectedItems):
                 checkBoxListWindow.SetCheckedItems(range(indexes))
-                thisButton.SetLabel("Select none")
             else:
                 checkBoxListWindow.SetCheckedItems([])
-                thisButton.SetLabel("Select all")
+            delBtnId = eval(f"dBtn{event}")
+            delBtnWindow = wx.FindWindowById(delBtnId)
+            if len(checkBoxListWindow.GetItems()):
+                if len(checkBoxListWindow.GetCheckedItems()):
+                    delBtnWindow.Enable()
+                else:
+                    delBtnWindow.Disable() 
+            else:
+                delBtnWindow.Disable() 
         except Exception as e:
             print(e)
 
-    def convertToMkv(self):
+    def runToMkv(self):
         try:
             checkBoxListWindow = wx.FindWindowById(selectedFilesToMkv)
             currentFile = wx.FindWindowById(currentFileToMkv)
@@ -687,7 +791,12 @@ class MyFrame1 ( wx.Frame ):
             pBar = wx.FindWindowById(pBarToMkv)
             clearListCheckbox = wx.FindWindowById(clearListToMkv)
             isClearChecked = clearListCheckbox.GetValue()
-            # print(indexes)
+            mkvmergeDirWindow = wx.FindWindowById(mkvmergeOldFolderToMkv)
+            drive, path = os.path.splitdrive(os.path.dirname(allFiles[0]))
+            if not os.path.isdir(mkvmergeDirWindow.GetLabel()):
+                mkvmergeDir = drive
+            else:
+                mkvmergeDir = mkvmergeDirWindow.GetLabel()
             if indexes:
                 allFiles = checkBoxListWindow.GetItems()
                 duplicateFiles = list(allFiles)
@@ -696,23 +805,24 @@ class MyFrame1 ( wx.Frame ):
                     selectedDir = os.path.dirname(file)
                     fName = os.path.basename(file)
                     fNameNoExt = os.path.splitext(fName)[0]
-                    if not os.path.exists((f"{selectedDir}\\mkvmerge_old")):
-                        os.makedirs((f"{selectedDir}\\mkvmerge_old"))
-                    mkvmerge_old = (f"{selectedDir}\mkvmerge_old\{fName}")
+                    if not os.path.exists((f"{mkvmergeDir}\\mkvmerge_old\\{path}")):
+                        os.makedirs((f"{mkvmergeDir}\\mkvmerge_old\\{path}"))
+                    mkvmerge_old = (f"{mkvmergeDir}\mkvmerge_old\\{path}\\{fName}")
                     shutil.move(file, mkvmerge_old)
-                    mkvCommand = f"\"{mkvMerge}\" --output \"{selectedDir}\\{fNameNoExt}.mkv\" \"{selectedDir}\\mkvmerge_old\\{fName}\""
+                    mkvCommand = f"\"{mkvMerge}\" --output \"{selectedDir}\\{fNameNoExt}.mkv\" \"{mkvmergeDir}\\mkvmerge_old\\{path}\\{fName}\""
                     presentage = int(100*(index+1)/indexes)
                     # print(presentage)
                     pBar.SetValue((presentage))
                     runCommand(mkvCommand)
             currentFile.SetLabel("")
             pBar.SetValue(0)
+            # os.startfile()
             if isClearChecked:
                 checkBoxListWindow.SetItems([])
         except Exception as e:
             print(e)
         
-    def convertToAudio( self ):
+    def runToAudio( self ):
         try:
             checkBoxListWindow = wx.FindWindowById(selectedFilesToAudio)
             currentFile = wx.FindWindowById(currentFileToAudio)
@@ -742,7 +852,7 @@ class MyFrame1 ( wx.Frame ):
         except Exception as e:
             print(e)
 
-    def cropVideo( self ):
+    def runCrop( self ):
         try:
             checkBoxListWindow = wx.FindWindowById(selectedFilesCrop)
             currentFile = wx.FindWindowById(currentFileCrop)
@@ -788,7 +898,7 @@ class MyFrame1 ( wx.Frame ):
         except Exception as e:
             print(e)
         
-    def runWithJson( self ):
+    def runOptions( self ):
         try:
             optionJson = wx.FindWindowById(optionsFile)
             checkBoxListWindow = wx.FindWindowById(selectedFilesOptions)
@@ -823,17 +933,23 @@ class MyFrame1 ( wx.Frame ):
                 jsonFile = f'{selectedJsonDir}\\options.json'
                 if indexes:
                     allFiles = checkBoxListWindow.GetItems()
+                    mkvmergeDirWindow = wx.FindWindowById(mkvmergeOldFolderOptions)
+                    drive, path = os.path.splitdrive(os.path.dirname(allFiles[0]))
+                    if not os.path.isdir(mkvmergeDirWindow.GetLabel()):
+                        mkvmergeDir = drive
+                    else:
+                        mkvmergeDir = mkvmergeDirWindow.GetLabel()
                     duplicateFiles = list(allFiles)
                     for index, file in enumerate(allFiles):
                         currentFile.SetLabel(str(file))
                         selectedDir = os.path.dirname(file)
                         fName = os.path.basename(file)
                         fNameNoExt = os.path.splitext(fName)[0]
-                        if not os.path.exists((f"{selectedDir}\\mkvmerge_old")):
-                            os.makedirs((f"{selectedDir}\\mkvmerge_old"))
-                        mkvmerge_old = (f"{selectedDir}\mkvmerge_old\{fName}")
+                        if not os.path.exists((f"{mkvmergeDir}\\mkvmerge_old\\{path}")):
+                            os.makedirs((f"{mkvmergeDir}\\mkvmerge_old\\{path}"))
+                        mkvmerge_old = (f"{mkvmergeDir}\mkvmerge_old\\{path}\\{fName}")
                         shutil.move(file, mkvmerge_old)
-                        mkvCommand = f"\"{mkvMerge}\" @{jsonFile} -o \"{selectedDir}\\{fNameNoExt}.mkv\" \"{selectedDir}\\mkvmerge_old\\{fName}\""
+                        mkvCommand = f"\"{mkvMerge}\" @{jsonFile} -o \"{selectedDir}\\{fNameNoExt}.mkv\" \"{mkvmergeDir}\\mkvmerge_old\\{path}\\{fName}\""
                         presentage = int(100*(index+1)/indexes)
                         # print(presentage)
                         pBar.SetValue((presentage))
@@ -861,16 +977,20 @@ class MyFileDropTarget(wx.FileDropTarget):
                     allFiles.append(os.path.join(root, file))
             filenames = allFiles
         windowId = eval(f"selectedFiles{self.tab}")
+        buttonId = eval(f"run{self.tab}")
         checkBoxList = wx.FindWindowById(windowId)
         oldfiles = checkBoxList.GetItems()
         allFiles = list(oldfiles) + filenames
         allFiles = list(dict.fromkeys(allFiles))
         if self.tab == "ToMkv":
-            fileTypesList.remove(".mkv")
-            # print(fileTypesList)
+            if ".mkv" in fileTypesList:
+                fileTypesList.remove(".mkv")
         allFiles = list(filter(lambda file: str(file).endswith(tuple(fileTypesList)),allFiles))
-        fileTypesList = defaultfileTypesList
+        fileTypesList.append(".mkv")
         checkBoxList.Set(allFiles)
+        if len(allFiles):
+            buttonWindow = wx.FindWindowById(buttonId)
+            buttonWindow.Enable()
         return True
 
 def runCommand(cmd, timeout=None, window=None):
