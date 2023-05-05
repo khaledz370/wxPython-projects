@@ -477,7 +477,7 @@ class MyFrame1 ( wx.Frame ):
 		bSizer81111 = wx.BoxSizer( wx.VERTICAL )
 
 		m_checkList1211Choices = []
-		self.m_checkList1211 = wx.CheckListBox( self.m_panel71111, selectedFilesOptions, wx.DefaultPosition, wx.Size( 480,-1 ), m_checkList1211Choices, 0 )
+		self.m_checkList1211 = wx.CheckListBox( self.m_panel71111, selectedFilesOptions, wx.DefaultPosition, wx.Size( 480,-1 ), m_checkList1211Choices, 0|wx.HSCROLL )
 		self.m_checkList1211.DragAcceptFiles( true )
 		self.m_checkList1211.SetMinSize( wx.Size( -1,150 ) )
 

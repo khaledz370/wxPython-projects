@@ -90,7 +90,7 @@ class MyFrame1 ( wx.Frame ):
     def __init__( self, parent ):
         wx.Frame.__init__ ( self, parent, id = wx.ID_ANY, title = wx.EmptyString, pos = wx.DefaultPosition, size = wx.Size( 664,600 ), style = wx.DEFAULT_FRAME_STYLE|wx.RESIZE_BORDER|wx.TAB_TRAVERSAL )
 
-        self.SetSizeHints( wx.Size( 660,600 ))
+        self.SetSizeHints( wx.Size( 660,600 ), wx.Size( 660,600 ))
 
         bSizer2 = wx.BoxSizer( wx.VERTICAL )
 
@@ -118,7 +118,7 @@ class MyFrame1 ( wx.Frame ):
         bSizer81 = wx.BoxSizer( wx.VERTICAL )
 
         m_checkList1Choices = []
-        self.m_checkList1 = wx.CheckListBox( self.m_panel71, selectedFilesToMkv, wx.DefaultPosition, wx.Size( 480,-1 ), m_checkList1Choices, 0 )
+        self.m_checkList1 = wx.CheckListBox( self.m_panel71, selectedFilesToMkv, wx.DefaultPosition, wx.Size( 480,-1 ), m_checkList1Choices, wx.HSCROLL )
         self.m_checkList1.DragAcceptFiles( true )
         self.m_checkList1.SetMinSize( wx.Size( -1,230 ) )
 
@@ -238,7 +238,7 @@ class MyFrame1 ( wx.Frame ):
         bSizer811 = wx.BoxSizer( wx.VERTICAL )
 
         m_checkList12Choices = []
-        self.m_checkList12 = wx.CheckListBox( self.m_panel711, selectedFilesToAudio, wx.DefaultPosition, wx.Size( 480,-1 ), m_checkList12Choices, 0 )
+        self.m_checkList12 = wx.CheckListBox( self.m_panel711, selectedFilesToAudio, wx.DefaultPosition, wx.Size( 480,-1 ), m_checkList12Choices, wx.HSCROLL )
         self.m_checkList12.DragAcceptFiles( true )
         self.m_checkList12.SetMinSize( wx.Size( -1,230 ) )
 
@@ -347,7 +347,7 @@ class MyFrame1 ( wx.Frame ):
         bSizer8111 = wx.BoxSizer( wx.VERTICAL )
 
         m_checkList121Choices = []
-        self.m_checkList121 = wx.CheckListBox( self.m_panel7111, selectedFilesCrop, wx.DefaultPosition, wx.Size( 480,-1 ), m_checkList121Choices, 0 )
+        self.m_checkList121 = wx.CheckListBox( self.m_panel7111, selectedFilesCrop, wx.DefaultPosition, wx.Size( 480,-1 ), m_checkList121Choices, wx.HSCROLL )
         self.m_checkList121.DragAcceptFiles( true )
         self.m_checkList121.SetMinSize( wx.Size( -1,200 ) )
 
@@ -500,7 +500,7 @@ class MyFrame1 ( wx.Frame ):
         bSizer81111 = wx.BoxSizer( wx.VERTICAL )
 
         m_checkList1211Choices = []
-        self.m_checkList1211 = wx.CheckListBox( self.m_panel71111, selectedFilesOptions, wx.DefaultPosition, wx.Size( 480,-1 ), m_checkList1211Choices, 0 )
+        self.m_checkList1211 = wx.CheckListBox( self.m_panel71111, selectedFilesOptions, wx.DefaultPosition, wx.Size( 480,-1 ), m_checkList1211Choices, wx.HSCROLL )
         self.m_checkList1211.DragAcceptFiles( true )
         self.m_checkList1211.SetMinSize( wx.Size( -1,150 ) )
 
@@ -761,9 +761,7 @@ class MyFrame1 ( wx.Frame ):
 
     def selectAll( self, event ):
         try:
-            selectAll = eval(f"selectAll{event}")
             selectedFiles = eval(f"selectedFiles{event}")
-            thisButton = wx.FindWindowById(selectAll)
             checkBoxListWindow = wx.FindWindowById(selectedFiles)
             indexes = checkBoxListWindow.GetCount()
             selectedItems = checkBoxListWindow.GetCheckedItems()
@@ -792,13 +790,13 @@ class MyFrame1 ( wx.Frame ):
             clearListCheckbox = wx.FindWindowById(clearListToMkv)
             isClearChecked = clearListCheckbox.GetValue()
             mkvmergeDirWindow = wx.FindWindowById(mkvmergeOldFolderToMkv)
-            drive, path = os.path.splitdrive(os.path.dirname(allFiles[0]))
-            if not os.path.isdir(mkvmergeDirWindow.GetLabel()):
-                mkvmergeDir = drive
-            else:
-                mkvmergeDir = mkvmergeDirWindow.GetLabel()
             if indexes:
                 allFiles = checkBoxListWindow.GetItems()
+                drive, path = os.path.splitdrive(os.path.dirname(allFiles[0]))
+                if not os.path.isdir(mkvmergeDirWindow.GetLabel()):
+                    mkvmergeDir = drive
+                else:
+                    mkvmergeDir = mkvmergeDirWindow.GetLabel()
                 duplicateFiles = list(allFiles)
                 for index, file in enumerate(allFiles):
                     currentFile.SetLabel(str(file))
