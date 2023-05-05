@@ -685,6 +685,8 @@ class MyFrame1 ( wx.Frame ):
             currentFile = wx.FindWindowById(currentFileToMkv)
             indexes = checkBoxListWindow.GetCount()
             pBar = wx.FindWindowById(pBarToMkv)
+            clearListCheckbox = wx.FindWindowById(clearListToMkv)
+            isClearChecked = clearListCheckbox.GetValue()
             # print(indexes)
             if indexes:
                 allFiles = checkBoxListWindow.GetItems()
@@ -705,7 +707,8 @@ class MyFrame1 ( wx.Frame ):
                     runCommand(mkvCommand)
             currentFile.SetLabel("")
             pBar.SetValue(0)
-            checkBoxListWindow.SetItems([])
+            if isClearChecked:
+                checkBoxListWindow.SetItems([])
         except Exception as e:
             print(e)
         
@@ -715,6 +718,8 @@ class MyFrame1 ( wx.Frame ):
             currentFile = wx.FindWindowById(currentFileToAudio)
             indexes = checkBoxListWindow.GetCount()
             pBar = wx.FindWindowById(pBarToAudio)
+            clearListCheckbox = wx.FindWindowById(clearListToAudio)
+            isClearChecked = clearListCheckbox.GetValue()
             # print(indexes)
             if indexes:
                 allFiles = checkBoxListWindow.GetItems()
@@ -732,7 +737,8 @@ class MyFrame1 ( wx.Frame ):
                     runCommand(audioCommand)
             currentFile.SetLabel("")
             pBar.SetValue(0)
-            checkBoxListWindow.SetItems([])
+            if isClearChecked:
+                checkBoxListWindow.SetItems([])
         except Exception as e:
             print(e)
 
@@ -750,6 +756,8 @@ class MyFrame1 ( wx.Frame ):
             cLeftValue = int(cLeftWindow.GetTextValue())
             cRightValue = int(cRightWindow.GetTextValue())
             cBottomValue = int(cBottomWindow.GetTextValue())
+            clearListCheckbox = wx.FindWindowById(clearListCrop)
+            isClearChecked = clearListCheckbox.GetValue()
             # print(indexes)
             if indexes:
                 allFiles = checkBoxListWindow.GetItems()
@@ -775,7 +783,8 @@ class MyFrame1 ( wx.Frame ):
                     runCommand(mkvCropCommand)
             currentFile.SetLabel("")
             pBar.SetValue(0)
-            checkBoxListWindow.SetItems([])
+            if isClearChecked:
+                checkBoxListWindow.SetItems([])
         except Exception as e:
             print(e)
         
@@ -786,6 +795,8 @@ class MyFrame1 ( wx.Frame ):
             currentFile = wx.FindWindowById(currentFileOptions)
             indexes = checkBoxListWindow.GetCount()
             pBar = wx.FindWindowById(pBarOptions)
+            clearListCheckbox = wx.FindWindowById(clearListOptions)
+            isClearChecked = clearListCheckbox.GetValue()
             jsonFile = optionJson.GetPath()
             if os.path.exists(jsonFile):
                 jsonVar = open(jsonFile)
@@ -829,7 +840,8 @@ class MyFrame1 ( wx.Frame ):
                         runCommand(mkvCommand)
                     currentFile.SetLabel("")
                     pBar.SetValue(0)
-                    checkBoxListWindow.SetItems([])
+                    if isClearChecked:
+                        checkBoxListWindow.SetItems([])
         except Exception as e:
             print(e)
         
