@@ -820,7 +820,13 @@ class MyFileDropTarget(wx.FileDropTarget):
         self.tab = tab
 
     def OnDropFiles(self, x, y, filenames):
-        # print(self.tab)
+        allFiles = filenames
+        if os.path.isdir(filenames[0]):
+            allFiles = []
+            for root, dirs, files in os.walk(filenames[0]):
+                for file in files:
+                    allFiles.append(os.path.join(root, file))
+            filenames = allFiles
         windowId = eval(f"selectedFiles{self.tab}")
         checkBoxList = wx.FindWindowById(windowId)
         oldfiles = checkBoxList.GetItems()
