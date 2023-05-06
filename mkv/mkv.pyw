@@ -22,6 +22,7 @@ defaultFileTypeFillter = "Videos|*.mkv;*.ts;*.mp4;*.avi;*.webm;*.flv;*.ogg;*.mov
 mkvMerge = "C:\Program Files\MKVToolNix\mkvmerge.exe"
 mkvpropedit = "C:\Program Files\MKVToolNix\mkvpropedit.exe"
 
+# widget ids
 selectedFilesToMkv = 1000
 browseFilesToMkv = 1001
 browseFolderToMkv = 1002
@@ -74,6 +75,7 @@ mkvmergeTomkv = 1049
 mkvmergeOptions = 1050
 mkvmergeOldFolderOptions = 1051
 mkvmergeOldFolderToMkv = 1052
+# end of widget ids
 
 mainDir = f"{os.path.dirname(__file__)}"
 settingsIcon = f"{mainDir}\\mkv.ico"
@@ -634,6 +636,7 @@ class MyFrame1 ( wx.Frame ):
         self.m_button2111.Bind( wx.EVT_BUTTON, lambda event: self.setMkvMergeFolder("Options") )
         self.m_button111111.Bind( wx.EVT_BUTTON, lambda event: self.deleteFromList("Options") )
         self.m_button9111.Bind( wx.EVT_BUTTON, lambda event: self.processThread("self.runOptions") )
+        self.m_filePicker1.Bind( wx.EVT_FILEPICKER_CHANGED, self.setRunEnable )
 
     def __del__( self ):
         pass
@@ -667,6 +670,11 @@ class MyFrame1 ( wx.Frame ):
                 delBtnWindow.Enable()
             else:
                 delBtnWindow.Disable() 
+            if event == "Options":
+                    optionJson = wx.FindWindowById(optionsFile)
+                    jsonFile = optionJson.GetPath()
+                    if not os.path.exists(jsonFile):
+                        wx.FindWindowById(eval(f"run{event}")).Disable()
         else:
             delBtnWindow.Disable() 
             buttonWindow.Disable() 
@@ -698,6 +706,11 @@ class MyFrame1 ( wx.Frame ):
                     delBtnWindow.Enable()
                 else:
                     delBtnWindow.Disable() 
+                if event == "Options":
+                    optionJson = wx.FindWindowById(optionsFile)
+                    jsonFile = optionJson.GetPath()
+                    if not os.path.exists(jsonFile):
+                        wx.FindWindowById(eval(f"run{event}")).Disable()
             else:
                 delBtnWindow.Disable() 
                 buttonWindow.Disable() 
@@ -730,6 +743,11 @@ class MyFrame1 ( wx.Frame ):
                     delBtnWindow.Enable()
                 else:
                     delBtnWindow.Disable() 
+                if event == "Options":
+                    optionJson = wx.FindWindowById(optionsFile)
+                    jsonFile = optionJson.GetPath()
+                    if not os.path.exists(jsonFile):
+                        wx.FindWindowById(eval(f"run{event}")).Disable()
             else:
                 delBtnWindow.Disable() 
                 buttonWindow.Disable() 
@@ -750,6 +768,14 @@ class MyFrame1 ( wx.Frame ):
         except Exception as e:
             print(e)
 
+    def setRunEnable(self, event):
+        optionJson = wx.FindWindowById(optionsFile)
+        jsonFile = optionJson.GetPath()
+        runBtn = wx.FindWindowById(runOptions)
+        if os.path.exists(jsonFile):
+            runBtn.Enable()
+        else:
+            runBtn.Disable()
 
     def selectAll( self, event ):
         try:
@@ -775,6 +801,9 @@ class MyFrame1 ( wx.Frame ):
 
     def runToMkv(self):
         try:
+            bFilesWindow = wx.FindWindowById(browseFilesToMkv)
+            bFoldersWindow = wx.FindWindowById(browseFolderToMkv)
+            bSelectAllWindow = wx.FindWindowById(selectAllToMkv)
             checkBoxListWindow = wx.FindWindowById(selectedFilesToMkv)
             currentFile = wx.FindWindowById(currentFileToMkv)
             indexes = checkBoxListWindow.GetCount()
@@ -788,8 +817,11 @@ class MyFrame1 ( wx.Frame ):
                     mkvmergeDir = drive
                 else:
                     mkvmergeDir = mkvmergeDirWindow.GetLabel()
-                duplicateFiles = list(allFiles)
+                # duplicateFiles = list(allFiles)
                 convertTomkvWindow.Disable()
+                bFilesWindow.Disable()
+                bFoldersWindow.Disable()
+                bSelectAllWindow.Disable()
                 for index, file in enumerate(allFiles):
                     currentFile.SetLabel(str(file))
                     selectedDir = os.path.dirname(file)
@@ -807,11 +839,16 @@ class MyFrame1 ( wx.Frame ):
             currentFile.SetLabel("")
             pBar.SetValue(0)
             checkBoxListWindow.SetItems([])
+            bFilesWindow.Enable()
+            bFoldersWindow.Enable()
         except Exception as e:
             print(e)
         
     def runToAudio( self ):
         try:
+            bFilesWindow = wx.FindWindowById(browseFilesToAudio)
+            bFoldersWindow = wx.FindWindowById(browseFolderToAudio)
+            bSelectAllWindow = wx.FindWindowById(selectAllToAudio)
             checkBoxListWindow = wx.FindWindowById(selectedFilesToAudio)
             currentFile = wx.FindWindowById(currentFileToAudio)
             convertToAudioWindow = wx.FindWindowById(runToAudio)
@@ -822,8 +859,11 @@ class MyFrame1 ( wx.Frame ):
             # print(indexes)
             if indexes:
                 allFiles = checkBoxListWindow.GetItems()
-                duplicateFiles = list(allFiles)
+                # duplicateFiles = list(allFiles)
                 convertToAudioWindow.Disable()
+                bFilesWindow.Disable()
+                bFoldersWindow.Disable()
+                bSelectAllWindow.Disable()
                 for index, file in enumerate(allFiles):
                     currentFile.SetLabel(str(file))
                     selectedDir = os.path.dirname(file)
@@ -841,11 +881,17 @@ class MyFrame1 ( wx.Frame ):
                 checkBoxListWindow.SetItems([])
             else:
                 convertToAudioWindow.Enable()
+                bSelectAllWindow.Enable()
+            bFilesWindow.Enable()
+            bFoldersWindow.Enable()
         except Exception as e:
             print(e)
 
     def runCrop( self ):
         try:
+            bFilesWindow = wx.FindWindowById(browseFilesCrop)
+            bFoldersWindow = wx.FindWindowById(browseFolderCrop)
+            bSelectAllWindow = wx.FindWindowById(selectAllCrop)
             checkBoxListWindow = wx.FindWindowById(selectedFilesCrop)
             currentFile = wx.FindWindowById(currentFileCrop)
             convertCropWindow = wx.FindWindowById(runCrop)
@@ -865,7 +911,10 @@ class MyFrame1 ( wx.Frame ):
             if indexes:
                 allFiles = checkBoxListWindow.GetItems()
                 convertCropWindow.Disable()
-                duplicateFiles = list(allFiles)
+                # duplicateFiles = list(allFiles)
+                bFilesWindow.Disable()
+                bFoldersWindow.Disable()
+                bSelectAllWindow.Disable()
                 for index, file in enumerate(allFiles):
                     currentFile.SetLabel(str(file))
                     selectedDir = os.path.dirname(file)
@@ -891,11 +940,17 @@ class MyFrame1 ( wx.Frame ):
                 checkBoxListWindow.SetItems([])
             else:
                 convertCropWindow.Enable()
+                bSelectAllWindow.Enable()
+            bFilesWindow.Enable()
+            bFoldersWindow.Enable()
         except Exception as e:
             print(e)
         
     def runOptions( self ):
         try:
+            bFilesWindow = wx.FindWindowById(browseFilesOptions)
+            bFoldersWindow = wx.FindWindowById(browseFolderOptions)
+            bSelectAllWindow = wx.FindWindowById(selectAllOptions)
             optionJson = wx.FindWindowById(optionsFile)
             checkBoxListWindow = wx.FindWindowById(selectedFilesOptions)
             convertOptionsWindow = wx.FindWindowById(runOptions)
@@ -934,8 +989,11 @@ class MyFrame1 ( wx.Frame ):
                         mkvmergeDir = drive
                     else:
                         mkvmergeDir = mkvmergeDirWindow.GetLabel()
-                    duplicateFiles = list(allFiles)
+                    # duplicateFiles = list(allFiles)
                     convertOptionsWindow.Disable()
+                    bFilesWindow.Disable()
+                    bFoldersWindow.Disable()
+                    bSelectAllWindow.Disable()
                     for index, file in enumerate(allFiles):
                         currentFile.SetLabel(str(file))
                         selectedDir = os.path.dirname(file)
@@ -953,6 +1011,10 @@ class MyFrame1 ( wx.Frame ):
                     currentFile.SetLabel("")
                     pBar.SetValue(0)
                     checkBoxListWindow.SetItems([])
+                    bFilesWindow.Enable()
+                    bFoldersWindow.Enable()
+            else:
+                currentFile.SetLabel("Please select options file first!")
         except Exception as e:
             print(e)
         
@@ -983,9 +1045,17 @@ class MyFileDropTarget(wx.FileDropTarget):
         allFiles = list(filter(lambda file: str(file).endswith(tuple(fileTypesList)),allFiles))
         fileTypesList.append(".mkv")
         checkBoxList.Set(allFiles)
+        selectAllId = eval(f"selectAll{self.tab}")
+        selectAllWindow = wx.FindWindowById(selectAllId)
         if len(allFiles):
             buttonWindow = wx.FindWindowById(buttonId)
             buttonWindow.Enable()
+            selectAllWindow.Enable()
+            if self.tab == "Options":
+                optionJson = wx.FindWindowById(optionsFile)
+                jsonFile = optionJson.GetPath()
+                if not os.path.exists(jsonFile):
+                    wx.FindWindowById(eval(f"run{self.tab}")).Disable()
         return True
 
 def runCommand(cmd, timeout=None, window=None):
@@ -995,18 +1065,6 @@ def runCommand(cmd, timeout=None, window=None):
     output = ""
     retval = p.wait(timeout)
     return (retval, output)
-
-def fileTypeFormat(listOfTypes):
-    finalString = ""
-    if len(listOfTypes):
-        for type in listOfTypes:
-            # newStr = f"(*{type})|*{type}"
-            # finalString = f"{finalString}|{newStr}" 
-            newStr = f"*.{type}"
-            finalString = f"{finalString} {newStr}" 
-    # print(finalString[1:])
-    return finalString
-            
 
 wx.SizerFlags.DisableConsistencyChecks()
 app = wx.App(False)

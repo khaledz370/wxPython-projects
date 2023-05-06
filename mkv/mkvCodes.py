@@ -340,6 +340,17 @@ def runCommand(cmd, timeout=None, window=None):
     retval = p.wait(timeout)
     return (retval, output)
 
+def fileTypeFormat(listOfTypes):
+    finalString = ""
+    if len(listOfTypes):
+        for type in listOfTypes:
+            # newStr = f"(*{type})|*{type}"
+            # finalString = f"{finalString}|{newStr}" 
+            newStr = f"*.{type}"
+            finalString = f"{finalString} {newStr}" 
+    # print(finalString[1:])
+    return finalString
+
 wx.SizerFlags.DisableConsistencyChecks()
 app = wx.App(False)
 frame = MyFrame1(None)

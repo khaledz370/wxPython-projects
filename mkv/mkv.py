@@ -620,6 +620,7 @@ class MyFrame1 ( wx.Frame ):
 		self.m_button15111.Bind( wx.EVT_BUTTON, self.selectAll("Options") )
 		self.m_button111111.Bind( wx.EVT_BUTTON, self.deleteFromList("Options") )
 		self.m_button2111.Bind( wx.EVT_BUTTON, self.setMkvMergeFolder )
+		self.m_filePicker1.Bind( wx.EVT_FILEPICKER_CHANGED, self.setRunEnable )
 		self.m_button9111.Bind( wx.EVT_BUTTON, self.runWithJson )
 
 	def __del__( self ):
@@ -688,6 +689,9 @@ class MyFrame1 ( wx.Frame ):
 	def deleteFromList("Options")( self, event ):
 		event.Skip()
 
+
+	def setRunEnable( self, event ):
+		event.Skip()
 
 	def runWithJson( self, event ):
 		event.Skip()
