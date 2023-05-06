@@ -68,14 +68,12 @@ runOptions = 1042
 currentFileOptions = 1043
 pBarOptions = 1044
 tabContainer = 1045
-clearListToMkv = 1046
 clearListToAudio = 1047
 clearListCrop = 1048
-clearListOptions = 1049
-mkvmergeTomkv = 1050
-mkvmergeOptions = 1051
-mkvmergeOldFolderOptions = 1052
-mkvmergeOldFolderToMkv = 1053
+mkvmergeTomkv = 1049
+mkvmergeOptions = 1050
+mkvmergeOldFolderOptions = 1051
+mkvmergeOldFolderToMkv = 1052
 
 mainDir = f"{os.path.dirname(__file__)}"
 settingsIcon = f"{mainDir}\\mkv.ico"
@@ -165,9 +163,6 @@ class MyFrame1 ( wx.Frame ):
         bSizer7.Add( self.m_panel7, 1, wx.EXPAND |wx.ALL, 5 )
         
         bSizer42 = wx.BoxSizer( wx.HORIZONTAL )
-
-        self.clearList = wx.CheckBox( self.m_panel20, clearListToMkv, u"Clear list after complete", wx.DefaultPosition, wx.DefaultSize, 0 )
-        bSizer42.Add( self.clearList, 0, wx.ALL|wx.EXPAND, 5 )
 
         self.m_button211 = wx.Button( self.m_panel20, mkvmergeTomkv, u"mkvmerge old", wx.DefaultPosition, wx.DefaultSize, 0 )
         bSizer42.Add( self.m_button211, 0, wx.ALL|wx.EXPAND, 5 )
@@ -550,9 +545,6 @@ class MyFrame1 ( wx.Frame ):
 
         bSizer421 = wx.BoxSizer( wx.HORIZONTAL )
 
-        self.clearList3 = wx.CheckBox( self.m_panel20111, clearListOptions, u"Clear list after complete", wx.DefaultPosition, wx.DefaultSize, 0 )
-        bSizer421.Add( self.clearList3, 0, wx.ALL|wx.EXPAND, 5 )
-
         self.m_button2111 = wx.Button( self.m_panel20111, mkvmergeOptions, u"mkvmerge old", wx.DefaultPosition, wx.DefaultSize, 0 )
         bSizer421.Add( self.m_button2111, 0, wx.ALL|wx.EXPAND, 5 )
         
@@ -786,9 +778,8 @@ class MyFrame1 ( wx.Frame ):
             checkBoxListWindow = wx.FindWindowById(selectedFilesToMkv)
             currentFile = wx.FindWindowById(currentFileToMkv)
             indexes = checkBoxListWindow.GetCount()
+            convertTomkvWindow = wx.FindWindowById(runToMkv)
             pBar = wx.FindWindowById(pBarToMkv)
-            clearListCheckbox = wx.FindWindowById(clearListToMkv)
-            isClearChecked = clearListCheckbox.GetValue()
             mkvmergeDirWindow = wx.FindWindowById(mkvmergeOldFolderToMkv)
             if indexes:
                 allFiles = checkBoxListWindow.GetItems()
@@ -798,6 +789,7 @@ class MyFrame1 ( wx.Frame ):
                 else:
                     mkvmergeDir = mkvmergeDirWindow.GetLabel()
                 duplicateFiles = list(allFiles)
+                convertTomkvWindow.Disable()
                 for index, file in enumerate(allFiles):
                     currentFile.SetLabel(str(file))
                     selectedDir = os.path.dirname(file)
@@ -814,9 +806,7 @@ class MyFrame1 ( wx.Frame ):
                     runCommand(mkvCommand)
             currentFile.SetLabel("")
             pBar.SetValue(0)
-            # os.startfile()
-            if isClearChecked:
-                checkBoxListWindow.SetItems([])
+            checkBoxListWindow.SetItems([])
         except Exception as e:
             print(e)
         
@@ -824,6 +814,7 @@ class MyFrame1 ( wx.Frame ):
         try:
             checkBoxListWindow = wx.FindWindowById(selectedFilesToAudio)
             currentFile = wx.FindWindowById(currentFileToAudio)
+            convertToAudioWindow = wx.FindWindowById(runToAudio)
             indexes = checkBoxListWindow.GetCount()
             pBar = wx.FindWindowById(pBarToAudio)
             clearListCheckbox = wx.FindWindowById(clearListToAudio)
@@ -832,6 +823,7 @@ class MyFrame1 ( wx.Frame ):
             if indexes:
                 allFiles = checkBoxListWindow.GetItems()
                 duplicateFiles = list(allFiles)
+                convertToAudioWindow.Disable()
                 for index, file in enumerate(allFiles):
                     currentFile.SetLabel(str(file))
                     selectedDir = os.path.dirname(file)
@@ -847,6 +839,8 @@ class MyFrame1 ( wx.Frame ):
             pBar.SetValue(0)
             if isClearChecked:
                 checkBoxListWindow.SetItems([])
+            else:
+                convertToAudioWindow.Enable()
         except Exception as e:
             print(e)
 
@@ -854,6 +848,7 @@ class MyFrame1 ( wx.Frame ):
         try:
             checkBoxListWindow = wx.FindWindowById(selectedFilesCrop)
             currentFile = wx.FindWindowById(currentFileCrop)
+            convertCropWindow = wx.FindWindowById(runCrop)
             indexes = checkBoxListWindow.GetCount()
             pBar = wx.FindWindowById(pBarCrop)
             cTopWindow = wx.FindWindowById(cTop)
@@ -869,6 +864,7 @@ class MyFrame1 ( wx.Frame ):
             # print(indexes)
             if indexes:
                 allFiles = checkBoxListWindow.GetItems()
+                convertCropWindow.Disable()
                 duplicateFiles = list(allFiles)
                 for index, file in enumerate(allFiles):
                     currentFile.SetLabel(str(file))
@@ -893,6 +889,8 @@ class MyFrame1 ( wx.Frame ):
             pBar.SetValue(0)
             if isClearChecked:
                 checkBoxListWindow.SetItems([])
+            else:
+                convertCropWindow.Enable()
         except Exception as e:
             print(e)
         
@@ -900,11 +898,10 @@ class MyFrame1 ( wx.Frame ):
         try:
             optionJson = wx.FindWindowById(optionsFile)
             checkBoxListWindow = wx.FindWindowById(selectedFilesOptions)
+            convertOptionsWindow = wx.FindWindowById(runOptions)
             currentFile = wx.FindWindowById(currentFileOptions)
             indexes = checkBoxListWindow.GetCount()
             pBar = wx.FindWindowById(pBarOptions)
-            clearListCheckbox = wx.FindWindowById(clearListOptions)
-            isClearChecked = clearListCheckbox.GetValue()
             jsonFile = optionJson.GetPath()
             if os.path.exists(jsonFile):
                 jsonVar = open(jsonFile)
@@ -938,6 +935,7 @@ class MyFrame1 ( wx.Frame ):
                     else:
                         mkvmergeDir = mkvmergeDirWindow.GetLabel()
                     duplicateFiles = list(allFiles)
+                    convertOptionsWindow.Disable()
                     for index, file in enumerate(allFiles):
                         currentFile.SetLabel(str(file))
                         selectedDir = os.path.dirname(file)
@@ -954,8 +952,7 @@ class MyFrame1 ( wx.Frame ):
                         runCommand(mkvCommand)
                     currentFile.SetLabel("")
                     pBar.SetValue(0)
-                    if isClearChecked:
-                        checkBoxListWindow.SetItems([])
+                    checkBoxListWindow.SetItems([])
         except Exception as e:
             print(e)
         
