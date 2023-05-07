@@ -14,6 +14,9 @@ import subprocess
 import shutil
 import json
 import threading
+import traceback
+import sys
+
 
 true = True
 defaultfileTypesList = [".mkv" ,".ts" ,".mp4" ,".avi" ,".webm" ,".flv" ,".ogg" ,".mov" ,".mpeg-2"]
@@ -962,16 +965,18 @@ class MyFrame1 ( wx.Frame ):
                 jsonVar = open(jsonFile)
                 fileOptions = list(json.load(jsonVar))
                 try:
-                    removeIndex = fileOptions.index('--output')
-                    del fileOptions[removeIndex] # remove --output line
-                    del fileOptions[removeIndex] # remove file line
+                    if "--output" in fileOptions: 
+                        removeIndex = fileOptions.index('--output')
+                        del fileOptions[removeIndex] # remove --output line
+                        del fileOptions[removeIndex] # remove file line
                 except ValueError:
                     print(e)  # item not in list
                 try:
-                    removeIndex = fileOptions.index('(')
-                    del fileOptions[removeIndex] # remove ( line
-                    del fileOptions[removeIndex] # remove what's between () line
-                    del fileOptions[removeIndex] # remove ) line
+                    if '(' in fileOptions:
+                        removeIndex = fileOptions.index('(')
+                        del fileOptions[removeIndex] # remove ( line
+                        del fileOptions[removeIndex] # remove what's between () line
+                        del fileOptions[removeIndex] # remove ) line
                 except Exception as e:
                     print(e) # item not in list
                 if fileOptions[0] != "--ui-language":
@@ -999,11 +1004,15 @@ class MyFrame1 ( wx.Frame ):
                         selectedDir = os.path.dirname(file)
                         fName = os.path.basename(file)
                         fNameNoExt = os.path.splitext(fName)[0]
-                        if not os.path.exists((f"{mkvmergeDir}\\mkvmerge_old\\{path}")):
-                            os.makedirs((f"{mkvmergeDir}\\mkvmerge_old\\{path}"))
-                        mkvmerge_old = (f"{mkvmergeDir}\mkvmerge_old\\{path}\\{fName}")
+                        print(fName,"dir=>",selectedDir)
+                        if not os.path.exists((f"{mkvmergeDir}\\mkvmerge_old")):
+                            os.makedirs((f"{mkvmergeDir}\\mkvmerge_old"))
+                        mkvmerge_old = (f"{mkvmergeDir}\mkvmerge_old\\{fName}")
                         shutil.move(file, mkvmerge_old)
-                        mkvCommand = f"\"{mkvMerge}\" @{jsonFile} -o \"{selectedDir}\\{fNameNoExt}.mkv\" \"{mkvmergeDir}\\mkvmerge_old\\{path}\\{fName}\""
+                        outputFile = f'{selectedDir}\\{fNameNoExt}.mkv'
+                        inputfile = f'{mkvmergeDir}\\mkvmerge_old\\{fName}'
+                        mkvCommand = f'"{mkvMerge}" @"{jsonFile}" -o "{outputFile}" "{inputfile}"'
+                        print(mkvCommand)
                         presentage = int(100*(index+1)/indexes)
                         # print(presentage)
                         pBar.SetValue((presentage))
@@ -1016,7 +1025,7 @@ class MyFrame1 ( wx.Frame ):
             else:
                 currentFile.SetLabel("Please select options file first!")
         except Exception as e:
-            print(e)
+            print(traceback.format_exc())
         
 class MyFileDropTarget(wx.FileDropTarget):
     def __init__(self, window,tab):
@@ -1059,10 +1068,15 @@ class MyFileDropTarget(wx.FileDropTarget):
         return True
 
 def runCommand(cmd, timeout=None, window=None):
+    # cmd = cmd.replace("\\","/")
     p = subprocess.Popen(
         cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT,encoding='utf-8'
     )
     output = ""
+    for line in p.stdout:
+        output += line
+        print(line)
+        window.Refresh() if window else None  # yes, a 1-line if, so shoot me
     retval = p.wait(timeout)
     return (retval, output)
 
