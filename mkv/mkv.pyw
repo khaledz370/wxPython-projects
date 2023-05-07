@@ -830,11 +830,13 @@ class MyFrame1 ( wx.Frame ):
                     selectedDir = os.path.dirname(file)
                     fName = os.path.basename(file)
                     fNameNoExt = os.path.splitext(fName)[0]
-                    if not os.path.exists((f"{mkvmergeDir}\\mkvmerge_old\\{path}")):
-                        os.makedirs((f"{mkvmergeDir}\\mkvmerge_old\\{path}"))
-                    mkvmerge_old = (f"{mkvmergeDir}\mkvmerge_old\\{path}\\{fName}")
+                    if not os.path.exists((f"{mkvmergeDir}\\mkvmerge_old")):
+                        os.makedirs((f"{mkvmergeDir}\\mkvmerge_old"))
+                    mkvmerge_old = (f"{mkvmergeDir}\mkvmerge_old\\{fName}")
                     shutil.move(file, mkvmerge_old)
-                    mkvCommand = f"\"{mkvMerge}\" --output \"{selectedDir}\\{fNameNoExt}.mkv\" \"{mkvmergeDir}\\mkvmerge_old\\{path}\\{fName}\""
+                    outputFile = f"{selectedDir}\\{fNameNoExt}.mkv"
+                    inputFile = f"{mkvmergeDir}\\mkvmerge_old\\{fName}"
+                    mkvCommand = f'"{mkvMerge}" --output "{outputFile}" "{inputFile}"'
                     presentage = int(100*(index+1)/indexes)
                     # print(presentage)
                     pBar.SetValue((presentage))
