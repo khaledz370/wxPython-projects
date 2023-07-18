@@ -16,46 +16,45 @@ browseFilesToMkv = 1002
 browseFolderToMkv = 1003
 selectAllToMkv = 1004
 dBtnToMkv = 1005
-clearListToMkv = 1006
-mkvmergeTomkv = 1007
-mkvmergeOldFolderToMkv = 1008
-convertToMkv = 1009
-currentFileToMkv = 1010
-pBarToMkv = 1011
-selectedFilesToAudio = 1012
-browseFilesToAudio = 1013
-browseFolderToAudio = 1014
-selectAllToAudio = 1015
-dBtnToAudio = 1016
-clearListToAudio = 1017
-convertToAudio = 1018
-currentFileToAudio = 1019
-pBarToAudio = 1020
-selectedFilesCrop = 1021
-browseFilesCrop = 1022
-browseFolderCrop = 1023
-selectAllCrop = 1024
-dBtnCrop = 1025
-clearListCrop = 1026
-cTop = 1027
-cRight = 1028
-cBottom = 1029
-cLeft = 1030
-cropVideo = 1031
-currentFileCrop = 1032
-pBarCrop = 1033
-selectedFilesOptions = 1034
-browseFilesOptions = 1035
-browseFolderOptions = 1036
-mkvmergeOptions = 1037
-selectAllOptions = 1038
-dBtnOptions = 1039
-clearListOptions = 1040
-mkvmergeOldFolderOptions = 1041
-optionsFile = 1042
-runOption = 1043
-currentFileOptions = 1044
-pBarOptions = 1045
+mkvmergeTomkv = 1006
+mkvmergeOldFolderToMkv = 1007
+convertToMkv = 1008
+currentFileToMkv = 1009
+pBarToMkv = 1010
+selectedFilesToAudio = 1011
+browseFilesToAudio = 1012
+browseFolderToAudio = 1013
+selectAllToAudio = 1014
+dBtnToAudio = 1015
+clearListToAudio = 1016
+convertToAudio = 1017
+currentFileToAudio = 1018
+pBarToAudio = 1019
+selectedFilesCrop = 1020
+browseFilesCrop = 1021
+browseFolderCrop = 1022
+selectAllCrop = 1023
+dBtnCrop = 1024
+clearListCrop = 1025
+cTop = 1026
+cRight = 1027
+cBottom = 1028
+cLeft = 1029
+cropVideo = 1030
+currentFileCrop = 1031
+pBarCrop = 1032
+selectedFilesOptions = 1033
+browseFilesOptions = 1034
+browseFolderOptions = 1035
+mkvmergeOptions = 1036
+selectAllOptions = 1037
+dBtnOptions = 1038
+clearListOptions = 1039
+mkvmergeOldFolderOptions = 1040
+optionsFile = 1041
+runOption = 1042
+currentFileOptions = 1043
+pBarOptions = 1044
 
 ###########################################################################
 ## Class MyFrame1
@@ -140,9 +139,6 @@ class MyFrame1 ( wx.Frame ):
 		bSizer7.Add( self.m_panel7, 1, wx.EXPAND |wx.ALL, 5 )
 
 		bSizer42 = wx.BoxSizer( wx.HORIZONTAL )
-
-		self.clearList = wx.CheckBox( self.m_panel20, clearListToMkv, u"Clear list after complete", wx.DefaultPosition, wx.DefaultSize, 0 )
-		bSizer42.Add( self.clearList, 0, wx.ALL|wx.EXPAND, 5 )
 
 		self.m_button211 = wx.Button( self.m_panel20, mkvmergeTomkv, u"mkvmerge old", wx.DefaultPosition, wx.DefaultSize, 0 )
 		bSizer42.Add( self.m_button211, 0, wx.ALL|wx.EXPAND, 5 )
@@ -586,7 +582,28 @@ class MyFrame1 ( wx.Frame ):
 		self.mkvOptions.SetSizer( bSizer4111 )
 		self.mkvOptions.Layout()
 		bSizer4111.Fit( self.mkvOptions )
-		self.m_notebook30.AddPage( self.mkvOptions, u"mkvOptions", True )
+		self.m_notebook30.AddPage( self.mkvOptions, u"mkvOptions", False )
+		self.Settings = wx.Panel( self.m_notebook30, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.TAB_TRAVERSAL )
+		bSizer41111 = wx.BoxSizer( wx.VERTICAL )
+
+		self.m_staticText32111 = wx.StaticText( self.Settings, wx.ID_ANY, u"Settings", wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.m_staticText32111.Wrap( -1 )
+
+		bSizer41111.Add( self.m_staticText32111, 0, wx.ALIGN_CENTER_HORIZONTAL|wx.ALL, 5 )
+
+		self.m_staticText21 = wx.StaticText( self.Settings, wx.ID_ANY, u"Mkvtoolnix folder", wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.m_staticText21.Wrap( -1 )
+
+		bSizer41111.Add( self.m_staticText21, 0, wx.ALL|wx.ALIGN_CENTER_HORIZONTAL|wx.EXPAND, 5 )
+
+		self.m_dirPicker1 = wx.DirPickerCtrl( self.Settings, wx.ID_ANY, u"C:\\Program Files\\MKVToolNix", u"Select a folder", wx.DefaultPosition, wx.DefaultSize, wx.DIRP_DEFAULT_STYLE )
+		bSizer41111.Add( self.m_dirPicker1, 0, wx.ALL|wx.EXPAND, 5 )
+
+
+		self.Settings.SetSizer( bSizer41111 )
+  
+		bSizer41111.Fit( self.Settings )
+		self.m_notebook30.AddPage( self.Settings, u"Settings", True )
 
 		bSizer2.Add( self.m_notebook30, 1, wx.EXPAND |wx.ALL, 5 )
 
@@ -622,6 +639,7 @@ class MyFrame1 ( wx.Frame ):
 		self.m_button2111.Bind( wx.EVT_BUTTON, self.setMkvMergeFolder )
 		self.m_filePicker1.Bind( wx.EVT_FILEPICKER_CHANGED, self.setRunEnable )
 		self.m_button9111.Bind( wx.EVT_BUTTON, self.runWithJson )
+		self.m_dirPicker1.Bind( wx.EVT_DIRPICKER_CHANGED, self.setMkvDir )
 
 	def __del__( self ):
 		pass
@@ -694,6 +712,9 @@ class MyFrame1 ( wx.Frame ):
 		event.Skip()
 
 	def runWithJson( self, event ):
+		event.Skip()
+
+	def setMkvDir( self, event ):
 		event.Skip()
 
 
