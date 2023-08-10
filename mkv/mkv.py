@@ -738,6 +738,11 @@ class MyFrame1 ( wx.Frame ):
 		self.m_dirPicker1 = wx.DirPickerCtrl( self.Settings, mkvDir, u"C:\\Program Files\\MKVToolNix", u"Select a folder", wx.DefaultPosition, wx.DefaultSize, wx.DIRP_DEFAULT_STYLE )
 		bSizer41111.Add( self.m_dirPicker1, 0, wx.ALL|wx.EXPAND, 5 )
 
+		self.m_staticText20 = wx.StaticText( self.Settings, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.m_staticText20.Wrap( -1 )
+
+		bSizer41111.Add( self.m_staticText20, 0, wx.ALL, 5 )
+
 
 		self.Settings.SetSizer( bSizer41111 )
 		self.Settings.Layout()
