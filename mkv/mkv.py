@@ -55,6 +55,17 @@ optionsFile = 1041
 runOption = 1042
 currentFileOptions = 1043
 pBarOptions = 1044
+errorMissing = 1045
+selectedFilesTranslate = 1046
+browseFilesTranslate = 1047
+selectAllTranslate = 1048
+dBtnTranslate = 1049
+clearListTranslate = 1050
+translateTo = 1051
+runTranslate = 1052
+currentFileTranslate = 1053
+pBarTranslate = 1054
+mkvDir = 1055
 
 ###########################################################################
 ## Class MyFrame1
@@ -583,6 +594,134 @@ class MyFrame1 ( wx.Frame ):
 		self.mkvOptions.Layout()
 		bSizer4111.Fit( self.mkvOptions )
 		self.m_notebook30.AddPage( self.mkvOptions, u"mkvOptions", False )
+		self.translate = wx.Panel( self.m_notebook30, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.TAB_TRAVERSAL )
+		bSizer4112 = wx.BoxSizer( wx.VERTICAL )
+
+		self.m_staticText3212 = wx.StaticText( self.translate, wx.ID_ANY, u"Subtitle translator", wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.m_staticText3212.Wrap( -1 )
+
+		bSizer4112.Add( self.m_staticText3212, 0, wx.ALIGN_CENTER_HORIZONTAL|wx.ALL, 5 )
+
+		self.m_staticText19 = wx.StaticText( self.translate, errorMissing, u"! translatesubs Library is missing", wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.m_staticText19.Wrap( -1 )
+
+		self.m_staticText19.SetForegroundColour( wx.Colour( 179, 0, 0 ) )
+		self.m_staticText19.SetBackgroundColour( wx.SystemSettings.GetColour( wx.SYS_COLOUR_BTNHIGHLIGHT ) )
+
+		bSizer4112.Add( self.m_staticText19, 0, wx.ALL|wx.ALIGN_CENTER_HORIZONTAL, 5 )
+
+		bSizer6112 = wx.BoxSizer( wx.VERTICAL )
+
+		self.m_panel20112 = wx.Panel( self.translate, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.TAB_TRAVERSAL )
+		bSizer7212 = wx.BoxSizer( wx.VERTICAL )
+
+		self.m_panel7212 = wx.Panel( self.m_panel20112, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.TAB_TRAVERSAL )
+		bSizer5112 = wx.BoxSizer( wx.HORIZONTAL )
+
+		self.m_panel8212 = wx.Panel( self.m_panel7212, wx.ID_ANY, wx.DefaultPosition, wx.Size( -1,-1 ), wx.TAB_TRAVERSAL )
+		bSizer8212 = wx.BoxSizer( wx.HORIZONTAL )
+
+		self.m_panel71112 = wx.Panel( self.m_panel8212, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.TAB_TRAVERSAL )
+		bSizer81112 = wx.BoxSizer( wx.VERTICAL )
+
+		m_checkList1212Choices = []
+		self.m_checkList1212 = wx.CheckListBox( self.m_panel71112, selectedFilesTranslate, wx.DefaultPosition, wx.Size( 480,-1 ), m_checkList1212Choices, 0 )
+		self.m_checkList1212.DragAcceptFiles( true )
+		self.m_checkList1212.SetMinSize( wx.Size( -1,200 ) )
+
+		bSizer81112.Add( self.m_checkList1212, 1, wx.ALL|wx.EXPAND, 5 )
+
+		self.m_panel9112 = wx.Panel( self.m_panel71112, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.TAB_TRAVERSAL )
+		bSizer71112 = wx.BoxSizer( wx.HORIZONTAL )
+
+		bSizer71112.SetMinSize( wx.Size( -1,40 ) )
+		self.m_button3112 = wx.Button( self.m_panel9112, browseFilesTranslate, u"browse files", wx.DefaultPosition, wx.DefaultSize, 0 )
+		bSizer71112.Add( self.m_button3112, 1, wx.ALL|wx.ALIGN_CENTER_VERTICAL|wx.ALIGN_CENTER_HORIZONTAL|wx.EXPAND, 5 )
+
+		self.m_button11212 = wx.Button( self.m_panel9112, browseFolderCrop, u"select folder", wx.DefaultPosition, wx.DefaultSize, 0 )
+		bSizer71112.Add( self.m_button11212, 1, wx.ALL|wx.EXPAND, 5 )
+
+		self.m_button15112 = wx.Button( self.m_panel9112, selectAllTranslate, u"Select all", wx.DefaultPosition, wx.DefaultSize, 0 )
+		bSizer71112.Add( self.m_button15112, 1, wx.ALL|wx.EXPAND, 5 )
+
+		self.m_button111112 = wx.Button( self.m_panel9112, dBtnTranslate, u"Delete", wx.DefaultPosition, wx.DefaultSize, 0 )
+		bSizer71112.Add( self.m_button111112, 1, wx.ALL|wx.ALIGN_CENTER_HORIZONTAL|wx.EXPAND, 5 )
+
+
+		self.m_panel9112.SetSizer( bSizer71112 )
+		self.m_panel9112.Layout()
+		bSizer71112.Fit( self.m_panel9112 )
+		bSizer81112.Add( self.m_panel9112, 0, wx.ALIGN_CENTER_VERTICAL|wx.ALL|wx.EXPAND, 5 )
+
+
+		self.m_panel71112.SetSizer( bSizer81112 )
+		self.m_panel71112.Layout()
+		bSizer81112.Fit( self.m_panel71112 )
+		bSizer8212.Add( self.m_panel71112, 1, wx.EXPAND |wx.ALL, 5 )
+
+
+		self.m_panel8212.SetSizer( bSizer8212 )
+		self.m_panel8212.Layout()
+		bSizer8212.Fit( self.m_panel8212 )
+		bSizer5112.Add( self.m_panel8212, 1, wx.ALL|wx.EXPAND|wx.ALIGN_BOTTOM, 5 )
+
+
+		self.m_panel7212.SetSizer( bSizer5112 )
+		self.m_panel7212.Layout()
+		bSizer5112.Fit( self.m_panel7212 )
+		bSizer7212.Add( self.m_panel7212, 1, wx.EXPAND |wx.ALL, 5 )
+
+		bSizer431 = wx.BoxSizer( wx.HORIZONTAL )
+
+		self.clearList21 = wx.CheckBox( self.m_panel20112, clearListTranslate, u"Clear list after complete", wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.clearList21.SetValue(True)
+		bSizer431.Add( self.clearList21, 1, wx.ALL|wx.EXPAND, 5 )
+
+		m_choice2Choices = [ u"aa", u"ab", u"af", u"ak", u"sq", u"am", u"ar", u"an", u"hy", u"as", u"av", u"ae", u"ay", u"az", u"ba", u"bm", u"eu", u"be", u"bn", u"bh", u"bi", u"bs", u"br", u"bg", u"my", u"ca", u"km", u"ch", u"ce", u"ny", u"zh", u"cu", u"cv", u"kw", u"co", u"cr", u"hr", u"cs", u"da", u"dv", u"nl", u"dz", u"en", u"eo", u"et", u"ee", u"fo", u"fj", u"fi", u"fr", u"fy", u"ff", u"ka", u"de", u"gd", u"ga", u"gl", u"gv", u"el", u"gn", u"gu", u"ht", u"ha", u"he", u"hz", u"hi", u"ho", u"hr", u"hu", u"ig", u"is", u"io", u"ii", u"iu", u"ie", u"ia", u"id", u"ik", u"it", u"jv", u"ja", u"kl", u"kn", u"ks", u"kr", u"kk", u"km", u"ki", u"rw", u"ky", u"kv", u"kg", u"ko", u"ku", u"kj", u"la", u"lb", u"lg", u"li", u"ln", u"lo", u"lt", u"lu", u"lv", u"gv", u"mk", u"mg", u"ms", u"ml", u"mt", u"mi", u"mr", u"mh", u"mn", u"na", u"nv", u"nb", u"nd", u"ne", u"ng", u"nn", u"no", u"ii", u"nr", u"oc", u"oj", u"cu", u"om", u"or", u"os", u"pa", u"pi", u"fa", u"pl", u"ps", u"pt", u"qu", u"rm", u"ro", u"rn", u"ru", u"sg", u"sa", u"si", u"sk", u"sl", u"se", u"sm", u"sn", u"sd", u"so", u"st", u"es", u"sc", u"sr", u"ss", u"su", u"sw", u"sv", u"ty", u"ta", u"tt", u"te", u"tg", u"tl", u"th", u"bo", u"ti", u"to", u"tn", u"ts", u"tk", u"tr", u"tw", u"ug", u"uk", u"ur", u"uz", u"ve", u"vi", u"vo", u"cy", u"wa", u"wo", u"xh", u"yi", u"yo", u"za", u"zu" ]
+		self.m_choice2 = wx.Choice( self.m_panel20112, translateTo, wx.DefaultPosition, wx.DefaultSize, m_choice2Choices, 0 )
+		self.m_choice2.SetSelection( 42 )
+		bSizer431.Add( self.m_choice2, 0, wx.ALL, 5 )
+
+
+		bSizer7212.Add( bSizer431, 0, wx.EXPAND|wx.ALIGN_CENTER_HORIZONTAL, 5 )
+
+
+		self.m_panel20112.SetSizer( bSizer7212 )
+		self.m_panel20112.Layout()
+		bSizer7212.Fit( self.m_panel20112 )
+		bSizer6112.Add( self.m_panel20112, 1, wx.EXPAND|wx.ALL|wx.ALIGN_CENTER_HORIZONTAL, 5 )
+
+		bSizer11112 = wx.BoxSizer( wx.VERTICAL )
+
+		bSizer12112 = wx.BoxSizer( wx.HORIZONTAL )
+
+		bSizer12112.SetMinSize( wx.Size( -1,30 ) )
+		self.m_button9112 = wx.Button( self.translate, runTranslate, u"Translate", wx.DefaultPosition, wx.Size( -1,30 ), 0 )
+		bSizer12112.Add( self.m_button9112, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL|wx.EXPAND, 5 )
+
+		self.m_staticText31112 = wx.StaticText( self.translate, currentFileTranslate, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.m_staticText31112.Wrap( -1 )
+
+		bSizer12112.Add( self.m_staticText31112, 1, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
+
+
+		bSizer11112.Add( bSizer12112, 0, wx.EXPAND, 5 )
+
+		self.m_gauge1112 = wx.Gauge( self.translate, pBarTranslate, 100, wx.DefaultPosition, wx.Size( -1,30 ), wx.GA_HORIZONTAL )
+		self.m_gauge1112.SetValue( 0 )
+		bSizer11112.Add( self.m_gauge1112, 0, wx.ALL|wx.EXPAND, 5 )
+
+
+		bSizer6112.Add( bSizer11112, 0, wx.EXPAND, 5 )
+
+
+		bSizer4112.Add( bSizer6112, 1, wx.EXPAND, 5 )
+
+
+		self.translate.SetSizer( bSizer4112 )
+		self.translate.Layout()
+		bSizer4112.Fit( self.translate )
+		self.m_notebook30.AddPage( self.translate, u"translate", True )
 		self.Settings = wx.Panel( self.m_notebook30, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.TAB_TRAVERSAL )
 		bSizer41111 = wx.BoxSizer( wx.VERTICAL )
 
@@ -596,14 +735,14 @@ class MyFrame1 ( wx.Frame ):
 
 		bSizer41111.Add( self.m_staticText21, 0, wx.ALL|wx.ALIGN_CENTER_HORIZONTAL|wx.EXPAND, 5 )
 
-		self.m_dirPicker1 = wx.DirPickerCtrl( self.Settings, wx.ID_ANY, u"C:\\Program Files\\MKVToolNix", u"Select a folder", wx.DefaultPosition, wx.DefaultSize, wx.DIRP_DEFAULT_STYLE )
+		self.m_dirPicker1 = wx.DirPickerCtrl( self.Settings, mkvDir, u"C:\\Program Files\\MKVToolNix", u"Select a folder", wx.DefaultPosition, wx.DefaultSize, wx.DIRP_DEFAULT_STYLE )
 		bSizer41111.Add( self.m_dirPicker1, 0, wx.ALL|wx.EXPAND, 5 )
 
 
 		self.Settings.SetSizer( bSizer41111 )
-  
+		self.Settings.Layout()
 		bSizer41111.Fit( self.Settings )
-		self.m_notebook30.AddPage( self.Settings, u"Settings", True )
+		self.m_notebook30.AddPage( self.Settings, u"Settings", False )
 
 		bSizer2.Add( self.m_notebook30, 1, wx.EXPAND |wx.ALL, 5 )
 
@@ -639,6 +778,11 @@ class MyFrame1 ( wx.Frame ):
 		self.m_button2111.Bind( wx.EVT_BUTTON, self.setMkvMergeFolder )
 		self.m_filePicker1.Bind( wx.EVT_FILEPICKER_CHANGED, self.setRunEnable )
 		self.m_button9111.Bind( wx.EVT_BUTTON, self.runWithJson )
+		self.m_button3112.Bind( wx.EVT_BUTTON, self.openFilesSelector("Crop") )
+		self.m_button11212.Bind( wx.EVT_BUTTON, self.selectFolder("Crop") )
+		self.m_button15112.Bind( wx.EVT_BUTTON, self.selectAll("Crop") )
+		self.m_button111112.Bind( wx.EVT_BUTTON, self.deleteFromList("Crop") )
+		self.m_button9112.Bind( wx.EVT_BUTTON, self.runTranslate )
 		self.m_dirPicker1.Bind( wx.EVT_DIRPICKER_CHANGED, self.setMkvDir )
 
 	def __del__( self ):
@@ -712,6 +856,13 @@ class MyFrame1 ( wx.Frame ):
 		event.Skip()
 
 	def runWithJson( self, event ):
+		event.Skip()
+
+
+
+
+
+	def runTranslate( self, event ):
 		event.Skip()
 
 	def setMkvDir( self, event ):
