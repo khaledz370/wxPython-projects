@@ -16,28 +16,38 @@ import json
 import threading
 import traceback
 import sys
-import translatesubs
+
+appdataFolder = f"{os.getenv('APPDATA')}\mkvBatch"
+appdataFile = f"{appdataFolder}\config.json"
+
 try:
-    with open('config.json', 'r') as f:
+    if not os.path.exists(appdataFolder):
+        os.mkdir(appdataFolder)
+    if not os.path.exists(appdataFile):
+        open(appdataFile, "x")
+    with open(appdataFile, 'r') as f:
         config = json.load(f)
-except:  
+    languageCodes = config['languageCodes']
+except:
     config = {
             "mkvtoolnix":"C:\\Program Files\\MKVToolNix",
+            "languageCodes":[ "en", "de" ]
         }
-    with open('config.json', 'w') as f:
+    languageCodes = config['languageCodes']
+    with open(appdataFile, 'w') as f:
         json.dump(config, f)
-
+        
+    
 true = True
 defaultfileTypesList = [".mkv" ,".ts" ,".mp4" ,".avi" ,".webm" ,".flv" ,".ogg" ,".mov" ,".mpeg-2"]
 toMkvtfileTypesList = [".ts" ,".mp4" ,".avi" ,".webm" ,".flv" ,".ogg" ,".mov" ,".mpeg-2"]
 subtitleFileTypeList = [".srt", ".sub", ".sbv", ".ass", ".ssa", ".usf", ".idx", ".aqt", ".jss", ".psb", ".rt", ".smi", ".stl", ".vtt", ".xml", ".txt"]
-# defaultfileTypesFillter = "(*.mkv)|*.mkv|(*.mp4)|*.mp4|(*.ts)|*.ts|(*.flv)|*.flv|(*.avo)|*.avo|(*.webm)|*.webm|(*.ogg)|*.ogg|(*.mov)|*.mov|(*.mpeg-2)|*.mpeg-2"
 defaultFileTypeFillter = "Videos|*.mkv;*.ts;*.mp4;*.avi;*.webm;*.flv;*.ogg;*.mov;*.mpeg-2|All files (*.*)|*.*"
 subtitleFileTypeFillter = "Subtitles|*.srt;*.sub;*.sbv;*.ass;*.ssa;*.usf;*.idx;*.aqt;*.jss;*.psb;*.rt;*.smi;*.stl;*.vtt;*.xml;*.txt;|All files (*.*)|*.*"
 mkvMerge = f"{config['mkvtoolnix']}\\mkvmerge.exe"
 mkvpropedit = f"{config['mkvtoolnix']}\\mkvpropedit.exe"
+languageCodes = config['languageCodes']
 
-languageCodes = [ "aa", "ab", "af", "ak", "sq", "am", "ar", "an", "hy", "as", "av", "ae", "ay", "az", "ba", "bm", "eu", "be", "bn", "bh", "bi", "bs", "br", "bg", "my", "ca", "km", "ch", "ce", "ny", "zh", "cu", "cv", "kw", "co", "cr", "hr", "cs", "da", "dv", "nl", "dz", "en", "eo", "et", "ee", "fo", "fj", "fi", "fr", "fy", "ff", "ka", "de", "gd", "ga", "gl", "gv", "el", "gn", "gu", "ht", "ha", "he", "hz", "hi", "ho", "hr", "hu", "ig", "is", "io", "ii", "iu", "ie", "ia", "id", "ik", "it", "jv", "ja", "kl", "kn", "ks", "kr", "kk", "km", "ki", "rw", "ky", "kv", "kg", "ko", "ku", "kj", "la", "lb", "lg", "li", "ln", "lo", "lt", "lu", "lv", "gv", "mk", "mg", "ms", "ml", "mt", "mi", "mr", "mh", "mn", "na", "nv", "nb", "nd", "ne", "ng", "nn", "no", "ii", "nr", "oc", "oj", "cu", "om", "or", "os", "pa", "pi", "fa", "pl", "ps", "pt", "qu", "rm", "ro", "rn", "ru", "sg", "sa", "si", "sk", "sl", "se", "sm", "sn", "sd", "so", "st", "es", "sc", "sr", "ss", "su", "sw", "sv", "ty", "ta", "tt", "te", "tg", "tl", "th", "bo", "ti", "to", "tn", "ts", "tk", "tr", "tw", "ug", "uk", "ur", "uz", "ve", "vi", "vo", "cy", "wa", "wo", "xh", "yi", "yo", "za", "zu" ]
 
 # widget ids
 selectedFilesToMkv = 1000
@@ -598,8 +608,8 @@ class MyFrame1 ( wx.Frame ):
 
         self.m_filePicker1 = wx.FilePickerCtrl( self.mkvOptions, optionsFile, wx.EmptyString, "Select options file", "*.json*", wx.DefaultPosition, wx.DefaultSize, wx.FLP_DEFAULT_STYLE )
         bSizer461.Add( self.m_filePicker1, 1, wx.ALL|wx.ALIGN_CENTER_VERTICAL|wx.EXPAND, 5 )
-
-
+        self.m_filePicker1.DragAcceptFiles( true )
+        
         bSizer11111.Add( bSizer461, 0, wx.EXPAND, 5 )
 
         bSizer12111 = wx.BoxSizer( wx.HORIZONTAL )
@@ -647,7 +657,7 @@ class MyFrame1 ( wx.Frame ):
         self.m_staticText19.SetBackgroundColour( wx.SystemSettings.GetColour( wx.SYS_COLOUR_BTNHIGHLIGHT ) )
         
         try:
-            import translatesubsx
+            import translatesubs
             self.m_staticText19.Hide()
         except:
             print()
@@ -722,7 +732,7 @@ class MyFrame1 ( wx.Frame ):
 
         m_choice2Choices = languageCodes
         self.m_choice2 = wx.Choice( self.m_panel20112, translateTo, wx.DefaultPosition, wx.DefaultSize, m_choice2Choices, 0 )
-        self.m_choice2.SetSelection( 42 )
+        self.m_choice2.SetSelection( 0 )
         bSizer431.Add( self.m_choice2, 0, wx.ALL, 5 )
 
 
@@ -1022,6 +1032,7 @@ class MyFrame1 ( wx.Frame ):
             convertTomkvWindow = wx.FindWindowById(runToMkv)
             pBar = wx.FindWindowById(pBarToMkv)
             mkvmergeDirWindow = wx.FindWindowById(mkvmergeOldFolderToMkv)
+            mkvmergeDirBtn = wx.FindWindowById(mkvmergeTomkv)
             if indexes:
                 allFiles = checkBoxListWindow.GetItems()
                 drive, path = os.path.splitdrive(os.path.dirname(allFiles[0]))
@@ -1034,6 +1045,7 @@ class MyFrame1 ( wx.Frame ):
                 bFilesWindow.Disable()
                 bFoldersWindow.Disable()
                 bSelectAllWindow.Disable()
+                mkvmergeDirBtn.Disable()
                 for index, file in enumerate(allFiles):
                     currentFile.SetLabel(str(file))
                     selectedDir = os.path.dirname(file)
@@ -1055,6 +1067,7 @@ class MyFrame1 ( wx.Frame ):
             checkBoxListWindow.SetItems([])
             bFilesWindow.Enable()
             bFoldersWindow.Enable()
+            mkvmergeDirBtn.Enable()
         except Exception as e:
             print(e)
         
@@ -1078,6 +1091,7 @@ class MyFrame1 ( wx.Frame ):
                 bFilesWindow.Disable()
                 bFoldersWindow.Disable()
                 bSelectAllWindow.Disable()
+                clearListCheckbox.Disable()
                 for index, file in enumerate(allFiles):
                     currentFile.SetLabel(str(file))
                     selectedDir = os.path.dirname(file)
@@ -1098,6 +1112,7 @@ class MyFrame1 ( wx.Frame ):
                 bSelectAllWindow.Enable()
             bFilesWindow.Enable()
             bFoldersWindow.Enable()
+            clearListCheckbox.Enable()
         except Exception as e:
             print(e)
 
@@ -1129,6 +1144,11 @@ class MyFrame1 ( wx.Frame ):
                 bFilesWindow.Disable()
                 bFoldersWindow.Disable()
                 bSelectAllWindow.Disable()
+                cTopWindow.Disable()
+                cLeftWindow.Disable()
+                cRightWindow.Disable()
+                clearListCheckbox.Disable()
+                cBottomWindow.Disable()
                 for index, file in enumerate(allFiles):
                     currentFile.SetLabel(str(file))
                     selectedDir = os.path.dirname(file)
@@ -1157,6 +1177,11 @@ class MyFrame1 ( wx.Frame ):
                 bSelectAllWindow.Enable()
             bFilesWindow.Enable()
             bFoldersWindow.Enable()
+            cTopWindow.Enable()
+            cLeftWindow.Enable()
+            cRightWindow.Enable()
+            cBottomWindow.Enable()
+            clearListCheckbox.Enable()
         except Exception as e:
             print(e)
         
@@ -1169,6 +1194,8 @@ class MyFrame1 ( wx.Frame ):
             checkBoxListWindow = wx.FindWindowById(selectedFilesOptions)
             convertOptionsWindow = wx.FindWindowById(runOptions)
             currentFile = wx.FindWindowById(currentFileOptions)
+            mkvmergeDirBtn = wx.FindWindowById(mkvmergeOptions)
+            optionsFileWindow = wx.FindWindowById(optionsFile)
             indexes = checkBoxListWindow.GetCount()
             pBar = wx.FindWindowById(pBarOptions)
             jsonFile = optionJson.GetPath()
@@ -1194,9 +1221,14 @@ class MyFrame1 ( wx.Frame ):
                     currentFile.SetLabel("wrong json file")
                     return
                 selectedJsonDir = os.path.dirname(jsonFile)
-                with open(f'{selectedJsonDir}\\options.json', 'w') as f:
+                fixIndex = 0
+                tempJsonFile =  f'{selectedJsonDir}\\options.json'
+                while os.path.exists(tempJsonFile):
+                    tempJsonFile = f'{selectedJsonDir}\\options {fixIndex}.json'
+                    fixIndex +=1
+                with open(tempJsonFile, 'w') as f:
                     json.dump(fileOptions, f)
-                jsonFile = f'{selectedJsonDir}\\options.json'
+                jsonFile = tempJsonFile
                 if indexes:
                     allFiles = checkBoxListWindow.GetItems()
                     mkvmergeDirWindow = wx.FindWindowById(mkvmergeOldFolderOptions)
@@ -1210,6 +1242,8 @@ class MyFrame1 ( wx.Frame ):
                     bFilesWindow.Disable()
                     bFoldersWindow.Disable()
                     bSelectAllWindow.Disable()
+                    mkvmergeDirBtn.Disable()
+                    optionsFileWindow.Disable()
                     for index, file in enumerate(allFiles):
                         currentFile.SetLabel(str(file))
                         selectedDir = os.path.dirname(file)
@@ -1232,7 +1266,9 @@ class MyFrame1 ( wx.Frame ):
                     pBar.SetValue(0)
                     checkBoxListWindow.SetItems([])
                     bFilesWindow.Enable()
+                    mkvmergeDirBtn.Enable()
                     bFoldersWindow.Enable()
+                    optionsFileWindow.Enable()
             else:
                 currentFile.SetLabel("Please select options file first!")
         except Exception as e:
@@ -1249,6 +1285,7 @@ class MyFrame1 ( wx.Frame ):
             selectedLangIndex = selectedLangWindow.GetSelection()
             selectedLang = languageCodes[selectedLangIndex]
             translateWindow = wx.FindWindowById(runTranslate)
+            translateLangsWindow = wx.FindWindowById(translateTo)
             indexes = checkBoxListWindow.GetCount()
             pBar = wx.FindWindowById(pBarTranslate)
             clearListCheckbox = wx.FindWindowById(clearListTranslate)
@@ -1260,6 +1297,8 @@ class MyFrame1 ( wx.Frame ):
                 bFilesWindow.Disable()
                 bFoldersWindow.Disable()
                 bSelectAllWindow.Disable()
+                translateLangsWindow.Disable()
+                clearListCheckbox.Disable()
                 for index, file in enumerate(allFiles):
                     currentFile.SetLabel(str(file))
                     selectedDir = os.path.dirname(file)
@@ -1284,6 +1323,8 @@ class MyFrame1 ( wx.Frame ):
                 bSelectAllWindow.Enable()
             bFilesWindow.Enable()
             bFoldersWindow.Enable()
+            translateLangsWindow.Enable()
+            clearListCheckbox.Enable()
         except Exception as e:
             print(e)
 
@@ -1295,38 +1336,44 @@ class MyFileDropTarget(wx.FileDropTarget):
         self.tab = tab
 
     def OnDropFiles(self, x, y, filenames):
-        allFiles = filenames
-        if os.path.isdir(filenames[0]):
-            allFiles = []
-            for root, dirs, files in os.walk(filenames[0]):
-                for file in files:
-                    allFiles.append(os.path.join(root, file))
-            filenames = allFiles
-        windowId = eval(f"selectedFiles{self.tab}")
-        buttonId = eval(f"run{self.tab}")
-        checkBoxList = wx.FindWindowById(windowId)
-        oldfiles = checkBoxList.GetItems()
-        allFiles = list(oldfiles) + filenames
-        allFiles = list(dict.fromkeys(allFiles))
-        if self.tab == "ToMkv":
-            fileTypesList = toMkvtfileTypesList
-        elif self.tab == "Translate":
-            fileTypesList = subtitleFileTypeList
+        print(self.tab)
+        if self.tab == "Json":
+            print(filenames)
+            optionJson = wx.FindWindowById(optionsFile)
+            optionJson.SetPath(filenames[0])
         else:
-            fileTypesList = defaultfileTypesList
-        allFiles = list(filter(lambda file: str(file).endswith(tuple(fileTypesList)),allFiles))
-        checkBoxList.Set(allFiles)
-        selectAllId = eval(f"selectAll{self.tab}")
-        selectAllWindow = wx.FindWindowById(selectAllId)
-        if len(allFiles):
-            buttonWindow = wx.FindWindowById(buttonId)
-            buttonWindow.Enable()
-            selectAllWindow.Enable()
-            if self.tab == "Options":
-                optionJson = wx.FindWindowById(optionsFile)
-                jsonFile = optionJson.GetPath()
-                if not os.path.exists(jsonFile):
-                    wx.FindWindowById(eval(f"run{self.tab}")).Disable()
+            allFiles = filenames
+            if os.path.isdir(filenames[0]):
+                allFiles = []
+                for root, dirs, files in os.walk(filenames[0]):
+                    for file in files:
+                        allFiles.append(os.path.join(root, file))
+                filenames = allFiles
+            windowId = eval(f"selectedFiles{self.tab}")
+            buttonId = eval(f"run{self.tab}")
+            checkBoxList = wx.FindWindowById(windowId)
+            oldfiles = checkBoxList.GetItems()
+            allFiles = list(oldfiles) + filenames
+            allFiles = list(dict.fromkeys(allFiles))
+            if self.tab == "ToMkv":
+                fileTypesList = toMkvtfileTypesList
+            elif self.tab == "Translate":
+                fileTypesList = subtitleFileTypeList
+            else:
+                fileTypesList = defaultfileTypesList
+            allFiles = list(filter(lambda file: str(file).endswith(tuple(fileTypesList)),allFiles))
+            checkBoxList.Set(allFiles)
+            selectAllId = eval(f"selectAll{self.tab}")
+            selectAllWindow = wx.FindWindowById(selectAllId)
+            if len(allFiles):
+                buttonWindow = wx.FindWindowById(buttonId)
+                buttonWindow.Enable()
+                selectAllWindow.Enable()
+                if self.tab == "Options":
+                    optionJson = wx.FindWindowById(optionsFile)
+                    jsonFile = optionJson.GetPath()
+                    if not os.path.exists(jsonFile):
+                        wx.FindWindowById(eval(f"run{self.tab}")).Disable()
         return True
 
 def runCommand(cmd, timeout=None, window=None):
@@ -1349,6 +1396,7 @@ wx.FindWindowById(tabContainer).SetSelection(0)
 frame.m_checkList1.SetDropTarget(MyFileDropTarget(frame.m_checkList1,"ToMkv"))
 frame.m_checkList12.SetDropTarget(MyFileDropTarget(frame.m_checkList12,"ToAudio"))
 frame.m_checkList121.SetDropTarget(MyFileDropTarget(frame.m_checkList121,"Crop"))
+frame.m_filePicker1.SetDropTarget(MyFileDropTarget(frame.m_filePicker1,"Json"))
 frame.m_checkList1211.SetDropTarget(MyFileDropTarget(frame.m_checkList1211,"Options"))
 frame.m_checkList1212.SetDropTarget(MyFileDropTarget(frame.m_checkList1212,"Translate"))
 frame.Show(True)
