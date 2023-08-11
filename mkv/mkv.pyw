@@ -1313,7 +1313,7 @@ class MyFrame1 ( wx.Frame ):
                     translateCommand = f"translatesubs \"{sourceFile}\" \"{outputFile}\" --to_lang {selectedLang}"
                     presentage = int(100*(index+1)/indexes)
                     pBar.SetValue((presentage))
-                    runCommand(translateCommand)
+                    runCommand(translateCommand, trs = 1)
             currentFile.SetLabel("")
             pBar.SetValue(0)
             if isClearChecked:
@@ -1336,9 +1336,7 @@ class MyFileDropTarget(wx.FileDropTarget):
         self.tab = tab
 
     def OnDropFiles(self, x, y, filenames):
-        print(self.tab)
         if self.tab == "Json":
-            print(filenames)
             optionJson = wx.FindWindowById(optionsFile)
             optionJson.SetPath(filenames[0])
         else:
@@ -1376,18 +1374,23 @@ class MyFileDropTarget(wx.FileDropTarget):
                         wx.FindWindowById(eval(f"run{self.tab}")).Disable()
         return True
 
-def runCommand(cmd, timeout=None, window=None):
+def runCommand(cmd, trs = 0, timeout=None, window=None):
     # cmd = cmd.replace("\\","/")
-    p = subprocess.Popen(
-        cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT,encoding='utf-8'
-    )
-    output = ""
-    for line in p.stdout:
-        output += line
-        print(line)
-        window.Refresh() if window else None  # yes, a 1-line if, so shoot me
-    retval = p.wait(timeout)
-    return (retval, output)
+    if trs:
+        os.system(f"{cmd} &")
+        return true
+    else:
+        p = subprocess.Popen(
+            cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, encoding="utf-8"
+        )
+        
+        output = ""
+        for line in p.stdout:
+            output += line
+            print(line)
+            window.Refresh() if window else None  # yes, a 1-line if, so shoot me
+        retval = p.wait(timeout)
+        return (retval, output)
 
 wx.SizerFlags.DisableConsistencyChecks()
 app = wx.App(False)
