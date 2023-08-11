@@ -1313,7 +1313,7 @@ class MyFrame1 ( wx.Frame ):
                     translateCommand = f"translatesubs \"{sourceFile}\" \"{outputFile}\" --to_lang {selectedLang}"
                     presentage = int(100*(index+1)/indexes)
                     pBar.SetValue((presentage))
-                    runCommand(translateCommand, trs = 1)
+                    runCommand(translateCommand)
             currentFile.SetLabel("")
             pBar.SetValue(0)
             if isClearChecked:
@@ -1374,23 +1374,18 @@ class MyFileDropTarget(wx.FileDropTarget):
                         wx.FindWindowById(eval(f"run{self.tab}")).Disable()
         return True
 
-def runCommand(cmd, trs = 0, timeout=None, window=None):
+def runCommand(cmd, timeout=None, window=None):
     # cmd = cmd.replace("\\","/")
-    if trs:
-        os.system(f"{cmd} &")
-        return true
-    else:
-        p = subprocess.Popen(
-            cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, encoding="utf-8"
+    p = subprocess.run(
+             cmd, shell=true, encoding="utf-8",  universal_newlines=True
         )
-        
-        output = ""
-        for line in p.stdout:
-            output += line
-            print(line)
-            window.Refresh() if window else None  # yes, a 1-line if, so shoot me
-        retval = p.wait(timeout)
-        return (retval, output)
+    # for line in p.stdout:
+    #     output += line
+    #     print(line)
+    #     window.Refresh() if window else None  # yes, a 1-line if, so shoot me
+    # retval = p.wait(timeout)
+    # return (retval, output)
+    return p.returncode
 
 wx.SizerFlags.DisableConsistencyChecks()
 app = wx.App(False)
