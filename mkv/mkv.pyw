@@ -910,6 +910,8 @@ class MyFrame1 ( wx.Frame ):
             if event=="Translate":
                 fileTypeList = subtitleFileTypeList
             allFiles = list(filter(lambda file: str(file).endswith(tuple(fileTypeList)),allFiles))
+            allFiles = list(set(allFiles))
+            allFiles.sort()
             checkBoxListWindow.Set(allFiles)
             openFileDialog.Destroy()
             buttonId = eval(f"run{event}")
@@ -941,6 +943,7 @@ class MyFrame1 ( wx.Frame ):
         try:
             selectedFiles = eval(f"selectedFiles{event}")
             checkBoxListWindow = wx.FindWindowById(selectedFiles)
+            oldFiles = checkBoxListWindow.GetItems() 
             openDirDialog = wx.DirDialog(self, "Choose folder",style=wx.DD_DIR_MUST_EXIST)
             openDirDialog.ShowModal()
             selectedDir = openDirDialog.GetPath()
@@ -950,7 +953,10 @@ class MyFrame1 ( wx.Frame ):
             if event=="Translate":
                 fileTypeList = subtitleFileTypeList  
             filterFilesInDir = list(filter(lambda file: str(file).endswith(tuple(fileTypeList)),absFilesInDir))
-            checkBoxListWindow.Set(filterFilesInDir)
+            allFiles = oldFiles + filterFilesInDir
+            allFiles = list(set(allFiles))
+            allFiles.sort()
+            checkBoxListWindow.Set(allFiles)
             openDirDialog.Destroy()
             buttonId = eval(f"run{event}")
             selectAllId = eval(f"selectAll{event}")
@@ -1352,7 +1358,7 @@ class MyFileDropTarget(wx.FileDropTarget):
             checkBoxList = wx.FindWindowById(windowId)
             oldfiles = checkBoxList.GetItems()
             allFiles = list(oldfiles) + filenames
-            allFiles = list(dict.fromkeys(allFiles))
+            allFiles = list(set(allFiles))
             if self.tab == "ToMkv":
                 fileTypesList = toMkvtfileTypesList
             elif self.tab == "Translate":
@@ -1360,6 +1366,7 @@ class MyFileDropTarget(wx.FileDropTarget):
             else:
                 fileTypesList = defaultfileTypesList
             allFiles = list(filter(lambda file: str(file).endswith(tuple(fileTypesList)),allFiles))
+            allFiles.sort()
             checkBoxList.Set(allFiles)
             selectAllId = eval(f"selectAll{self.tab}")
             selectAllWindow = wx.FindWindowById(selectAllId)
