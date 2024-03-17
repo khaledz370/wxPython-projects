@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ###########################################################################
-## Python code generated with wxFormBuilder (version 3.10.1-282-g1fa54006)
+## Python code generated with wxFormBuilder (version 4.1.0-0-g733bf3d)
 ## http://www.wxformbuilder.org/
 ##
 ## PLEASE DO *NOT* EDIT THIS FILE!
@@ -46,26 +46,23 @@ pBarCrop = 1032
 selectedFilesOptions = 1033
 browseFilesOptions = 1034
 browseFolderOptions = 1035
-mkvmergeOptions = 1036
-selectAllOptions = 1037
-dBtnOptions = 1038
-clearListOptions = 1039
-mkvmergeOldFolderOptions = 1040
-optionsFile = 1041
-runOption = 1042
-currentFileOptions = 1043
-pBarOptions = 1044
-errorMissing = 1045
-selectedFilesTranslate = 1046
-browseFilesTranslate = 1047
-selectAllTranslate = 1048
-dBtnTranslate = 1049
-clearListTranslate = 1050
-translateTo = 1051
-runTranslate = 1052
-currentFileTranslate = 1053
-pBarTranslate = 1054
-mkvDir = 1055
+selectAllOptions = 1036
+dBtnOptions = 1037
+optionsFile = 1038
+runOption = 1039
+currentFileOptions = 1040
+pBarOptions = 1041
+errorMissing = 1042
+selectedFilesTranslate = 1043
+browseFilesTranslate = 1044
+selectAllTranslate = 1045
+dBtnTranslate = 1046
+clearListTranslate = 1047
+translateTo = 1048
+runTranslate = 1049
+currentFileTranslate = 1050
+pBarTranslate = 1051
+mkvDir = 1052
 
 ###########################################################################
 ## Class MyFrame1
@@ -74,7 +71,7 @@ mkvDir = 1055
 class MyFrame1 ( wx.Frame ):
 
 	def __init__( self, parent ):
-		wx.Frame.__init__ ( self, parent, id = wx.ID_ANY, title = wx.EmptyString, pos = wx.DefaultPosition, size = wx.Size( 660,590 ), style = wx.DEFAULT_FRAME_STYLE|wx.RESIZE_BORDER|wx.TAB_TRAVERSAL )
+		wx.Frame.__init__ ( self, parent, id = wx.ID_ANY, title = u"Mkv batch v1.4", pos = wx.DefaultPosition, size = wx.Size( 660,590 ), style = wx.DEFAULT_FRAME_STYLE|wx.RESIZE_BORDER|wx.TAB_TRAVERSAL )
 
 		self.SetSizeHints( wx.Size( 660,440 ), wx.Size( 660,700 ) )
 
@@ -105,7 +102,7 @@ class MyFrame1 ( wx.Frame ):
 
 		m_checkList1Choices = []
 		self.m_checkList1 = wx.CheckListBox( self.m_panel71, selectedFilesToMkv, wx.DefaultPosition, wx.Size( 480,-1 ), m_checkList1Choices, 0 )
-		self.m_checkList1.DragAcceptFiles( true )
+		self.m_checkList1.DragAcceptFiles( True )
 		self.m_checkList1.SetMinSize( wx.Size( -1,230 ) )
 
 		bSizer81.Add( self.m_checkList1, 1, wx.ALL|wx.EXPAND, 5 )
@@ -120,9 +117,13 @@ class MyFrame1 ( wx.Frame ):
 		bSizer71.Add( self.m_button11, 1, wx.ALL|wx.EXPAND, 5 )
 
 		self.m_button15 = wx.Button( self.m_panel9, selectAllToMkv, u"Select all", wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.m_button15.Enable( False )
+
 		bSizer71.Add( self.m_button15, 1, wx.ALL|wx.EXPAND, 5 )
 
 		self.m_button111 = wx.Button( self.m_panel9, dBtnToMkv, u"Delete", wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.m_button111.Enable( False )
+
 		bSizer71.Add( self.m_button111, 1, wx.ALL|wx.ALIGN_CENTER_HORIZONTAL|wx.EXPAND, 5 )
 
 
@@ -175,6 +176,8 @@ class MyFrame1 ( wx.Frame ):
 		bSizer12 = wx.BoxSizer( wx.HORIZONTAL )
 
 		self.m_button9 = wx.Button( self.tomkv, convertToMkv, u"Convert to mkv", wx.DefaultPosition, wx.Size( -1,30 ), 0 )
+		self.m_button9.Enable( False )
+
 		bSizer12.Add( self.m_button9, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
 
 		self.m_staticText31 = wx.StaticText( self.tomkv, currentFileToMkv, wx.EmptyString, wx.DefaultPosition, wx.Size( -1,30 ), 0 )
@@ -224,7 +227,7 @@ class MyFrame1 ( wx.Frame ):
 
 		m_checkList12Choices = []
 		self.m_checkList12 = wx.CheckListBox( self.m_panel711, selectedFilesToAudio, wx.DefaultPosition, wx.Size( 480,-1 ), m_checkList12Choices, 0 )
-		self.m_checkList12.DragAcceptFiles( true )
+		self.m_checkList12.DragAcceptFiles( True )
 		self.m_checkList12.SetMinSize( wx.Size( -1,230 ) )
 
 		bSizer811.Add( self.m_checkList12, 1, wx.ALL|wx.EXPAND, 5 )
@@ -240,9 +243,13 @@ class MyFrame1 ( wx.Frame ):
 		bSizer711.Add( self.m_button112, 1, wx.ALL|wx.EXPAND, 5 )
 
 		self.m_button151 = wx.Button( self.m_panel91, selectAllToAudio, u"Select all", wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.m_button151.Enable( False )
+
 		bSizer711.Add( self.m_button151, 1, wx.ALL|wx.EXPAND, 5 )
 
 		self.m_button1111 = wx.Button( self.m_panel91, dBtnToAudio, u"Delete", wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.m_button1111.Enable( False )
+
 		bSizer711.Add( self.m_button1111, 1, wx.ALL|wx.ALIGN_CENTER_HORIZONTAL|wx.EXPAND, 5 )
 
 
@@ -284,6 +291,8 @@ class MyFrame1 ( wx.Frame ):
 
 		bSizer121.SetMinSize( wx.Size( -1,30 ) )
 		self.m_button91 = wx.Button( self.toAudio, convertToAudio, u"Convert to audio", wx.DefaultPosition, wx.Size( -1,30 ), 0 )
+		self.m_button91.Enable( False )
+
 		bSizer121.Add( self.m_button91, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
 
 		self.m_staticText311 = wx.StaticText( self.toAudio, currentFileToAudio, wx.EmptyString, wx.DefaultPosition, wx.Size( -1,30 ), 0 )
@@ -333,7 +342,7 @@ class MyFrame1 ( wx.Frame ):
 
 		m_checkList121Choices = []
 		self.m_checkList121 = wx.CheckListBox( self.m_panel7111, selectedFilesCrop, wx.DefaultPosition, wx.Size( 480,-1 ), m_checkList121Choices, 0 )
-		self.m_checkList121.DragAcceptFiles( true )
+		self.m_checkList121.DragAcceptFiles( True )
 		self.m_checkList121.SetMinSize( wx.Size( -1,200 ) )
 
 		bSizer8111.Add( self.m_checkList121, 1, wx.ALL|wx.EXPAND, 5 )
@@ -349,9 +358,13 @@ class MyFrame1 ( wx.Frame ):
 		bSizer7111.Add( self.m_button1121, 1, wx.ALL|wx.EXPAND, 5 )
 
 		self.m_button1511 = wx.Button( self.m_panel911, selectAllCrop, u"Select all", wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.m_button1511.Enable( False )
+
 		bSizer7111.Add( self.m_button1511, 1, wx.ALL|wx.EXPAND, 5 )
 
 		self.m_button11111 = wx.Button( self.m_panel911, dBtnCrop, u"Delete", wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.m_button11111.Enable( False )
+
 		bSizer7111.Add( self.m_button11111, 1, wx.ALL|wx.ALIGN_CENTER_HORIZONTAL|wx.EXPAND, 5 )
 
 
@@ -436,6 +449,8 @@ class MyFrame1 ( wx.Frame ):
 
 		bSizer1211.SetMinSize( wx.Size( -1,30 ) )
 		self.m_button911 = wx.Button( self.crop, cropVideo, u"Crop", wx.DefaultPosition, wx.Size( -1,30 ), 0 )
+		self.m_button911.Enable( False )
+
 		bSizer1211.Add( self.m_button911, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL|wx.EXPAND, 5 )
 
 		self.m_staticText3111 = wx.StaticText( self.crop, currentFileCrop, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, 0 )
@@ -485,7 +500,7 @@ class MyFrame1 ( wx.Frame ):
 
 		m_checkList1211Choices = []
 		self.m_checkList1211 = wx.CheckListBox( self.m_panel71111, selectedFilesOptions, wx.DefaultPosition, wx.Size( 480,-1 ), m_checkList1211Choices, 0|wx.HSCROLL )
-		self.m_checkList1211.DragAcceptFiles( true )
+		self.m_checkList1211.DragAcceptFiles( True )
 		self.m_checkList1211.SetMinSize( wx.Size( -1,150 ) )
 
 		bSizer81111.Add( self.m_checkList1211, 1, wx.ALL|wx.EXPAND, 5 )
@@ -501,13 +516,14 @@ class MyFrame1 ( wx.Frame ):
 		self.m_button11211 = wx.Button( self.m_panel9111, browseFolderOptions, u"select folder", wx.DefaultPosition, wx.DefaultSize, 0 )
 		bSizer71111.Add( self.m_button11211, 1, wx.ALL|wx.EXPAND, 5 )
 
-		self.m_button212 = wx.Button( self.m_panel9111, mkvmergeOptions, u"mkvmerge old", wx.DefaultPosition, wx.DefaultSize, 0 )
-		bSizer71111.Add( self.m_button212, 0, wx.ALL, 5 )
-
 		self.m_button15111 = wx.Button( self.m_panel9111, selectAllOptions, u"Select all", wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.m_button15111.Enable( False )
+
 		bSizer71111.Add( self.m_button15111, 1, wx.ALL|wx.EXPAND, 5 )
 
 		self.m_button111111 = wx.Button( self.m_panel9111, dBtnOptions, u"Delete", wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.m_button111111.Enable( False )
+
 		bSizer71111.Add( self.m_button111111, 1, wx.ALL|wx.ALIGN_CENTER_HORIZONTAL|wx.EXPAND, 5 )
 
 
@@ -534,22 +550,6 @@ class MyFrame1 ( wx.Frame ):
 		bSizer5111.Fit( self.m_panel7211 )
 		bSizer7211.Add( self.m_panel7211, 1, wx.EXPAND |wx.ALL, 5 )
 
-		bSizer421 = wx.BoxSizer( wx.HORIZONTAL )
-
-		self.clearList3 = wx.CheckBox( self.m_panel20111, clearListOptions, u"Clear list after complete", wx.DefaultPosition, wx.DefaultSize, 0 )
-		bSizer421.Add( self.clearList3, 0, wx.ALL|wx.EXPAND, 5 )
-
-		self.m_button2111 = wx.Button( self.m_panel20111, mkvmergeOptions, u"mkvmerge old", wx.DefaultPosition, wx.DefaultSize, 0 )
-		bSizer421.Add( self.m_button2111, 0, wx.ALL|wx.EXPAND, 5 )
-
-		self.m_staticText131 = wx.StaticText( self.m_panel20111, mkvmergeOldFolderOptions, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, 0 )
-		self.m_staticText131.Wrap( -1 )
-
-		bSizer421.Add( self.m_staticText131, 1, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
-
-
-		bSizer7211.Add( bSizer421, 0, wx.EXPAND, 5 )
-
 
 		self.m_panel20111.SetSizer( bSizer7211 )
 		self.m_panel20111.Layout()
@@ -569,6 +569,8 @@ class MyFrame1 ( wx.Frame ):
 		bSizer12111 = wx.BoxSizer( wx.HORIZONTAL )
 
 		self.m_button9111 = wx.Button( self.mkvOptions, runOption, u"Run", wx.DefaultPosition, wx.Size( -1,30 ), 0 )
+		self.m_button9111.Enable( False )
+
 		bSizer12111.Add( self.m_button9111, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
 
 		self.m_staticText31111 = wx.StaticText( self.mkvOptions, currentFileOptions, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, 0 )
@@ -626,7 +628,7 @@ class MyFrame1 ( wx.Frame ):
 
 		m_checkList1212Choices = []
 		self.m_checkList1212 = wx.CheckListBox( self.m_panel71112, selectedFilesTranslate, wx.DefaultPosition, wx.Size( 480,-1 ), m_checkList1212Choices, 0 )
-		self.m_checkList1212.DragAcceptFiles( true )
+		self.m_checkList1212.DragAcceptFiles( True )
 		self.m_checkList1212.SetMinSize( wx.Size( -1,200 ) )
 
 		bSizer81112.Add( self.m_checkList1212, 1, wx.ALL|wx.EXPAND, 5 )
@@ -642,9 +644,13 @@ class MyFrame1 ( wx.Frame ):
 		bSizer71112.Add( self.m_button11212, 1, wx.ALL|wx.EXPAND, 5 )
 
 		self.m_button15112 = wx.Button( self.m_panel9112, selectAllTranslate, u"Select all", wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.m_button15112.Enable( False )
+
 		bSizer71112.Add( self.m_button15112, 1, wx.ALL|wx.EXPAND, 5 )
 
 		self.m_button111112 = wx.Button( self.m_panel9112, dBtnTranslate, u"Delete", wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.m_button111112.Enable( False )
+
 		bSizer71112.Add( self.m_button111112, 1, wx.ALL|wx.ALIGN_CENTER_HORIZONTAL|wx.EXPAND, 5 )
 
 
@@ -697,6 +703,8 @@ class MyFrame1 ( wx.Frame ):
 
 		bSizer12112.SetMinSize( wx.Size( -1,30 ) )
 		self.m_button9112 = wx.Button( self.translate, runTranslate, u"Translate", wx.DefaultPosition, wx.Size( -1,30 ), 0 )
+		self.m_button9112.Enable( False )
+
 		bSizer12112.Add( self.m_button9112, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL|wx.EXPAND, 5 )
 
 		self.m_staticText31112 = wx.StaticText( self.translate, currentFileTranslate, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, 0 )
@@ -759,30 +767,33 @@ class MyFrame1 ( wx.Frame ):
 		self.Centre( wx.BOTH )
 
 		# Connect Events
+		self.m_checkList1.Bind( wx.EVT_CHECKLISTBOX, self.checkCheckbox("ToMkv") )
 		self.m_button3.Bind( wx.EVT_BUTTON, self.openFilesSelector("ToMkv") )
 		self.m_button11.Bind( wx.EVT_BUTTON, self.selectFolder("ToMkv") )
 		self.m_button15.Bind( wx.EVT_BUTTON, self.selectAll("ToMkv") )
 		self.m_button111.Bind( wx.EVT_BUTTON, self.deleteFromList("ToMkv") )
 		self.m_button211.Bind( wx.EVT_BUTTON, self.setMkvMergeFolder )
-		self.m_button9.Bind( wx.EVT_BUTTON, self.convertToMkv )
+		self.m_button9.Bind( wx.EVT_BUTTON, self.runToMkv )
+		self.m_checkList12.Bind( wx.EVT_CHECKLISTBOX, self.checkCheckbox('ToAudio') )
 		self.m_button31.Bind( wx.EVT_BUTTON, self.openFilesSelector("ToAudio") )
 		self.m_button112.Bind( wx.EVT_BUTTON, self.selectFolder("ToAudio") )
 		self.m_button151.Bind( wx.EVT_BUTTON, self.selectAll("ToAudio") )
 		self.m_button1111.Bind( wx.EVT_BUTTON, self.deleteFromList("ToAudio") )
-		self.m_button91.Bind( wx.EVT_BUTTON, self.convertToAudio )
+		self.m_button91.Bind( wx.EVT_BUTTON, self.runToAudio )
+		self.m_checkList121.Bind( wx.EVT_CHECKLISTBOX, self.checkCheckbox('Crop') )
 		self.m_button311.Bind( wx.EVT_BUTTON, self.openFilesSelector("Crop") )
 		self.m_button1121.Bind( wx.EVT_BUTTON, self.selectFolder("Crop") )
 		self.m_button1511.Bind( wx.EVT_BUTTON, self.selectAll("Crop") )
 		self.m_button11111.Bind( wx.EVT_BUTTON, self.deleteFromList("Crop") )
-		self.m_button911.Bind( wx.EVT_BUTTON, self.cropVideo )
+		self.m_button911.Bind( wx.EVT_BUTTON, self.runCrop )
+		self.m_checkList1211.Bind( wx.EVT_CHECKLISTBOX, self.checkCheckbox('Options') )
 		self.m_button3111.Bind( wx.EVT_BUTTON, self.openFilesSelector("Options") )
 		self.m_button11211.Bind( wx.EVT_BUTTON, self.selectFolder("Options") )
-		self.m_button212.Bind( wx.EVT_BUTTON, self.setMkvMergeFolder )
 		self.m_button15111.Bind( wx.EVT_BUTTON, self.selectAll("Options") )
 		self.m_button111111.Bind( wx.EVT_BUTTON, self.deleteFromList("Options") )
-		self.m_button2111.Bind( wx.EVT_BUTTON, self.setMkvMergeFolder )
 		self.m_filePicker1.Bind( wx.EVT_FILEPICKER_CHANGED, self.setRunEnable )
-		self.m_button9111.Bind( wx.EVT_BUTTON, self.runWithJson )
+		self.m_button9111.Bind( wx.EVT_BUTTON, self.runOptions )
+		self.m_checkList1212.Bind( wx.EVT_CHECKLISTBOX, self.checkCheckbox('Translate') )
 		self.m_button3112.Bind( wx.EVT_BUTTON, self.openFilesSelector("Crop") )
 		self.m_button11212.Bind( wx.EVT_BUTTON, self.selectFolder("Crop") )
 		self.m_button15112.Bind( wx.EVT_BUTTON, self.selectAll("Crop") )
@@ -795,6 +806,9 @@ class MyFrame1 ( wx.Frame ):
 
 
 	# Virtual event handlers, override them in your derived class
+	def checkCheckbox("ToMkv")( self, event ):
+		event.Skip()
+
 	def openFilesSelector("ToMkv")( self, event ):
 		event.Skip()
 
@@ -810,7 +824,10 @@ class MyFrame1 ( wx.Frame ):
 	def setMkvMergeFolder( self, event ):
 		event.Skip()
 
-	def convertToMkv( self, event ):
+	def runToMkv( self, event ):
+		event.Skip()
+
+	def checkCheckbox('ToAudio')( self, event ):
 		event.Skip()
 
 	def openFilesSelector("ToAudio")( self, event ):
@@ -825,7 +842,10 @@ class MyFrame1 ( wx.Frame ):
 	def deleteFromList("ToAudio")( self, event ):
 		event.Skip()
 
-	def convertToAudio( self, event ):
+	def runToAudio( self, event ):
+		event.Skip()
+
+	def checkCheckbox('Crop')( self, event ):
 		event.Skip()
 
 	def openFilesSelector("Crop")( self, event ):
@@ -840,7 +860,10 @@ class MyFrame1 ( wx.Frame ):
 	def deleteFromList("Crop")( self, event ):
 		event.Skip()
 
-	def cropVideo( self, event ):
+	def runCrop( self, event ):
+		event.Skip()
+
+	def checkCheckbox('Options')( self, event ):
 		event.Skip()
 
 	def openFilesSelector("Options")( self, event ):
@@ -849,18 +872,19 @@ class MyFrame1 ( wx.Frame ):
 	def selectFolder("Options")( self, event ):
 		event.Skip()
 
-
 	def selectAll("Options")( self, event ):
 		event.Skip()
 
 	def deleteFromList("Options")( self, event ):
 		event.Skip()
 
-
 	def setRunEnable( self, event ):
 		event.Skip()
 
-	def runWithJson( self, event ):
+	def runOptions( self, event ):
+		event.Skip()
+
+	def checkCheckbox('Translate')( self, event ):
 		event.Skip()
 
 
