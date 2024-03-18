@@ -29,7 +29,7 @@
     <property name="use_array_enum">0</property>
     <property name="use_enum">0</property>
     <property name="use_microsoft_bom">0</property>
-    <object class="Frame" expanded="true">
+    <object class="Frame" expanded="false">
       <property name="aui_managed">0</property>
       <property name="aui_manager_style">wxAUI_MGR_DEFAULT</property>
       <property name="bg"></property>
@@ -58,16 +58,16 @@
       <property name="window_name"></property>
       <property name="window_style">wxTAB_TRAVERSAL</property>
       <property name="xrc_skip_sizer">1</property>
-      <object class="wxBoxSizer" expanded="true">
+      <object class="wxBoxSizer" expanded="false">
         <property name="minimum_size"></property>
         <property name="name">bSizer2</property>
         <property name="orient">wxVERTICAL</property>
         <property name="permission">none</property>
-        <object class="sizeritem" expanded="true">
+        <object class="sizeritem" expanded="false">
           <property name="border">5</property>
           <property name="flag">wxEXPAND | wxALL</property>
           <property name="proportion">1</property>
-          <object class="wxNotebook" expanded="true">
+          <object class="wxNotebook" expanded="false">
             <property name="BottomDockable">1</property>
             <property name="LeftDockable">1</property>
             <property name="RightDockable">1</property>
@@ -121,11 +121,11 @@
             <property name="window_extra_style"></property>
             <property name="window_name"></property>
             <property name="window_style"></property>
-            <object class="notebookpage" expanded="true">
+            <object class="notebookpage" expanded="false">
               <property name="bitmap"></property>
               <property name="label">to mkv</property>
               <property name="select">0</property>
-              <object class="wxPanel" expanded="true">
+              <object class="wxPanel" expanded="false">
                 <property name="BottomDockable">1</property>
                 <property name="LeftDockable">1</property>
                 <property name="RightDockable">1</property>
@@ -177,7 +177,7 @@
                 <property name="window_extra_style"></property>
                 <property name="window_name"></property>
                 <property name="window_style">wxTAB_TRAVERSAL</property>
-                <object class="wxBoxSizer" expanded="true">
+                <object class="wxBoxSizer" expanded="false">
                   <property name="minimum_size"></property>
                   <property name="name">bSizer4</property>
                   <property name="orient">wxVERTICAL</property>
@@ -244,11 +244,11 @@
                       <property name="wrap">-1</property>
                     </object>
                   </object>
-                  <object class="sizeritem" expanded="true">
+                  <object class="sizeritem" expanded="false">
                     <property name="border">5</property>
                     <property name="flag">wxEXPAND</property>
                     <property name="proportion">1</property>
-                    <object class="wxBoxSizer" expanded="true">
+                    <object class="wxBoxSizer" expanded="false">
                       <property name="minimum_size"></property>
                       <property name="name">bSizer6</property>
                       <property name="orient">wxVERTICAL</property>
@@ -1086,11 +1086,11 @@
                           </object>
                         </object>
                       </object>
-                      <object class="sizeritem" expanded="true">
+                      <object class="sizeritem" expanded="false">
                         <property name="border">5</property>
                         <property name="flag">wxEXPAND</property>
                         <property name="proportion">0</property>
-                        <object class="wxBoxSizer" expanded="true">
+                        <object class="wxBoxSizer" expanded="false">
                           <property name="minimum_size"></property>
                           <property name="name">bSizer11</property>
                           <property name="orient">wxVERTICAL</property>
@@ -1142,7 +1142,7 @@
                                   <property name="font"></property>
                                   <property name="gripper">0</property>
                                   <property name="hidden">0</property>
-                                  <property name="id">convertToMkv</property>
+                                  <property name="id">runToMkv</property>
                                   <property name="label">Convert to mkv</property>
                                   <property name="margins"></property>
                                   <property name="markup">0</property>
@@ -2253,7 +2253,7 @@
                                   <property name="font"></property>
                                   <property name="gripper">0</property>
                                   <property name="hidden">0</property>
-                                  <property name="id">convertToAudio</property>
+                                  <property name="id">runToAudio</property>
                                   <property name="label">Convert to audio</property>
                                   <property name="margins"></property>
                                   <property name="markup">0</property>
@@ -3886,7 +3886,7 @@
                                   <property name="font"></property>
                                   <property name="gripper">0</property>
                                   <property name="hidden">0</property>
-                                  <property name="id">cropVideo</property>
+                                  <property name="id">runCrop</property>
                                   <property name="label">Crop</property>
                                   <property name="margins"></property>
                                   <property name="markup">0</property>
@@ -4062,7 +4062,7 @@
             <object class="notebookpage" expanded="false">
               <property name="bitmap"></property>
               <property name="label">mkvOptions</property>
-              <property name="select">1</property>
+              <property name="select">0</property>
               <object class="wxPanel" expanded="false">
                 <property name="BottomDockable">1</property>
                 <property name="LeftDockable">1</property>
@@ -5010,7 +5010,7 @@
                                   <property name="font"></property>
                                   <property name="gripper">0</property>
                                   <property name="hidden">0</property>
-                                  <property name="id">runOption</property>
+                                  <property name="id">runOptions</property>
                                   <property name="label">Run</property>
                                   <property name="margins"></property>
                                   <property name="markup">0</property>
@@ -5186,7 +5186,7 @@
             <object class="notebookpage" expanded="false">
               <property name="bitmap"></property>
               <property name="label">translate</property>
-              <property name="select">0</property>
+              <property name="select">1</property>
               <object class="wxPanel" expanded="false">
                 <property name="BottomDockable">1</property>
                 <property name="LeftDockable">1</property>
@@ -5860,7 +5860,7 @@
                                                         <property name="font"></property>
                                                         <property name="gripper">0</property>
                                                         <property name="hidden">0</property>
-                                                        <property name="id">browseFolderCrop</property>
+                                                        <property name="id">browseFolderTranslate</property>
                                                         <property name="label">select folder</property>
                                                         <property name="margins"></property>
                                                         <property name="markup">0</property>
@@ -6151,7 +6151,7 @@
                                     <property name="caption"></property>
                                     <property name="caption_visible">1</property>
                                     <property name="center_pane">0</property>
-                                    <property name="choices">&quot;aa&quot; &quot;ab&quot; &quot;af&quot; &quot;ak&quot; &quot;sq&quot; &quot;am&quot; &quot;ar&quot; &quot;an&quot; &quot;hy&quot; &quot;as&quot; &quot;av&quot; &quot;ae&quot; &quot;ay&quot; &quot;az&quot; &quot;ba&quot; &quot;bm&quot; &quot;eu&quot; &quot;be&quot; &quot;bn&quot; &quot;bh&quot; &quot;bi&quot; &quot;bs&quot; &quot;br&quot; &quot;bg&quot; &quot;my&quot; &quot;ca&quot; &quot;km&quot; &quot;ch&quot; &quot;ce&quot; &quot;ny&quot; &quot;zh&quot; &quot;cu&quot; &quot;cv&quot; &quot;kw&quot; &quot;co&quot; &quot;cr&quot; &quot;hr&quot; &quot;cs&quot; &quot;da&quot; &quot;dv&quot; &quot;nl&quot; &quot;dz&quot; &quot;en&quot; &quot;eo&quot; &quot;et&quot; &quot;ee&quot; &quot;fo&quot; &quot;fj&quot; &quot;fi&quot; &quot;fr&quot; &quot;fy&quot; &quot;ff&quot; &quot;ka&quot; &quot;de&quot; &quot;gd&quot; &quot;ga&quot; &quot;gl&quot; &quot;gv&quot; &quot;el&quot; &quot;gn&quot; &quot;gu&quot; &quot;ht&quot; &quot;ha&quot; &quot;he&quot; &quot;hz&quot; &quot;hi&quot; &quot;ho&quot; &quot;hr&quot; &quot;hu&quot; &quot;ig&quot; &quot;is&quot; &quot;io&quot; &quot;ii&quot; &quot;iu&quot; &quot;ie&quot; &quot;ia&quot; &quot;id&quot; &quot;ik&quot; &quot;it&quot; &quot;jv&quot; &quot;ja&quot; &quot;kl&quot; &quot;kn&quot; &quot;ks&quot; &quot;kr&quot; &quot;kk&quot; &quot;km&quot; &quot;ki&quot; &quot;rw&quot; &quot;ky&quot; &quot;kv&quot; &quot;kg&quot; &quot;ko&quot; &quot;ku&quot; &quot;kj&quot; &quot;la&quot; &quot;lb&quot; &quot;lg&quot; &quot;li&quot; &quot;ln&quot; &quot;lo&quot; &quot;lt&quot; &quot;lu&quot; &quot;lv&quot; &quot;gv&quot; &quot;mk&quot; &quot;mg&quot; &quot;ms&quot; &quot;ml&quot; &quot;mt&quot; &quot;mi&quot; &quot;mr&quot; &quot;mh&quot; &quot;mn&quot; &quot;na&quot; &quot;nv&quot; &quot;nb&quot; &quot;nd&quot; &quot;ne&quot; &quot;ng&quot; &quot;nn&quot; &quot;no&quot; &quot;ii&quot; &quot;nr&quot; &quot;oc&quot; &quot;oj&quot; &quot;cu&quot; &quot;om&quot; &quot;or&quot; &quot;os&quot; &quot;pa&quot; &quot;pi&quot; &quot;fa&quot; &quot;pl&quot; &quot;ps&quot; &quot;pt&quot; &quot;qu&quot; &quot;rm&quot; &quot;ro&quot; &quot;rn&quot; &quot;ru&quot; &quot;sg&quot; &quot;sa&quot; &quot;si&quot; &quot;sk&quot; &quot;sl&quot; &quot;se&quot; &quot;sm&quot; &quot;sn&quot; &quot;sd&quot; &quot;so&quot; &quot;st&quot; &quot;es&quot; &quot;sc&quot; &quot;sr&quot; &quot;ss&quot; &quot;su&quot; &quot;sw&quot; &quot;sv&quot; &quot;ty&quot; &quot;ta&quot; &quot;tt&quot; &quot;te&quot; &quot;tg&quot; &quot;tl&quot; &quot;th&quot; &quot;bo&quot; &quot;ti&quot; &quot;to&quot; &quot;tn&quot; &quot;ts&quot; &quot;tk&quot; &quot;tr&quot; &quot;tw&quot; &quot;ug&quot; &quot;uk&quot; &quot;ur&quot; &quot;uz&quot; &quot;ve&quot; &quot;vi&quot; &quot;vo&quot; &quot;cy&quot; &quot;wa&quot; &quot;wo&quot; &quot;xh&quot; &quot;yi&quot; &quot;yo&quot; &quot;za&quot; &quot;zu&quot;</property>
+                                    <property name="choices"></property>
                                     <property name="close_button">1</property>
                                     <property name="context_help"></property>
                                     <property name="context_menu">1</property>
@@ -6676,7 +6676,7 @@
                       <property name="validator_style">wxFILTER_NONE</property>
                       <property name="validator_type">wxDefaultValidator</property>
                       <property name="validator_variable"></property>
-                      <property name="value">C:\Program Files\MKVToolNix</property>
+                      <property name="value">config[&quot;mkvtoolnix&quot;]</property>
                       <property name="window_extra_style"></property>
                       <property name="window_name"></property>
                       <property name="window_style"></property>

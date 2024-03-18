@@ -18,7 +18,7 @@ selectAllToMkv = 1004
 dBtnToMkv = 1005
 mkvmergeTomkv = 1006
 mkvmergeOldFolderToMkv = 1007
-convertToMkv = 1008
+runToMkv = 1008
 currentFileToMkv = 1009
 pBarToMkv = 1010
 selectedFilesToAudio = 1011
@@ -27,7 +27,7 @@ browseFolderToAudio = 1013
 selectAllToAudio = 1014
 dBtnToAudio = 1015
 clearListToAudio = 1016
-convertToAudio = 1017
+runToAudio = 1017
 currentFileToAudio = 1018
 pBarToAudio = 1019
 selectedFilesCrop = 1020
@@ -40,7 +40,7 @@ cTop = 1026
 cRight = 1027
 cBottom = 1028
 cLeft = 1029
-cropVideo = 1030
+runCrop = 1030
 currentFileCrop = 1031
 pBarCrop = 1032
 selectedFilesOptions = 1033
@@ -49,20 +49,21 @@ browseFolderOptions = 1035
 selectAllOptions = 1036
 dBtnOptions = 1037
 optionsFile = 1038
-runOption = 1039
+runOptions = 1039
 currentFileOptions = 1040
 pBarOptions = 1041
 errorMissing = 1042
 selectedFilesTranslate = 1043
 browseFilesTranslate = 1044
-selectAllTranslate = 1045
-dBtnTranslate = 1046
-clearListTranslate = 1047
-translateTo = 1048
-runTranslate = 1049
-currentFileTranslate = 1050
-pBarTranslate = 1051
-mkvDir = 1052
+browseFolderTranslate = 1045
+selectAllTranslate = 1046
+dBtnTranslate = 1047
+clearListTranslate = 1048
+translateTo = 1049
+runTranslate = 1050
+currentFileTranslate = 1051
+pBarTranslate = 1052
+mkvDir = 1053
 
 ###########################################################################
 ## Class MyFrame1
@@ -175,7 +176,7 @@ class MyFrame1 ( wx.Frame ):
 
 		bSizer12 = wx.BoxSizer( wx.HORIZONTAL )
 
-		self.m_button9 = wx.Button( self.tomkv, convertToMkv, u"Convert to mkv", wx.DefaultPosition, wx.Size( -1,30 ), 0 )
+		self.m_button9 = wx.Button( self.tomkv, runToMkv, u"Convert to mkv", wx.DefaultPosition, wx.Size( -1,30 ), 0 )
 		self.m_button9.Enable( False )
 
 		bSizer12.Add( self.m_button9, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
@@ -290,7 +291,7 @@ class MyFrame1 ( wx.Frame ):
 		bSizer121 = wx.BoxSizer( wx.HORIZONTAL )
 
 		bSizer121.SetMinSize( wx.Size( -1,30 ) )
-		self.m_button91 = wx.Button( self.toAudio, convertToAudio, u"Convert to audio", wx.DefaultPosition, wx.Size( -1,30 ), 0 )
+		self.m_button91 = wx.Button( self.toAudio, runToAudio, u"Convert to audio", wx.DefaultPosition, wx.Size( -1,30 ), 0 )
 		self.m_button91.Enable( False )
 
 		bSizer121.Add( self.m_button91, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
@@ -448,7 +449,7 @@ class MyFrame1 ( wx.Frame ):
 		bSizer1211 = wx.BoxSizer( wx.HORIZONTAL )
 
 		bSizer1211.SetMinSize( wx.Size( -1,30 ) )
-		self.m_button911 = wx.Button( self.crop, cropVideo, u"Crop", wx.DefaultPosition, wx.Size( -1,30 ), 0 )
+		self.m_button911 = wx.Button( self.crop, runCrop, u"Crop", wx.DefaultPosition, wx.Size( -1,30 ), 0 )
 		self.m_button911.Enable( False )
 
 		bSizer1211.Add( self.m_button911, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL|wx.EXPAND, 5 )
@@ -568,7 +569,7 @@ class MyFrame1 ( wx.Frame ):
 
 		bSizer12111 = wx.BoxSizer( wx.HORIZONTAL )
 
-		self.m_button9111 = wx.Button( self.mkvOptions, runOption, u"Run", wx.DefaultPosition, wx.Size( -1,30 ), 0 )
+		self.m_button9111 = wx.Button( self.mkvOptions, runOptions, u"Run", wx.DefaultPosition, wx.Size( -1,30 ), 0 )
 		self.m_button9111.Enable( False )
 
 		bSizer12111.Add( self.m_button9111, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
@@ -640,7 +641,7 @@ class MyFrame1 ( wx.Frame ):
 		self.m_button3112 = wx.Button( self.m_panel9112, browseFilesTranslate, u"browse files", wx.DefaultPosition, wx.DefaultSize, 0 )
 		bSizer71112.Add( self.m_button3112, 1, wx.ALL|wx.ALIGN_CENTER_VERTICAL|wx.ALIGN_CENTER_HORIZONTAL|wx.EXPAND, 5 )
 
-		self.m_button11212 = wx.Button( self.m_panel9112, browseFolderCrop, u"select folder", wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.m_button11212 = wx.Button( self.m_panel9112, browseFolderTranslate, u"select folder", wx.DefaultPosition, wx.DefaultSize, 0 )
 		bSizer71112.Add( self.m_button11212, 1, wx.ALL|wx.EXPAND, 5 )
 
 		self.m_button15112 = wx.Button( self.m_panel9112, selectAllTranslate, u"Select all", wx.DefaultPosition, wx.DefaultSize, 0 )
@@ -683,7 +684,7 @@ class MyFrame1 ( wx.Frame ):
 		self.clearList21.SetValue(True)
 		bSizer431.Add( self.clearList21, 1, wx.ALL|wx.EXPAND, 5 )
 
-		m_choice2Choices = [ u"aa", u"ab", u"af", u"ak", u"sq", u"am", u"ar", u"an", u"hy", u"as", u"av", u"ae", u"ay", u"az", u"ba", u"bm", u"eu", u"be", u"bn", u"bh", u"bi", u"bs", u"br", u"bg", u"my", u"ca", u"km", u"ch", u"ce", u"ny", u"zh", u"cu", u"cv", u"kw", u"co", u"cr", u"hr", u"cs", u"da", u"dv", u"nl", u"dz", u"en", u"eo", u"et", u"ee", u"fo", u"fj", u"fi", u"fr", u"fy", u"ff", u"ka", u"de", u"gd", u"ga", u"gl", u"gv", u"el", u"gn", u"gu", u"ht", u"ha", u"he", u"hz", u"hi", u"ho", u"hr", u"hu", u"ig", u"is", u"io", u"ii", u"iu", u"ie", u"ia", u"id", u"ik", u"it", u"jv", u"ja", u"kl", u"kn", u"ks", u"kr", u"kk", u"km", u"ki", u"rw", u"ky", u"kv", u"kg", u"ko", u"ku", u"kj", u"la", u"lb", u"lg", u"li", u"ln", u"lo", u"lt", u"lu", u"lv", u"gv", u"mk", u"mg", u"ms", u"ml", u"mt", u"mi", u"mr", u"mh", u"mn", u"na", u"nv", u"nb", u"nd", u"ne", u"ng", u"nn", u"no", u"ii", u"nr", u"oc", u"oj", u"cu", u"om", u"or", u"os", u"pa", u"pi", u"fa", u"pl", u"ps", u"pt", u"qu", u"rm", u"ro", u"rn", u"ru", u"sg", u"sa", u"si", u"sk", u"sl", u"se", u"sm", u"sn", u"sd", u"so", u"st", u"es", u"sc", u"sr", u"ss", u"su", u"sw", u"sv", u"ty", u"ta", u"tt", u"te", u"tg", u"tl", u"th", u"bo", u"ti", u"to", u"tn", u"ts", u"tk", u"tr", u"tw", u"ug", u"uk", u"ur", u"uz", u"ve", u"vi", u"vo", u"cy", u"wa", u"wo", u"xh", u"yi", u"yo", u"za", u"zu" ]
+		m_choice2Choices = []
 		self.m_choice2 = wx.Choice( self.m_panel20112, translateTo, wx.DefaultPosition, wx.DefaultSize, m_choice2Choices, 0 )
 		self.m_choice2.SetSelection( 42 )
 		bSizer431.Add( self.m_choice2, 0, wx.ALL, 5 )
@@ -743,7 +744,7 @@ class MyFrame1 ( wx.Frame ):
 
 		bSizer41111.Add( self.m_staticText21, 0, wx.ALL|wx.ALIGN_CENTER_HORIZONTAL|wx.EXPAND, 5 )
 
-		self.m_dirPicker1 = wx.DirPickerCtrl( self.Settings, mkvDir, u"C:\\Program Files\\MKVToolNix", u"Select a folder", wx.DefaultPosition, wx.DefaultSize, wx.DIRP_DEFAULT_STYLE )
+		self.m_dirPicker1 = wx.DirPickerCtrl( self.Settings, mkvDir, u"config[\"mkvtoolnix\"]", u"Select a folder", wx.DefaultPosition, wx.DefaultSize, wx.DIRP_DEFAULT_STYLE )
 		bSizer41111.Add( self.m_dirPicker1, 0, wx.ALL|wx.EXPAND, 5 )
 
 		self.m_staticText20 = wx.StaticText( self.Settings, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, 0 )
