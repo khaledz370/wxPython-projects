@@ -30,9 +30,7 @@ try:
     languageCodes = config["languageCodes"]
 except:
     config = {
-        "mkvtoolnix": "C:\\Program Files\\MKVToolNix",
-        "languageCodes": ["en", "de"],
-    }
+        "mkvtoolnix": "C:\\Program Files\\MKVToolNix","languageCodes": ["en", "de"], }
     languageCodes = config["languageCodes"]
     with open(appdataFile, "w") as f:
         json.dump(config, f)
@@ -40,44 +38,11 @@ except:
 
 true = True
 defaultfileTypesList = [
-    ".mkv",
-    ".ts",
-    ".mp4",
-    ".avi",
-    ".webm",
-    ".flv",
-    ".ogg",
-    ".mov",
-    ".mpeg-2",
-]
+    ".mkv", ".ts", ".mp4", ".avi", ".webm", ".flv", ".ogg", ".mov", ".mpeg-2",]
 toMkvtfileTypesList = [
-    ".ts",
-    ".mp4",
-    ".avi",
-    ".webm",
-    ".flv",
-    ".ogg",
-    ".mov",
-    ".mpeg-2",
-]
+    ".ts", ".mp4", ".avi", ".webm", ".flv", ".ogg", ".mov", ".mpeg-2",]
 subtitleFileTypeList = [
-    ".srt",
-    ".sub",
-    ".sbv",
-    ".ass",
-    ".ssa",
-    ".usf",
-    ".idx",
-    ".aqt",
-    ".jss",
-    ".psb",
-    ".rt",
-    ".smi",
-    ".stl",
-    ".vtt",
-    ".xml",
-    ".txt",
-]
+    ".srt", ".sub", ".sbv", ".ass", ".ssa", ".usf", ".idx", ".aqt", ".jss", ".psb", ".rt", ".smi", ".stl", ".vtt", ".xml", ".txt",]
 defaultFileTypeFillter = "Videos|*.mkv;*.ts;*.mp4;*.avi;*.webm;*.flv;*.ogg;*.mov;*.mpeg-2|All files (*.*)|*.*"
 subtitleFileTypeFillter = "Subtitles|*.srt;*.sub;*.sbv;*.ass;*.ssa;*.usf;*.idx;*.aqt;*.jss;*.psb;*.rt;*.smi;*.stl;*.vtt;*.xml;*.txt;|All files (*.*)|*.*"
 mkvMerge = f"{config['mkvtoolnix']}\\mkvmerge.exe"
@@ -162,145 +127,58 @@ settingsIcon = f"{mainDir}\\mkv.ico"
 
 
 class MyFrame1(wx.Frame):
-
     def __init__(self, parent):
-        wx.Frame.__init__(
-            self,
-            parent,
-            id=wx.ID_ANY,
-            title = u"Mkv batch v1.4",
-            pos=wx.DefaultPosition,
-            size=wx.Size(664, 600),
-            style=wx.DEFAULT_FRAME_STYLE | wx.RESIZE_BORDER | wx.TAB_TRAVERSAL,
-        )
+        wx.Frame.__init__(self,parent,id=wx.ID_ANY,title = u"Mkv batch v1.4",pos=wx.DefaultPosition,size=wx.Size(664, 600),style=wx.DEFAULT_FRAME_STYLE | wx.RESIZE_BORDER | wx.TAB_TRAVERSAL,)
 
         self.SetSizeHints(wx.Size(660, 600), wx.Size(660, 600))
 
         bSizer2 = wx.BoxSizer(wx.VERTICAL)
 
-        self.m_notebook30 = wx.Notebook(
-            self, tabContainer, wx.DefaultPosition, wx.DefaultSize, 0
-        )
-        self.tomkv = wx.Panel(
-            self.m_notebook30,
-            wx.ID_ANY,
-            wx.DefaultPosition,
-            wx.DefaultSize,
-            wx.TAB_TRAVERSAL,
-        )
+        self.m_notebook30 = wx.Notebook(self, tabContainer, wx.DefaultPosition, wx.DefaultSize, 0)
+        self.tomkv = wx.Panel(self.m_notebook30,wx.ID_ANY,wx.DefaultPosition,wx.DefaultSize,wx.TAB_TRAVERSAL,)
         bSizer4 = wx.BoxSizer(wx.VERTICAL)
 
-        self.m_staticText3 = wx.StaticText(
-            self.tomkv,
-            wx.ID_ANY,
-            "Convert video to mkv",
-            wx.DefaultPosition,
-            wx.DefaultSize,
-            0,
-        )
+        self.m_staticText3 = wx.StaticText(self.tomkv,wx.ID_ANY,"Convert video to mkv",wx.DefaultPosition,wx.DefaultSize,0,)
         self.m_staticText3.Wrap(-1)
 
         bSizer4.Add(self.m_staticText3, 0, wx.ALIGN_CENTER_HORIZONTAL | wx.ALL, 5)
 
         bSizer6 = wx.BoxSizer(wx.VERTICAL)
 
-        self.m_panel20 = wx.Panel(
-            self.tomkv, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.TAB_TRAVERSAL
-        )
+        self.m_panel20 = wx.Panel(self.tomkv, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.TAB_TRAVERSAL)
         bSizer7 = wx.BoxSizer(wx.VERTICAL)
 
-        self.m_panel7 = wx.Panel(
-            self.m_panel20,
-            wx.ID_ANY,
-            wx.DefaultPosition,
-            wx.DefaultSize,
-            wx.TAB_TRAVERSAL,
-        )
+        self.m_panel7 = wx.Panel(self.m_panel20,wx.ID_ANY,wx.DefaultPosition,wx.DefaultSize,wx.TAB_TRAVERSAL,)
         bSizer5 = wx.BoxSizer(wx.HORIZONTAL)
 
-        self.m_panel8 = wx.Panel(
-            self.m_panel7,
-            wx.ID_ANY,
-            wx.DefaultPosition,
-            wx.Size(-1, -1),
-            wx.TAB_TRAVERSAL,
-        )
+        self.m_panel8 = wx.Panel(self.m_panel7,wx.ID_ANY,wx.DefaultPosition,wx.Size(-1, -1),wx.TAB_TRAVERSAL,)
         bSizer8 = wx.BoxSizer(wx.HORIZONTAL)
 
-        self.m_panel71 = wx.Panel(
-            self.m_panel8,
-            wx.ID_ANY,
-            wx.DefaultPosition,
-            wx.DefaultSize,
-            wx.TAB_TRAVERSAL,
-        )
+        self.m_panel71 = wx.Panel(self.m_panel8,wx.ID_ANY,wx.DefaultPosition,wx.DefaultSize,wx.TAB_TRAVERSAL,)
         bSizer81 = wx.BoxSizer(wx.VERTICAL)
 
         m_checkList1Choices = []
-        self.m_checkList1 = wx.CheckListBox(
-            self.m_panel71,
-            selectedFilesToMkv,
-            wx.DefaultPosition,
-            wx.Size(480, -1),
-            m_checkList1Choices,
-            wx.HSCROLL,
-        )
+        self.m_checkList1 = wx.CheckListBox(self.m_panel71,selectedFilesToMkv,wx.DefaultPosition,wx.Size(480, -1),m_checkList1Choices,wx.HSCROLL,)
         self.m_checkList1.DragAcceptFiles(true)
         self.m_checkList1.SetMinSize(wx.Size(-1, 230))
 
         bSizer81.Add(self.m_checkList1, 1, wx.ALL | wx.EXPAND, 5)
 
-        self.m_panel9 = wx.Panel(
-            self.m_panel71,
-            wx.ID_ANY,
-            wx.DefaultPosition,
-            wx.DefaultSize,
-            wx.TAB_TRAVERSAL,
-        )
+        self.m_panel9 = wx.Panel(self.m_panel71,wx.ID_ANY,wx.DefaultPosition,wx.DefaultSize,wx.TAB_TRAVERSAL,)
         bSizer71 = wx.BoxSizer(wx.HORIZONTAL)
 
-        self.m_button3 = wx.Button(
-            self.m_panel9,
-            browseFilesToMkv,
-            "browse files",
-            wx.DefaultPosition,
-            wx.DefaultSize,
-            0,
-        )
-        bSizer71.Add(
-            self.m_button3,
-            1,
-            wx.ALL | wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_CENTER_HORIZONTAL | wx.EXPAND,
-            5,
-        )
+        self.m_button3 = wx.Button(self.m_panel9,browseFilesToMkv,"browse files",wx.DefaultPosition,wx.DefaultSize,0,)
+        bSizer71.Add(self.m_button3,1,wx.ALL | wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_CENTER_HORIZONTAL | wx.EXPAND,5,)
 
-        self.m_button11 = wx.Button(
-            self.m_panel9,
-            browseFolderToMkv,
-            "select folder",
-            wx.DefaultPosition,
-            wx.DefaultSize,
-            0,
-        )
+        self.m_button11 = wx.Button(self.m_panel9,browseFolderToMkv,"select folder",wx.DefaultPosition,wx.DefaultSize,0,)
         bSizer71.Add(self.m_button11, 1, wx.ALL | wx.EXPAND, 5)
 
-        self.m_button15 = wx.Button(
-            self.m_panel9,
-            selectAllToMkv,
-            "Select all / none",
-            wx.DefaultPosition,
-            wx.DefaultSize,
-            0,
-        )
+        self.m_button15 = wx.Button(self.m_panel9,selectAllToMkv,"Select all / none",wx.DefaultPosition,wx.DefaultSize,0,)
         bSizer71.Add(self.m_button15, 1, wx.ALL | wx.EXPAND, 5)
         self.m_button15.Disable()
 
-        self.m_button111 = wx.Button(
-            self.m_panel9, dBtnToMkv, "Delete", wx.DefaultPosition, wx.DefaultSize, 0
-        )
-        bSizer71.Add(
-            self.m_button111, 1, wx.ALL | wx.ALIGN_CENTER_HORIZONTAL | wx.EXPAND, 5
-        )
+        self.m_button111 = wx.Button(self.m_panel9, dBtnToMkv, "Delete", wx.DefaultPosition, wx.DefaultSize, 0)
+        bSizer71.Add(self.m_button111, 1, wx.ALL | wx.ALIGN_CENTER_HORIZONTAL | wx.EXPAND, 5)
         self.m_button111.Disable()
 
         self.m_panel9.SetSizer(bSizer71)
@@ -325,28 +203,12 @@ class MyFrame1(wx.Frame):
 
         bSizer42 = wx.BoxSizer(wx.HORIZONTAL)
 
-        self.m_button211 = wx.Button(
-            self.m_panel20,
-            mkvmergeTomkv,
-            "mkvmerge old",
-            wx.DefaultPosition,
-            wx.DefaultSize,
-            0,
-        )
+        self.m_button211 = wx.Button(self.m_panel20,mkvmergeTomkv,"mkvmerge old",wx.DefaultPosition,wx.DefaultSize,0,)
         bSizer42.Add(self.m_button211, 0, wx.ALL | wx.EXPAND, 5)
 
-        self.m_staticText13 = wx.StaticText(
-            self.m_panel20,
-            mkvmergeOldFolderToMkv,
-            wx.EmptyString,
-            wx.DefaultPosition,
-            wx.DefaultSize,
-            wx.ALIGN_RIGHT,
-        )
+        self.m_staticText13 = wx.StaticText(self.m_panel20,mkvmergeOldFolderToMkv,wx.EmptyString,wx.DefaultPosition,wx.DefaultSize,wx.ALIGN_RIGHT,)
         self.m_staticText13.Wrap(-1)
-        self.m_staticText13.SetForegroundColour(
-            wx.SystemSettings.GetColour(wx.SYS_COLOUR_HIGHLIGHT)
-        )
+        self.m_staticText13.SetForegroundColour(wx.SystemSettings.GetColour(wx.SYS_COLOUR_HIGHLIGHT))
 
         bSizer42.Add(self.m_staticText13, 1, wx.ALL | wx.ALIGN_CENTER_VERTICAL, 5)
 
@@ -360,39 +222,18 @@ class MyFrame1(wx.Frame):
 
         bSizer12 = wx.BoxSizer(wx.HORIZONTAL)
 
-        self.m_button9 = wx.Button(
-            self.tomkv,
-            runToMkv,
-            "Convert to mkv",
-            wx.DefaultPosition,
-            wx.Size(-1, 30),
-            0,
-        )
+        self.m_button9 = wx.Button(self.tomkv,runToMkv,"Convert to mkv",wx.DefaultPosition,wx.Size(-1, 30),0,)
         bSizer12.Add(self.m_button9, 0, wx.ALL | wx.ALIGN_CENTER_VERTICAL, 5)
         self.m_button9.Disable()
 
-        self.m_staticText31 = wx.StaticText(
-            self.tomkv,
-            currentFileToMkv,
-            wx.EmptyString,
-            wx.DefaultPosition,
-            wx.Size(-1, 30),
-            0,
-        )
+        self.m_staticText31 = wx.StaticText(self.tomkv,currentFileToMkv,wx.EmptyString,wx.DefaultPosition,wx.Size(-1, 30),0,)
         self.m_staticText31.Wrap(-1)
 
         bSizer12.Add(self.m_staticText31, 1, wx.ALL | wx.ALIGN_CENTER_VERTICAL, 5)
 
         bSizer11.Add(bSizer12, 0, wx.EXPAND, 5)
 
-        self.m_gauge1 = wx.Gauge(
-            self.tomkv,
-            pBarToMkv,
-            100,
-            wx.DefaultPosition,
-            wx.Size(-1, 30),
-            wx.GA_HORIZONTAL,
-        )
+        self.m_gauge1 = wx.Gauge(self.tomkv,pBarToMkv,100,wx.DefaultPosition,wx.Size(-1, 30),wx.GA_HORIZONTAL,)
         self.m_gauge1.SetValue(0)
         bSizer11.Add(self.m_gauge1, 0, wx.ALL | wx.EXPAND, 5)
 
@@ -404,139 +245,57 @@ class MyFrame1(wx.Frame):
         self.tomkv.Layout()
         bSizer4.Fit(self.tomkv)
         self.m_notebook30.AddPage(self.tomkv, "to mkv", True)
-        self.toAudio = wx.Panel(
-            self.m_notebook30,
-            wx.ID_ANY,
-            wx.DefaultPosition,
-            wx.DefaultSize,
-            wx.TAB_TRAVERSAL,
-        )
+        self.toAudio = wx.Panel(self.m_notebook30,wx.ID_ANY,wx.DefaultPosition,wx.DefaultSize,wx.TAB_TRAVERSAL,)
         bSizer41 = wx.BoxSizer(wx.VERTICAL)
 
-        self.m_staticText32 = wx.StaticText(
-            self.toAudio,
-            wx.ID_ANY,
-            "Convert video to audio",
-            wx.DefaultPosition,
-            wx.DefaultSize,
-            0,
-        )
+        self.m_staticText32 = wx.StaticText(self.toAudio,wx.ID_ANY,"Convert video to audio",wx.DefaultPosition,wx.DefaultSize,0,)
         self.m_staticText32.Wrap(-1)
 
         bSizer41.Add(self.m_staticText32, 0, wx.ALIGN_CENTER_HORIZONTAL | wx.ALL, 5)
 
         bSizer61 = wx.BoxSizer(wx.VERTICAL)
 
-        self.m_panel201 = wx.Panel(
-            self.toAudio,
-            wx.ID_ANY,
-            wx.DefaultPosition,
-            wx.DefaultSize,
-            wx.TAB_TRAVERSAL,
-        )
+        self.m_panel201 = wx.Panel(self.toAudio,wx.ID_ANY,wx.DefaultPosition,wx.DefaultSize,wx.TAB_TRAVERSAL,)
         bSizer72 = wx.BoxSizer(wx.VERTICAL)
 
-        self.m_panel72 = wx.Panel(
-            self.m_panel201,
-            wx.ID_ANY,
-            wx.DefaultPosition,
-            wx.DefaultSize,
-            wx.TAB_TRAVERSAL,
-        )
+        self.m_panel72 = wx.Panel(self.m_panel201,wx.ID_ANY,wx.DefaultPosition,wx.DefaultSize,wx.TAB_TRAVERSAL,)
         bSizer51 = wx.BoxSizer(wx.VERTICAL)
 
-        self.m_panel82 = wx.Panel(
-            self.m_panel72,
-            wx.ID_ANY,
-            wx.DefaultPosition,
-            wx.Size(-1, -1),
-            wx.TAB_TRAVERSAL,
-        )
+        self.m_panel82 = wx.Panel(self.m_panel72,wx.ID_ANY,wx.DefaultPosition,wx.Size(-1, -1),wx.TAB_TRAVERSAL,)
         bSizer82 = wx.BoxSizer(wx.VERTICAL)
 
-        self.m_panel711 = wx.Panel(
-            self.m_panel82,
-            wx.ID_ANY,
-            wx.DefaultPosition,
-            wx.DefaultSize,
-            wx.TAB_TRAVERSAL,
-        )
+        self.m_panel711 = wx.Panel(self.m_panel82,wx.ID_ANY,wx.DefaultPosition,wx.DefaultSize,wx.TAB_TRAVERSAL,)
         bSizer811 = wx.BoxSizer(wx.VERTICAL)
 
         m_checkList12Choices = []
-        self.m_checkList12 = wx.CheckListBox(
-            self.m_panel711,
-            selectedFilesToAudio,
-            wx.DefaultPosition,
-            wx.Size(480, -1),
-            m_checkList12Choices,
-            wx.HSCROLL,
-        )
+        self.m_checkList12 = wx.CheckListBox(self.m_panel711,selectedFilesToAudio,wx.DefaultPosition,wx.Size(480, -1),m_checkList12Choices,wx.HSCROLL,)
         self.m_checkList12.DragAcceptFiles(true)
         self.m_checkList12.SetMinSize(wx.Size(-1, 230))
 
         bSizer811.Add(self.m_checkList12, 1, wx.ALL | wx.EXPAND, 5)
 
-        self.m_panel91 = wx.Panel(
-            self.m_panel711,
-            wx.ID_ANY,
-            wx.DefaultPosition,
-            wx.DefaultSize,
-            wx.TAB_TRAVERSAL,
-        )
+        self.m_panel91 = wx.Panel(self.m_panel711,wx.ID_ANY,wx.DefaultPosition,wx.DefaultSize,wx.TAB_TRAVERSAL,)
         bSizer711 = wx.BoxSizer(wx.HORIZONTAL)
 
         bSizer711.SetMinSize(wx.Size(-1, 40))
-        self.m_button31 = wx.Button(
-            self.m_panel91,
-            browseFilesToAudio,
-            "browse files",
-            wx.DefaultPosition,
-            wx.DefaultSize,
-            0,
-        )
-        bSizer711.Add(
-            self.m_button31,
-            1,
-            wx.ALL | wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_CENTER_HORIZONTAL | wx.EXPAND,
-            5,
-        )
+        self.m_button31 = wx.Button(self.m_panel91,browseFilesToAudio,"browse files",wx.DefaultPosition,wx.DefaultSize,0,)
+        bSizer711.Add(self.m_button31,1,wx.ALL | wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_CENTER_HORIZONTAL | wx.EXPAND,5,)
 
-        self.m_button112 = wx.Button(
-            self.m_panel91,
-            browseFolderToAudio,
-            "select folder",
-            wx.DefaultPosition,
-            wx.DefaultSize,
-            0,
-        )
+        self.m_button112 = wx.Button(self.m_panel91,browseFolderToAudio,"select folder",wx.DefaultPosition,wx.DefaultSize,0,)
         bSizer711.Add(self.m_button112, 1, wx.ALL | wx.EXPAND, 5)
 
-        self.m_button151 = wx.Button(
-            self.m_panel91,
-            selectAllToAudio,
-            "Select all / none",
-            wx.DefaultPosition,
-            wx.DefaultSize,
-            0,
-        )
+        self.m_button151 = wx.Button(self.m_panel91,selectAllToAudio,"Select all / none",wx.DefaultPosition,wx.DefaultSize,0,)
         bSizer711.Add(self.m_button151, 1, wx.ALL | wx.EXPAND, 5)
         self.m_button151.Disable()
 
-        self.m_button1111 = wx.Button(
-            self.m_panel91, dBtnToAudio, "Delete", wx.DefaultPosition, wx.DefaultSize, 0
-        )
-        bSizer711.Add(
-            self.m_button1111, 1, wx.ALL | wx.ALIGN_CENTER_HORIZONTAL | wx.EXPAND, 5
-        )
+        self.m_button1111 = wx.Button(self.m_panel91, dBtnToAudio, "Delete", wx.DefaultPosition, wx.DefaultSize, 0)
+        bSizer711.Add(self.m_button1111, 1, wx.ALL | wx.ALIGN_CENTER_HORIZONTAL | wx.EXPAND, 5)
         self.m_button1111.Disable()
 
         self.m_panel91.SetSizer(bSizer711)
         self.m_panel91.Layout()
         bSizer711.Fit(self.m_panel91)
-        bSizer811.Add(
-            self.m_panel91, 0, wx.ALIGN_CENTER_VERTICAL | wx.ALL | wx.EXPAND, 5
-        )
+        bSizer811.Add(self.m_panel91, 0, wx.ALIGN_CENTER_VERTICAL | wx.ALL | wx.EXPAND, 5)
 
         self.m_panel711.SetSizer(bSizer811)
         self.m_panel711.Layout()
@@ -553,14 +312,7 @@ class MyFrame1(wx.Frame):
         bSizer51.Fit(self.m_panel72)
         bSizer72.Add(self.m_panel72, 1, wx.EXPAND | wx.ALL, 5)
 
-        self.clearList1 = wx.CheckBox(
-            self.m_panel201,
-            clearListToAudio,
-            "Clear list after complete",
-            wx.DefaultPosition,
-            wx.DefaultSize,
-            0,
-        )
+        self.clearList1 = wx.CheckBox(self.m_panel201,clearListToAudio,"Clear list after complete",wx.DefaultPosition,wx.DefaultSize,0,)
         bSizer72.Add(self.clearList1, 0, wx.ALL, 5)
 
         self.m_panel201.SetSizer(bSizer72)
@@ -573,39 +325,18 @@ class MyFrame1(wx.Frame):
         bSizer121 = wx.BoxSizer(wx.HORIZONTAL)
 
         bSizer121.SetMinSize(wx.Size(-1, 30))
-        self.m_button91 = wx.Button(
-            self.toAudio,
-            runToAudio,
-            "Convert to audio",
-            wx.DefaultPosition,
-            wx.Size(-1, 30),
-            0,
-        )
+        self.m_button91 = wx.Button(self.toAudio,runToAudio,"Convert to audio",wx.DefaultPosition,wx.Size(-1, 30),0,)
         bSizer121.Add(self.m_button91, 0, wx.ALL | wx.ALIGN_CENTER_VERTICAL, 5)
         self.m_button91.Disable()
 
-        self.m_staticText311 = wx.StaticText(
-            self.toAudio,
-            currentFileToAudio,
-            wx.EmptyString,
-            wx.DefaultPosition,
-            wx.Size(-1, 30),
-            0,
-        )
+        self.m_staticText311 = wx.StaticText(self.toAudio,currentFileToAudio,wx.EmptyString,wx.DefaultPosition,wx.Size(-1, 30),0,)
         self.m_staticText311.Wrap(-1)
 
         bSizer121.Add(self.m_staticText311, 1, wx.ALL | wx.ALIGN_CENTER_VERTICAL, 5)
 
         bSizer111.Add(bSizer121, 0, wx.EXPAND, 5)
 
-        self.m_gauge11 = wx.Gauge(
-            self.toAudio,
-            pBarToAudio,
-            100,
-            wx.DefaultPosition,
-            wx.Size(-1, 30),
-            wx.GA_HORIZONTAL,
-        )
+        self.m_gauge11 = wx.Gauge(self.toAudio,pBarToAudio,100,wx.DefaultPosition,wx.Size(-1, 30),wx.GA_HORIZONTAL,)
         self.m_gauge11.SetValue(0)
         bSizer111.Add(self.m_gauge11, 0, wx.EXPAND | wx.ALL, 5)
 
@@ -617,130 +348,57 @@ class MyFrame1(wx.Frame):
         self.toAudio.Layout()
         bSizer41.Fit(self.toAudio)
         self.m_notebook30.AddPage(self.toAudio, "toAudio", False)
-        self.crop = wx.Panel(
-            self.m_notebook30,
-            wx.ID_ANY,
-            wx.DefaultPosition,
-            wx.DefaultSize,
-            wx.TAB_TRAVERSAL,
-        )
+        self.crop = wx.Panel(self.m_notebook30,wx.ID_ANY,wx.DefaultPosition,wx.DefaultSize,wx.TAB_TRAVERSAL,)
         bSizer411 = wx.BoxSizer(wx.VERTICAL)
 
-        self.m_staticText321 = wx.StaticText(
-            self.crop, wx.ID_ANY, "crop video", wx.DefaultPosition, wx.DefaultSize, 0
-        )
+        self.m_staticText321 = wx.StaticText(self.crop, wx.ID_ANY, "crop video", wx.DefaultPosition, wx.DefaultSize, 0)
         self.m_staticText321.Wrap(-1)
 
         bSizer411.Add(self.m_staticText321, 0, wx.ALIGN_CENTER_HORIZONTAL | wx.ALL, 5)
 
         bSizer611 = wx.BoxSizer(wx.VERTICAL)
 
-        self.m_panel2011 = wx.Panel(
-            self.crop, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.TAB_TRAVERSAL
-        )
+        self.m_panel2011 = wx.Panel(self.crop, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.TAB_TRAVERSAL)
         bSizer721 = wx.BoxSizer(wx.VERTICAL)
 
-        self.m_panel721 = wx.Panel(
-            self.m_panel2011,
-            wx.ID_ANY,
-            wx.DefaultPosition,
-            wx.DefaultSize,
-            wx.TAB_TRAVERSAL,
-        )
+        self.m_panel721 = wx.Panel(self.m_panel2011,wx.ID_ANY,wx.DefaultPosition,wx.DefaultSize,wx.TAB_TRAVERSAL,)
         bSizer511 = wx.BoxSizer(wx.HORIZONTAL)
 
-        self.m_panel821 = wx.Panel(
-            self.m_panel721,
-            wx.ID_ANY,
-            wx.DefaultPosition,
-            wx.Size(-1, -1),
-            wx.TAB_TRAVERSAL,
-        )
+        self.m_panel821 = wx.Panel(self.m_panel721,wx.ID_ANY,wx.DefaultPosition,wx.Size(-1, -1),wx.TAB_TRAVERSAL,)
         bSizer821 = wx.BoxSizer(wx.HORIZONTAL)
 
-        self.m_panel7111 = wx.Panel(
-            self.m_panel821,
-            wx.ID_ANY,
-            wx.DefaultPosition,
-            wx.DefaultSize,
-            wx.TAB_TRAVERSAL,
-        )
+        self.m_panel7111 = wx.Panel(self.m_panel821,wx.ID_ANY,wx.DefaultPosition,wx.DefaultSize,wx.TAB_TRAVERSAL,)
         bSizer8111 = wx.BoxSizer(wx.VERTICAL)
 
         m_checkList121Choices = []
-        self.m_checkList121 = wx.CheckListBox(
-            self.m_panel7111,
-            selectedFilesCrop,
-            wx.DefaultPosition,
-            wx.Size(480, -1),
-            m_checkList121Choices,
-            wx.HSCROLL,
-        )
+        self.m_checkList121 = wx.CheckListBox(self.m_panel7111,selectedFilesCrop,wx.DefaultPosition,wx.Size(480, -1),m_checkList121Choices,wx.HSCROLL,)
         self.m_checkList121.DragAcceptFiles(true)
         self.m_checkList121.SetMinSize(wx.Size(-1, 200))
 
         bSizer8111.Add(self.m_checkList121, 1, wx.ALL | wx.EXPAND, 5)
 
-        self.m_panel911 = wx.Panel(
-            self.m_panel7111,
-            wx.ID_ANY,
-            wx.DefaultPosition,
-            wx.DefaultSize,
-            wx.TAB_TRAVERSAL,
-        )
+        self.m_panel911 = wx.Panel(self.m_panel7111,wx.ID_ANY,wx.DefaultPosition,wx.DefaultSize,wx.TAB_TRAVERSAL,)
         bSizer7111 = wx.BoxSizer(wx.HORIZONTAL)
 
         bSizer7111.SetMinSize(wx.Size(-1, 40))
-        self.m_button311 = wx.Button(
-            self.m_panel911,
-            browseFilesCrop,
-            "browse files",
-            wx.DefaultPosition,
-            wx.DefaultSize,
-            0,
-        )
-        bSizer7111.Add(
-            self.m_button311,
-            1,
-            wx.ALL | wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_CENTER_HORIZONTAL | wx.EXPAND,
-            5,
-        )
+        self.m_button311 = wx.Button(self.m_panel911,browseFilesCrop,"browse files",wx.DefaultPosition,wx.DefaultSize,0,)
+        bSizer7111.Add(self.m_button311,1,wx.ALL | wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_CENTER_HORIZONTAL | wx.EXPAND,5,)
 
-        self.m_button1121 = wx.Button(
-            self.m_panel911,
-            browseFolderCrop,
-            "select folder",
-            wx.DefaultPosition,
-            wx.DefaultSize,
-            0,
-        )
+        self.m_button1121 = wx.Button(self.m_panel911,browseFolderCrop,"select folder",wx.DefaultPosition,wx.DefaultSize,0,)
         bSizer7111.Add(self.m_button1121, 1, wx.ALL | wx.EXPAND, 5)
 
-        self.m_button1511 = wx.Button(
-            self.m_panel911,
-            selectAllCrop,
-            "Select all / none",
-            wx.DefaultPosition,
-            wx.DefaultSize,
-            0,
-        )
+        self.m_button1511 = wx.Button(self.m_panel911,selectAllCrop,"Select all / none",wx.DefaultPosition,wx.DefaultSize,0,)
         bSizer7111.Add(self.m_button1511, 1, wx.ALL | wx.EXPAND, 5)
         self.m_button1511.Disable()
 
-        self.m_button11111 = wx.Button(
-            self.m_panel911, dBtnCrop, "Delete", wx.DefaultPosition, wx.DefaultSize, 0
-        )
-        bSizer7111.Add(
-            self.m_button11111, 1, wx.ALL | wx.ALIGN_CENTER_HORIZONTAL | wx.EXPAND, 5
-        )
+        self.m_button11111 = wx.Button(self.m_panel911, dBtnCrop, "Delete", wx.DefaultPosition, wx.DefaultSize, 0)
+        bSizer7111.Add(self.m_button11111, 1, wx.ALL | wx.ALIGN_CENTER_HORIZONTAL | wx.EXPAND, 5)
         self.m_button11111.Disable()
 
         self.m_panel911.SetSizer(bSizer7111)
         self.m_panel911.Layout()
         bSizer7111.Fit(self.m_panel911)
-        bSizer8111.Add(
-            self.m_panel911, 0, wx.ALIGN_CENTER_VERTICAL | wx.ALL | wx.EXPAND, 5
-        )
+        bSizer8111.Add(self.m_panel911, 0, wx.ALIGN_CENTER_VERTICAL | wx.ALL | wx.EXPAND, 5)
 
         self.m_panel7111.SetSizer(bSizer8111)
         self.m_panel7111.Layout()
@@ -761,14 +419,7 @@ class MyFrame1(wx.Frame):
 
         bSizer721.Add(bSizer43, 1, wx.EXPAND, 5)
 
-        self.clearList2 = wx.CheckBox(
-            self.m_panel2011,
-            clearListCrop,
-            "Clear list after complete",
-            wx.DefaultPosition,
-            wx.DefaultSize,
-            0,
-        )
+        self.clearList2 = wx.CheckBox(self.m_panel2011,clearListCrop,"Clear list after complete",wx.DefaultPosition,wx.DefaultSize,0,)
         bSizer721.Add(self.clearList2, 0, wx.ALL, 5)
 
         self.m_panel2011.SetSizer(bSizer721)
@@ -781,84 +432,36 @@ class MyFrame1(wx.Frame):
         bSizer46 = wx.BoxSizer(wx.HORIZONTAL)
 
         bSizer46.SetMinSize(wx.Size(-1, 30))
-        self.m_staticText15 = wx.StaticText(
-            self.crop, wx.ID_ANY, "Top", wx.DefaultPosition, wx.DefaultSize, 0
-        )
+        self.m_staticText15 = wx.StaticText(self.crop, wx.ID_ANY, "Top", wx.DefaultPosition, wx.DefaultSize, 0)
         self.m_staticText15.Wrap(-1)
 
         bSizer46.Add(self.m_staticText15, 0, wx.ALL | wx.ALIGN_CENTER_VERTICAL, 5)
 
-        self.m_spinCtrl4 = wx.SpinCtrl(
-            self.crop,
-            cTop,
-            wx.EmptyString,
-            wx.DefaultPosition,
-            wx.DefaultSize,
-            wx.ALIGN_RIGHT | wx.SP_ARROW_KEYS,
-            0,
-            2000,
-            0,
-        )
+        self.m_spinCtrl4 = wx.SpinCtrl(self.crop,cTop,wx.EmptyString,wx.DefaultPosition,wx.DefaultSize,wx.ALIGN_RIGHT | wx.SP_ARROW_KEYS,0,2000,0,)
         bSizer46.Add(self.m_spinCtrl4, 1, wx.ALL, 5)
 
-        self.m_staticText16 = wx.StaticText(
-            self.crop, wx.ID_ANY, "Right", wx.DefaultPosition, wx.DefaultSize, 0
-        )
+        self.m_staticText16 = wx.StaticText(self.crop, wx.ID_ANY, "Right", wx.DefaultPosition, wx.DefaultSize, 0)
         self.m_staticText16.Wrap(-1)
 
         bSizer46.Add(self.m_staticText16, 0, wx.ALL | wx.ALIGN_CENTER_VERTICAL, 5)
 
-        self.m_spinCtrl3 = wx.SpinCtrl(
-            self.crop,
-            cRight,
-            wx.EmptyString,
-            wx.DefaultPosition,
-            wx.DefaultSize,
-            wx.ALIGN_RIGHT | wx.SP_ARROW_KEYS,
-            0,
-            2000,
-            0,
-        )
+        self.m_spinCtrl3 = wx.SpinCtrl(self.crop,cRight,wx.EmptyString,wx.DefaultPosition,wx.DefaultSize,wx.ALIGN_RIGHT | wx.SP_ARROW_KEYS,0,2000,0,)
         bSizer46.Add(self.m_spinCtrl3, 1, wx.ALL, 5)
 
-        self.m_staticText17 = wx.StaticText(
-            self.crop, wx.ID_ANY, "Bottom", wx.DefaultPosition, wx.DefaultSize, 0
-        )
+        self.m_staticText17 = wx.StaticText(self.crop, wx.ID_ANY, "Bottom", wx.DefaultPosition, wx.DefaultSize, 0)
         self.m_staticText17.Wrap(-1)
 
         bSizer46.Add(self.m_staticText17, 0, wx.ALL | wx.ALIGN_CENTER_VERTICAL, 5)
 
-        self.m_spinCtrl2 = wx.SpinCtrl(
-            self.crop,
-            cBottom,
-            wx.EmptyString,
-            wx.DefaultPosition,
-            wx.DefaultSize,
-            wx.ALIGN_RIGHT | wx.SP_ARROW_KEYS,
-            0,
-            2000,
-            0,
-        )
+        self.m_spinCtrl2 = wx.SpinCtrl(self.crop,cBottom,wx.EmptyString,wx.DefaultPosition,wx.DefaultSize,wx.ALIGN_RIGHT | wx.SP_ARROW_KEYS,0,2000,0,)
         bSizer46.Add(self.m_spinCtrl2, 1, wx.ALL, 5)
 
-        self.m_staticText18 = wx.StaticText(
-            self.crop, wx.ID_ANY, "Left", wx.DefaultPosition, wx.DefaultSize, 0
-        )
+        self.m_staticText18 = wx.StaticText(self.crop, wx.ID_ANY, "Left", wx.DefaultPosition, wx.DefaultSize, 0)
         self.m_staticText18.Wrap(-1)
 
         bSizer46.Add(self.m_staticText18, 0, wx.ALL | wx.ALIGN_CENTER_VERTICAL, 5)
 
-        self.m_spinCtrl1 = wx.SpinCtrl(
-            self.crop,
-            cLeft,
-            wx.EmptyString,
-            wx.DefaultPosition,
-            wx.DefaultSize,
-            wx.ALIGN_RIGHT | wx.SP_ARROW_KEYS,
-            0,
-            2000,
-            0,
-        )
+        self.m_spinCtrl1 = wx.SpinCtrl(self.crop,cLeft,wx.EmptyString,wx.DefaultPosition,wx.DefaultSize,wx.ALIGN_RIGHT | wx.SP_ARROW_KEYS,0,2000,0,)
         bSizer46.Add(self.m_spinCtrl1, 1, wx.ALL, 5)
 
         bSizer1111.Add(bSizer46, 0, wx.EXPAND, 5)
@@ -866,36 +469,18 @@ class MyFrame1(wx.Frame):
         bSizer1211 = wx.BoxSizer(wx.HORIZONTAL)
 
         bSizer1211.SetMinSize(wx.Size(-1, 30))
-        self.m_button911 = wx.Button(
-            self.crop, runCrop, "Crop", wx.DefaultPosition, wx.Size(-1, 30), 0
-        )
-        bSizer1211.Add(
-            self.m_button911, 0, wx.ALL | wx.ALIGN_CENTER_VERTICAL | wx.EXPAND, 5
-        )
+        self.m_button911 = wx.Button(self.crop, runCrop, "Crop", wx.DefaultPosition, wx.Size(-1, 30), 0)
+        bSizer1211.Add(self.m_button911, 0, wx.ALL | wx.ALIGN_CENTER_VERTICAL | wx.EXPAND, 5)
         self.m_button911.Disable()
 
-        self.m_staticText3111 = wx.StaticText(
-            self.crop,
-            currentFileCrop,
-            wx.EmptyString,
-            wx.DefaultPosition,
-            wx.DefaultSize,
-            0,
-        )
+        self.m_staticText3111 = wx.StaticText(self.crop,currentFileCrop,wx.EmptyString,wx.DefaultPosition,wx.DefaultSize,0,)
         self.m_staticText3111.Wrap(-1)
 
         bSizer1211.Add(self.m_staticText3111, 1, wx.ALL | wx.ALIGN_CENTER_VERTICAL, 5)
 
         bSizer1111.Add(bSizer1211, 0, wx.EXPAND, 5)
 
-        self.m_gauge111 = wx.Gauge(
-            self.crop,
-            pBarCrop,
-            100,
-            wx.DefaultPosition,
-            wx.Size(-1, 30),
-            wx.GA_HORIZONTAL,
-        )
+        self.m_gauge111 = wx.Gauge(self.crop,pBarCrop,100,wx.DefaultPosition,wx.Size(-1, 30),wx.GA_HORIZONTAL,)
         self.m_gauge111.SetValue(0)
         bSizer1111.Add(self.m_gauge111, 0, wx.ALL | wx.EXPAND, 5)
 
@@ -907,145 +492,58 @@ class MyFrame1(wx.Frame):
         self.crop.Layout()
         bSizer411.Fit(self.crop)
         self.m_notebook30.AddPage(self.crop, "crop", False)
-        self.mkvOptions = wx.Panel(
-            self.m_notebook30,
-            wx.ID_ANY,
-            wx.DefaultPosition,
-            wx.DefaultSize,
-            wx.TAB_TRAVERSAL,
-        )
+        self.mkvOptions = wx.Panel(self.m_notebook30,wx.ID_ANY,wx.DefaultPosition,wx.DefaultSize,wx.TAB_TRAVERSAL,)
         bSizer4111 = wx.BoxSizer(wx.VERTICAL)
 
-        self.m_staticText3211 = wx.StaticText(
-            self.mkvOptions,
-            wx.ID_ANY,
-            "mkv options",
-            wx.DefaultPosition,
-            wx.DefaultSize,
-            0,
-        )
+        self.m_staticText3211 = wx.StaticText(self.mkvOptions,wx.ID_ANY,"mkv options",wx.DefaultPosition,wx.DefaultSize,0,)
         self.m_staticText3211.Wrap(-1)
 
         bSizer4111.Add(self.m_staticText3211, 0, wx.ALIGN_CENTER_HORIZONTAL | wx.ALL, 5)
 
         bSizer6111 = wx.BoxSizer(wx.VERTICAL)
 
-        self.m_panel20111 = wx.Panel(
-            self.mkvOptions,
-            wx.ID_ANY,
-            wx.DefaultPosition,
-            wx.DefaultSize,
-            wx.TAB_TRAVERSAL,
-        )
+        self.m_panel20111 = wx.Panel(self.mkvOptions,wx.ID_ANY,wx.DefaultPosition,wx.DefaultSize,wx.TAB_TRAVERSAL,)
         bSizer7211 = wx.BoxSizer(wx.VERTICAL)
 
-        self.m_panel7211 = wx.Panel(
-            self.m_panel20111,
-            wx.ID_ANY,
-            wx.DefaultPosition,
-            wx.DefaultSize,
-            wx.TAB_TRAVERSAL,
-        )
+        self.m_panel7211 = wx.Panel(self.m_panel20111,wx.ID_ANY,wx.DefaultPosition,wx.DefaultSize,wx.TAB_TRAVERSAL,)
         bSizer5111 = wx.BoxSizer(wx.HORIZONTAL)
 
-        self.m_panel8211 = wx.Panel(
-            self.m_panel7211,
-            wx.ID_ANY,
-            wx.DefaultPosition,
-            wx.Size(-1, -1),
-            wx.TAB_TRAVERSAL,
-        )
+        self.m_panel8211 = wx.Panel(self.m_panel7211,wx.ID_ANY,wx.DefaultPosition,wx.Size(-1, -1),wx.TAB_TRAVERSAL,)
         bSizer8211 = wx.BoxSizer(wx.HORIZONTAL)
 
-        self.m_panel71111 = wx.Panel(
-            self.m_panel8211,
-            wx.ID_ANY,
-            wx.DefaultPosition,
-            wx.DefaultSize,
-            wx.TAB_TRAVERSAL,
-        )
+        self.m_panel71111 = wx.Panel(self.m_panel8211,wx.ID_ANY,wx.DefaultPosition,wx.DefaultSize,wx.TAB_TRAVERSAL,)
         bSizer81111 = wx.BoxSizer(wx.VERTICAL)
 
         m_checkList1211Choices = []
-        self.m_checkList1211 = wx.CheckListBox(
-            self.m_panel71111,
-            selectedFilesOptions,
-            wx.DefaultPosition,
-            wx.Size(480, -1),
-            m_checkList1211Choices,
-            wx.HSCROLL,
-        )
+        self.m_checkList1211 = wx.CheckListBox(self.m_panel71111,selectedFilesOptions,wx.DefaultPosition,wx.Size(480, -1),m_checkList1211Choices,wx.HSCROLL,)
         self.m_checkList1211.DragAcceptFiles(true)
         self.m_checkList1211.SetMinSize(wx.Size(-1, 150))
 
         bSizer81111.Add(self.m_checkList1211, 1, wx.ALL | wx.EXPAND, 5)
 
-        self.m_panel9111 = wx.Panel(
-            self.m_panel71111,
-            wx.ID_ANY,
-            wx.DefaultPosition,
-            wx.DefaultSize,
-            wx.TAB_TRAVERSAL,
-        )
+        self.m_panel9111 = wx.Panel(self.m_panel71111,wx.ID_ANY,wx.DefaultPosition,wx.DefaultSize,wx.TAB_TRAVERSAL,)
         self.m_panel9111.SetMinSize(wx.Size(-1, 40))
 
         bSizer71111 = wx.BoxSizer(wx.HORIZONTAL)
 
-        self.m_button3111 = wx.Button(
-            self.m_panel9111,
-            browseFilesOptions,
-            "browse files",
-            wx.DefaultPosition,
-            wx.DefaultSize,
-            0,
-        )
-        bSizer71111.Add(
-            self.m_button3111,
-            1,
-            wx.ALL | wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_CENTER_HORIZONTAL | wx.EXPAND,
-            5,
-        )
+        self.m_button3111 = wx.Button(self.m_panel9111,browseFilesOptions,"browse files",wx.DefaultPosition,wx.DefaultSize,0,)
+        bSizer71111.Add(self.m_button3111,1,wx.ALL | wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_CENTER_HORIZONTAL | wx.EXPAND,5,)
 
-        self.m_button11211 = wx.Button(
-            self.m_panel9111,
-            browseFolderOptions,
-            "select folder",
-            wx.DefaultPosition,
-            wx.DefaultSize,
-            0,
-        )
+        self.m_button11211 = wx.Button(self.m_panel9111,browseFolderOptions,"select folder",wx.DefaultPosition,wx.DefaultSize,0,)
         bSizer71111.Add(self.m_button11211, 1, wx.ALL | wx.EXPAND, 5)
 
-        self.m_button15111 = wx.Button(
-            self.m_panel9111,
-            selectAllOptions,
-            "Select all / none",
-            wx.DefaultPosition,
-            wx.DefaultSize,
-            0,
-        )
+        self.m_button15111 = wx.Button(self.m_panel9111,selectAllOptions,"Select all / none",wx.DefaultPosition,wx.DefaultSize,0,)
         bSizer71111.Add(self.m_button15111, 1, wx.ALL | wx.EXPAND, 5)
         self.m_button15111.Disable()
 
-        self.m_button111111 = wx.Button(
-            self.m_panel9111,
-            dBtnOptions,
-            "Delete",
-            wx.DefaultPosition,
-            wx.DefaultSize,
-            0,
-        )
-        bSizer71111.Add(
-            self.m_button111111, 1, wx.ALL | wx.ALIGN_CENTER_HORIZONTAL | wx.EXPAND, 5
-        )
+        self.m_button111111 = wx.Button(self.m_panel9111,dBtnOptions,"Delete",wx.DefaultPosition,wx.DefaultSize,0,)
+        bSizer71111.Add(self.m_button111111, 1, wx.ALL | wx.ALIGN_CENTER_HORIZONTAL | wx.EXPAND, 5)
         self.m_button111111.Disable()
 
         self.m_panel9111.SetSizer(bSizer71111)
         self.m_panel9111.Layout()
         bSizer71111.Fit(self.m_panel9111)
-        bSizer81111.Add(
-            self.m_panel9111, 0, wx.EXPAND | wx.ALIGN_CENTER_VERTICAL | wx.ALL, 5
-        )
+        bSizer81111.Add(self.m_panel9111, 0, wx.EXPAND | wx.ALIGN_CENTER_VERTICAL | wx.ALL, 5)
 
         self.m_panel71111.SetSizer(bSizer81111)
         self.m_panel71111.Layout()
@@ -1064,18 +562,9 @@ class MyFrame1(wx.Frame):
 
         bSizer421 = wx.BoxSizer(wx.HORIZONTAL)
 
-        self.m_staticText131 = wx.StaticText(
-            self.m_panel20111,
-            mkvmergeOldFolderOptions,
-            wx.EmptyString,
-            wx.DefaultPosition,
-            wx.DefaultSize,
-            wx.ALIGN_RIGHT,
-        )
+        self.m_staticText131 = wx.StaticText(self.m_panel20111,mkvmergeOldFolderOptions,wx.EmptyString,wx.DefaultPosition,wx.DefaultSize,wx.ALIGN_RIGHT,)
         self.m_staticText131.Wrap(-1)
-        self.m_staticText131.SetForegroundColour(
-            wx.SystemSettings.GetColour(wx.SYS_COLOUR_HIGHLIGHT)
-        )
+        self.m_staticText131.SetForegroundColour(wx.SystemSettings.GetColour(wx.SYS_COLOUR_HIGHLIGHT))
 
         bSizer421.Add(self.m_staticText131, 1, wx.ALL | wx.ALIGN_CENTER_VERTICAL, 5)
 
@@ -1090,53 +579,26 @@ class MyFrame1(wx.Frame):
 
         bSizer461 = wx.BoxSizer(wx.HORIZONTAL)
 
-        self.m_filePicker1 = wx.FilePickerCtrl(
-            self.mkvOptions,
-            optionsFile,
-            wx.EmptyString,
-            "Select options file",
-            "*.json*",
-            wx.DefaultPosition,
-            wx.DefaultSize,
-            wx.FLP_DEFAULT_STYLE,
-        )
-        bSizer461.Add(
-            self.m_filePicker1, 1, wx.ALL | wx.ALIGN_CENTER_VERTICAL | wx.EXPAND, 5
-        )
+        self.m_filePicker1 = wx.FilePickerCtrl(self.mkvOptions,optionsFile,wx.EmptyString,"Select options file","*.json*",wx.DefaultPosition,wx.DefaultSize,wx.FLP_DEFAULT_STYLE,)
+        bSizer461.Add(self.m_filePicker1, 1, wx.ALL | wx.ALIGN_CENTER_VERTICAL | wx.EXPAND, 5)
         self.m_filePicker1.DragAcceptFiles(true)
 
         bSizer11111.Add(bSizer461, 0, wx.EXPAND, 5)
 
         bSizer12111 = wx.BoxSizer(wx.HORIZONTAL)
 
-        self.m_button9111 = wx.Button(
-            self.mkvOptions, runOptions, "Run", wx.DefaultPosition, wx.Size(-1, 30), 0
-        )
+        self.m_button9111 = wx.Button(self.mkvOptions, runOptions, "Run", wx.DefaultPosition, wx.Size(-1, 30), 0)
         bSizer12111.Add(self.m_button9111, 0, wx.ALL | wx.ALIGN_CENTER_VERTICAL, 5)
         self.m_button9111.Disable()
 
-        self.m_staticText31111 = wx.StaticText(
-            self.mkvOptions,
-            currentFileOptions,
-            wx.EmptyString,
-            wx.DefaultPosition,
-            wx.DefaultSize,
-            0,
-        )
+        self.m_staticText31111 = wx.StaticText(self.mkvOptions,currentFileOptions,wx.EmptyString,wx.DefaultPosition,wx.DefaultSize,0,)
         self.m_staticText31111.Wrap(-1)
 
         bSizer12111.Add(self.m_staticText31111, 1, wx.ALL | wx.ALIGN_CENTER_VERTICAL, 5)
 
         bSizer11111.Add(bSizer12111, 0, wx.EXPAND, 5)
 
-        self.m_gauge1111 = wx.Gauge(
-            self.mkvOptions,
-            pBarOptions,
-            100,
-            wx.DefaultPosition,
-            wx.Size(-1, 30),
-            wx.GA_HORIZONTAL,
-        )
+        self.m_gauge1111 = wx.Gauge(self.mkvOptions,pBarOptions,100,wx.DefaultPosition,wx.Size(-1, 30),wx.GA_HORIZONTAL,)
         self.m_gauge1111.SetValue(0)
         bSizer11111.Add(self.m_gauge1111, 0, wx.ALL | wx.EXPAND, 5)
 
@@ -1149,41 +611,19 @@ class MyFrame1(wx.Frame):
         bSizer4111.Fit(self.mkvOptions)
         self.m_notebook30.AddPage(self.mkvOptions, "mkvOptions", False)
 
-        self.translate = wx.Panel(
-            self.m_notebook30,
-            wx.ID_ANY,
-            wx.DefaultPosition,
-            wx.DefaultSize,
-            wx.TAB_TRAVERSAL,
-        )
+        self.translate = wx.Panel(self.m_notebook30,wx.ID_ANY,wx.DefaultPosition,wx.DefaultSize,wx.TAB_TRAVERSAL,)
         bSizer4112 = wx.BoxSizer(wx.VERTICAL)
 
-        self.m_staticText3212 = wx.StaticText(
-            self.translate,
-            wx.ID_ANY,
-            "Subtitle translator",
-            wx.DefaultPosition,
-            wx.DefaultSize,
-            0,
-        )
+        self.m_staticText3212 = wx.StaticText(self.translate,wx.ID_ANY,"Subtitle translator",wx.DefaultPosition,wx.DefaultSize,0,)
         self.m_staticText3212.Wrap(-1)
 
         bSizer4112.Add(self.m_staticText3212, 0, wx.ALIGN_CENTER_HORIZONTAL | wx.ALL, 5)
 
-        self.m_staticText19 = wx.StaticText(
-            self.translate,
-            errorMissing,
-            "! translatesubs Library is missing",
-            wx.DefaultPosition,
-            wx.DefaultSize,
-            0,
-        )
+        self.m_staticText19 = wx.StaticText(self.translate,errorMissing,"! translatesubs Library is missing",wx.DefaultPosition,wx.DefaultSize,0,)
         self.m_staticText19.Wrap(-1)
 
         self.m_staticText19.SetForegroundColour(wx.Colour(179, 0, 0))
-        self.m_staticText19.SetBackgroundColour(
-            wx.SystemSettings.GetColour(wx.SYS_COLOUR_BTNHIGHLIGHT)
-        )
+        self.m_staticText19.SetBackgroundColour(wx.SystemSettings.GetColour(wx.SYS_COLOUR_BTNHIGHLIGHT))
 
         try:
             import translatesubs
@@ -1194,121 +634,47 @@ class MyFrame1(wx.Frame):
 
         bSizer6112 = wx.BoxSizer(wx.VERTICAL)
 
-        self.m_panel20112 = wx.Panel(
-            self.translate,
-            wx.ID_ANY,
-            wx.DefaultPosition,
-            wx.DefaultSize,
-            wx.TAB_TRAVERSAL,
-        )
+        self.m_panel20112 = wx.Panel(self.translate,wx.ID_ANY,wx.DefaultPosition,wx.DefaultSize,wx.TAB_TRAVERSAL,)
         bSizer7212 = wx.BoxSizer(wx.VERTICAL)
 
-        self.m_panel7212 = wx.Panel(
-            self.m_panel20112,
-            wx.ID_ANY,
-            wx.DefaultPosition,
-            wx.DefaultSize,
-            wx.TAB_TRAVERSAL,
-        )
+        self.m_panel7212 = wx.Panel(self.m_panel20112,wx.ID_ANY,wx.DefaultPosition,wx.DefaultSize,wx.TAB_TRAVERSAL,)
         bSizer5112 = wx.BoxSizer(wx.HORIZONTAL)
 
-        self.m_panel8212 = wx.Panel(
-            self.m_panel7212,
-            wx.ID_ANY,
-            wx.DefaultPosition,
-            wx.Size(-1, -1),
-            wx.TAB_TRAVERSAL,
-        )
+        self.m_panel8212 = wx.Panel(self.m_panel7212,wx.ID_ANY,wx.DefaultPosition,wx.Size(-1, -1),wx.TAB_TRAVERSAL,)
         bSizer8212 = wx.BoxSizer(wx.HORIZONTAL)
 
-        self.m_panel71112 = wx.Panel(
-            self.m_panel8212,
-            wx.ID_ANY,
-            wx.DefaultPosition,
-            wx.DefaultSize,
-            wx.TAB_TRAVERSAL,
-        )
+        self.m_panel71112 = wx.Panel(self.m_panel8212,wx.ID_ANY,wx.DefaultPosition,wx.DefaultSize,wx.TAB_TRAVERSAL,)
         bSizer81112 = wx.BoxSizer(wx.VERTICAL)
 
         m_checkList1212Choices = []
-        self.m_checkList1212 = wx.CheckListBox(
-            self.m_panel71112,
-            selectedFilesTranslate,
-            wx.DefaultPosition,
-            wx.Size(480, -1),
-            m_checkList1212Choices,
-            0,
-        )
+        self.m_checkList1212 = wx.CheckListBox(self.m_panel71112,selectedFilesTranslate,wx.DefaultPosition,wx.Size(480, -1),m_checkList1212Choices,0,)
         self.m_checkList1212.DragAcceptFiles(true)
         self.m_checkList1212.SetMinSize(wx.Size(-1, 200))
 
         bSizer81112.Add(self.m_checkList1212, 1, wx.ALL | wx.EXPAND, 5)
 
-        self.m_panel9112 = wx.Panel(
-            self.m_panel71112,
-            wx.ID_ANY,
-            wx.DefaultPosition,
-            wx.DefaultSize,
-            wx.TAB_TRAVERSAL,
-        )
+        self.m_panel9112 = wx.Panel(self.m_panel71112,wx.ID_ANY,wx.DefaultPosition,wx.DefaultSize,wx.TAB_TRAVERSAL,)
         bSizer71112 = wx.BoxSizer(wx.HORIZONTAL)
 
         bSizer71112.SetMinSize(wx.Size(-1, 40))
-        self.m_button3112 = wx.Button(
-            self.m_panel9112,
-            browseFilesTranslate,
-            "browse files",
-            wx.DefaultPosition,
-            wx.DefaultSize,
-            0,
-        )
-        bSizer71112.Add(
-            self.m_button3112,
-            1,
-            wx.ALL | wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_CENTER_HORIZONTAL | wx.EXPAND,
-            5,
-        )
+        self.m_button3112 = wx.Button(self.m_panel9112,browseFilesTranslate,"browse files",wx.DefaultPosition,wx.DefaultSize,0,)
+        bSizer71112.Add(self.m_button3112,1,wx.ALL | wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_CENTER_HORIZONTAL | wx.EXPAND,5,)
 
-        self.m_button11212 = wx.Button(
-            self.m_panel9112,
-            browseFolderTranslate,
-            "select folder",
-            wx.DefaultPosition,
-            wx.DefaultSize,
-            0,
-        )
+        self.m_button11212 = wx.Button(self.m_panel9112,browseFolderTranslate,"select folder",wx.DefaultPosition,wx.DefaultSize,0,)
         bSizer71112.Add(self.m_button11212, 1, wx.ALL | wx.EXPAND, 5)
 
-        self.m_button15112 = wx.Button(
-            self.m_panel9112,
-            selectAllTranslate,
-            "Select all / none",
-            wx.DefaultPosition,
-            wx.DefaultSize,
-            0,
-        )
+        self.m_button15112 = wx.Button(self.m_panel9112,selectAllTranslate,"Select all / none",wx.DefaultPosition,wx.DefaultSize,0,)
         bSizer71112.Add(self.m_button15112, 1, wx.ALL | wx.EXPAND, 5)
         self.m_button15112.Disable()
 
-        self.m_button111112 = wx.Button(
-            self.m_panel9112,
-            dBtnTranslate,
-            "Delete",
-            wx.DefaultPosition,
-            wx.DefaultSize,
-            0,
-        )
-        bSizer71112.Add(
-            self.m_button111112, 1, wx.ALL | wx.ALIGN_CENTER_HORIZONTAL | wx.EXPAND, 5
-        )
+        self.m_button111112 = wx.Button(self.m_panel9112,dBtnTranslate,"Delete",wx.DefaultPosition,wx.DefaultSize,0,)
+        bSizer71112.Add(self.m_button111112, 1, wx.ALL | wx.ALIGN_CENTER_HORIZONTAL | wx.EXPAND, 5)
         self.m_button111112.Disable()
 
         self.m_panel9112.SetSizer(bSizer71112)
         self.m_panel9112.Layout()
         bSizer71112.Fit(self.m_panel9112)
-        bSizer81112.Add(
-            self.m_panel9112, 0, wx.ALIGN_CENTER_VERTICAL | wx.ALL | wx.EXPAND, 5
-        )
+        bSizer81112.Add(self.m_panel9112, 0, wx.ALIGN_CENTER_VERTICAL | wx.ALL | wx.EXPAND, 5)
 
         self.m_panel71112.SetSizer(bSizer81112)
         self.m_panel71112.Layout()
@@ -1327,25 +693,11 @@ class MyFrame1(wx.Frame):
 
         bSizer431 = wx.BoxSizer(wx.HORIZONTAL)
 
-        self.clearList21 = wx.CheckBox(
-            self.m_panel20112,
-            clearListTranslate,
-            "Clear list after complete",
-            wx.DefaultPosition,
-            wx.DefaultSize,
-            0,
-        )
+        self.clearList21 = wx.CheckBox(self.m_panel20112,clearListTranslate,"Clear list after complete",wx.DefaultPosition,wx.DefaultSize,0,)
         bSizer431.Add(self.clearList21, 1, wx.ALL | wx.EXPAND, 5)
 
         m_choice2Choices = languageCodes
-        self.m_choice2 = wx.Choice(
-            self.m_panel20112,
-            translateTo,
-            wx.DefaultPosition,
-            wx.DefaultSize,
-            m_choice2Choices,
-            0,
-        )
+        self.m_choice2 = wx.Choice(self.m_panel20112,translateTo,wx.DefaultPosition,wx.DefaultSize,m_choice2Choices,0,)
         self.m_choice2.SetSelection(0)
         bSizer431.Add(self.m_choice2, 0, wx.ALL, 5)
 
@@ -1354,50 +706,25 @@ class MyFrame1(wx.Frame):
         self.m_panel20112.SetSizer(bSizer7212)
         self.m_panel20112.Layout()
         bSizer7212.Fit(self.m_panel20112)
-        bSizer6112.Add(
-            self.m_panel20112, 1, wx.EXPAND | wx.ALL | wx.ALIGN_CENTER_HORIZONTAL, 5
-        )
+        bSizer6112.Add(self.m_panel20112, 1, wx.EXPAND | wx.ALL | wx.ALIGN_CENTER_HORIZONTAL, 5)
 
         bSizer11112 = wx.BoxSizer(wx.VERTICAL)
 
         bSizer12112 = wx.BoxSizer(wx.HORIZONTAL)
 
         bSizer12112.SetMinSize(wx.Size(-1, 30))
-        self.m_button9112 = wx.Button(
-            self.translate,
-            runTranslate,
-            "Translate",
-            wx.DefaultPosition,
-            wx.Size(-1, 30),
-            0,
-        )
-        bSizer12112.Add(
-            self.m_button9112, 0, wx.ALL | wx.ALIGN_CENTER_VERTICAL | wx.EXPAND, 5
-        )
+        self.m_button9112 = wx.Button(self.translate,runTranslate,"Translate",wx.DefaultPosition,wx.Size(-1, 30),0,)
+        bSizer12112.Add(self.m_button9112, 0, wx.ALL | wx.ALIGN_CENTER_VERTICAL | wx.EXPAND, 5)
         self.m_button9112.Disable()
 
-        self.m_staticText31112 = wx.StaticText(
-            self.translate,
-            currentFileTranslate,
-            wx.EmptyString,
-            wx.DefaultPosition,
-            wx.DefaultSize,
-            0,
-        )
+        self.m_staticText31112 = wx.StaticText(self.translate,currentFileTranslate,wx.EmptyString,wx.DefaultPosition,wx.DefaultSize,0,)
         self.m_staticText31112.Wrap(-1)
 
         bSizer12112.Add(self.m_staticText31112, 1, wx.ALL | wx.ALIGN_CENTER_VERTICAL, 5)
 
         bSizer11112.Add(bSizer12112, 0, wx.EXPAND, 5)
 
-        self.m_gauge1112 = wx.Gauge(
-            self.translate,
-            pBarTranslate,
-            100,
-            wx.DefaultPosition,
-            wx.Size(-1, 30),
-            wx.GA_HORIZONTAL,
-        )
+        self.m_gauge1112 = wx.Gauge(self.translate,pBarTranslate,100,wx.DefaultPosition,wx.Size(-1, 30),wx.GA_HORIZONTAL,)
         self.m_gauge1112.SetValue(0)
         bSizer11112.Add(self.m_gauge1112, 0, wx.ALL | wx.EXPAND, 5)
 
@@ -1410,47 +737,20 @@ class MyFrame1(wx.Frame):
         bSizer4112.Fit(self.translate)
         self.m_notebook30.AddPage(self.translate, "translate", True)
 
-        self.Settings = wx.Panel(
-            self.m_notebook30,
-            wx.ID_ANY,
-            wx.DefaultPosition,
-            wx.DefaultSize,
-            wx.TAB_TRAVERSAL,
-        )
+        self.Settings = wx.Panel(self.m_notebook30,wx.ID_ANY,wx.DefaultPosition,wx.DefaultSize,wx.TAB_TRAVERSAL,)
         bSizer41111 = wx.BoxSizer(wx.VERTICAL)
 
-        self.m_staticText32111 = wx.StaticText(
-            self.Settings, wx.ID_ANY, "Settings", wx.DefaultPosition, wx.DefaultSize, 0
-        )
+        self.m_staticText32111 = wx.StaticText(self.Settings, wx.ID_ANY, "Settings", wx.DefaultPosition, wx.DefaultSize, 0)
         self.m_staticText32111.Wrap(-1)
 
-        bSizer41111.Add(
-            self.m_staticText32111, 0, wx.ALIGN_CENTER_HORIZONTAL | wx.ALL, 5
-        )
+        bSizer41111.Add(self.m_staticText32111, 0, wx.ALIGN_CENTER_HORIZONTAL | wx.ALL, 5)
 
-        self.m_staticText21 = wx.StaticText(
-            self.Settings,
-            wx.ID_ANY,
-            "Mkvtoolnix folder",
-            wx.DefaultPosition,
-            wx.DefaultSize,
-            0,
-        )
+        self.m_staticText21 = wx.StaticText(self.Settings,wx.ID_ANY,"Mkvtoolnix folder",wx.DefaultPosition,wx.DefaultSize,0,)
         self.m_staticText21.Wrap(-1)
 
-        bSizer41111.Add(
-            self.m_staticText21, 0, wx.ALL | wx.ALIGN_CENTER_HORIZONTAL | wx.EXPAND, 5
-        )
+        bSizer41111.Add(self.m_staticText21, 0, wx.ALL | wx.ALIGN_CENTER_HORIZONTAL | wx.EXPAND, 5)
 
-        self.m_dirPicker1 = wx.DirPickerCtrl(
-            self.Settings,
-            mkvDir,
-            config["mkvtoolnix"],
-            "Select a folder",
-            wx.DefaultPosition,
-            wx.DefaultSize,
-            wx.DIRP_DEFAULT_STYLE,
-        )
+        self.m_dirPicker1 = wx.DirPickerCtrl(self.Settings,mkvDir,config["mkvtoolnix"],"Select a folder",wx.DefaultPosition,wx.DefaultSize,wx.DIRP_DEFAULT_STYLE,)
         bSizer41111.Add(self.m_dirPicker1, 0, wx.ALL | wx.EXPAND, 5)
 
         self.Settings.SetSizer(bSizer41111)
@@ -1468,83 +768,37 @@ class MyFrame1(wx.Frame):
         self.Centre(wx.BOTH)
 
         # Connect Events
-        self.m_checkList1.Bind(
-            wx.EVT_CHECKLISTBOX, lambda event: self.checkCheckbox("ToMkv")
-        )
-        self.m_button3.Bind(
-            wx.EVT_BUTTON, lambda event: self.openFilesSelector("ToMkv")
-        )
+        self.m_checkList1.Bind(wx.EVT_CHECKLISTBOX, lambda event: self.checkCheckbox("ToMkv"))
+        self.m_button3.Bind(wx.EVT_BUTTON, lambda event: self.openFilesSelector("ToMkv"))
         self.m_button11.Bind(wx.EVT_BUTTON, lambda event: self.selectFolder("ToMkv"))
         self.m_button15.Bind(wx.EVT_BUTTON, lambda event: self.selectAll("ToMkv"))
-        self.m_button211.Bind(
-            wx.EVT_BUTTON, lambda event: self.setMkvMergeFolder("ToMkv")
-        )
+        self.m_button211.Bind(wx.EVT_BUTTON, lambda event: self.setMkvMergeFolder("ToMkv"))
         self.m_button111.Bind(wx.EVT_BUTTON, lambda event: self.deleteFromList("ToMkv"))
-        self.m_button9.Bind(
-            wx.EVT_BUTTON, lambda event: self.processThread("self.runToMkv ")
-        )
-        self.m_checkList12.Bind(
-            wx.EVT_CHECKLISTBOX, lambda event: self.checkCheckbox("ToAudio")
-        )
-        self.m_button31.Bind(
-            wx.EVT_BUTTON, lambda event: self.openFilesSelector("ToAudio")
-        )
+        self.m_button9.Bind(wx.EVT_BUTTON, lambda event: self.processThread("self.runToMkv "))
+        self.m_checkList12.Bind(wx.EVT_CHECKLISTBOX, lambda event: self.checkCheckbox("ToAudio"))
+        self.m_button31.Bind(wx.EVT_BUTTON, lambda event: self.openFilesSelector("ToAudio"))
         self.m_button112.Bind(wx.EVT_BUTTON, lambda event: self.selectFolder("ToAudio"))
         self.m_button151.Bind(wx.EVT_BUTTON, lambda event: self.selectAll("ToAudio"))
-        self.m_button1111.Bind(
-            wx.EVT_BUTTON, lambda event: self.deleteFromList("ToAudio")
-        )
-        self.m_button91.Bind(
-            wx.EVT_BUTTON, lambda event: self.processThread("self.runToAudio")
-        )
-        self.m_checkList121.Bind(
-            wx.EVT_CHECKLISTBOX, lambda event: self.checkCheckbox("Crop")
-        )
-        self.m_button311.Bind(
-            wx.EVT_BUTTON, lambda event: self.openFilesSelector("Crop")
-        )
+        self.m_button1111.Bind(wx.EVT_BUTTON, lambda event: self.deleteFromList("ToAudio"))
+        self.m_button91.Bind(wx.EVT_BUTTON, lambda event: self.processThread("self.runToAudio"))
+        self.m_checkList121.Bind(wx.EVT_CHECKLISTBOX, lambda event: self.checkCheckbox("Crop"))
+        self.m_button311.Bind(wx.EVT_BUTTON, lambda event: self.openFilesSelector("Crop"))
         self.m_button1121.Bind(wx.EVT_BUTTON, lambda event: self.selectFolder("Crop"))
         self.m_button1511.Bind(wx.EVT_BUTTON, lambda event: self.selectAll("Crop"))
-        self.m_button11111.Bind(
-            wx.EVT_BUTTON, lambda event: self.deleteFromList("Crop")
-        )
-        self.m_button911.Bind(
-            wx.EVT_BUTTON, lambda event: self.processThread("self.runCrop")
-        )
-        self.m_checkList1211.Bind(
-            wx.EVT_CHECKLISTBOX, lambda event: self.checkCheckbox("Options")
-        )
-        self.m_button3111.Bind(
-            wx.EVT_BUTTON, lambda event: self.openFilesSelector("Options")
-        )
-        self.m_button11211.Bind(
-            wx.EVT_BUTTON, lambda event: self.selectFolder("Options")
-        )
+        self.m_button11111.Bind(wx.EVT_BUTTON, lambda event: self.deleteFromList("Crop"))
+        self.m_button911.Bind(wx.EVT_BUTTON, lambda event: self.processThread("self.runCrop"))
+        self.m_checkList1211.Bind(wx.EVT_CHECKLISTBOX, lambda event: self.checkCheckbox("Options"))
+        self.m_button3111.Bind(wx.EVT_BUTTON, lambda event: self.openFilesSelector("Options"))
+        self.m_button11211.Bind(wx.EVT_BUTTON, lambda event: self.selectFolder("Options"))
         self.m_button15111.Bind(wx.EVT_BUTTON, lambda event: self.selectAll("Options"))
-        self.m_button111111.Bind(
-            wx.EVT_BUTTON, lambda event: self.deleteFromList("Options")
-        )
-        self.m_button9111.Bind(
-            wx.EVT_BUTTON, lambda event: self.processThread("self.runOptions")
-        )
-        self.m_checkList1212.Bind(
-            wx.EVT_CHECKLISTBOX, lambda event: self.checkCheckbox("Translate")
-        )
-        self.m_button3112.Bind(
-            wx.EVT_BUTTON, lambda event: self.openFilesSelector("Translate")
-        )
-        self.m_button11212.Bind(
-            wx.EVT_BUTTON, lambda event: self.selectFolder("Translate")
-        )
-        self.m_button15112.Bind(
-            wx.EVT_BUTTON, lambda event: self.selectAll("Translate")
-        )
-        self.m_button111112.Bind(
-            wx.EVT_BUTTON, lambda event: self.deleteFromList("Translate")
-        )
-        self.m_button9112.Bind(
-            wx.EVT_BUTTON, lambda event: self.processThread("self.runTranslate")
-        )
+        self.m_button111111.Bind(wx.EVT_BUTTON, lambda event: self.deleteFromList("Options"))
+        self.m_button9111.Bind(wx.EVT_BUTTON, lambda event: self.processThread("self.runOptions"))
+        self.m_checkList1212.Bind(wx.EVT_CHECKLISTBOX, lambda event: self.checkCheckbox("Translate"))
+        self.m_button3112.Bind(wx.EVT_BUTTON, lambda event: self.openFilesSelector("Translate"))
+        self.m_button11212.Bind(wx.EVT_BUTTON, lambda event: self.selectFolder("Translate"))
+        self.m_button15112.Bind(wx.EVT_BUTTON, lambda event: self.selectAll("Translate"))
+        self.m_button111112.Bind(wx.EVT_BUTTON, lambda event: self.deleteFromList("Translate"))
+        self.m_button9112.Bind(wx.EVT_BUTTON, lambda event: self.processThread("self.runTranslate"))
         self.m_filePicker1.Bind(wx.EVT_FILEPICKER_CHANGED, self.setRunEnable)
         self.m_dirPicker1.Bind(wx.EVT_DIRPICKER_CHANGED, self.setMkvDir)
 
@@ -1585,12 +839,7 @@ class MyFrame1(wx.Frame):
         checkBoxListWindow = wx.FindWindowById(selectedFiles)
         allFilesInCheckBoxList = checkBoxListWindow.GetItems()
         selectedFilesFromList = checkBoxListWindow.GetCheckedStrings()
-        newList = list(
-            filter(
-                lambda file: str(file) not in selectedFilesFromList,
-                allFilesInCheckBoxList,
-            )
-        )
+        newList = list(filter(lambda file: str(file) not in selectedFilesFromList, allFilesInCheckBoxList,))
         checkBoxListWindow.SetItems(newList)
         selectAll = eval(f"selectAll{event}")
         thisButton = wx.FindWindowById(selectAll)
@@ -1626,20 +875,14 @@ class MyFrame1(wx.Frame):
             fileTypeFilter = defaultFileTypeFillter
             if event == "Translate":
                 fileTypeFilter = subtitleFileTypeFillter
-            openFileDialog = wx.FileDialog(
-                self,
-                "Select files",
-                wildcard=fileTypeFilter,
-                style=wx.FD_OPEN | wx.FD_FILE_MUST_EXIST | wx.FD_MULTIPLE,
-            )
+            openFileDialog = wx.FileDialog(self, "Select files", wildcard=fileTypeFilter, style=wx.FD_OPEN | wx.FD_FILE_MUST_EXIST | wx.FD_MULTIPLE,)
             openFileDialog.ShowModal()
             selectedFiles = openFileDialog.GetFilenames()
             allFiles = oldFiles + selectedFiles
             fileTypeList = defaultfileTypesList
             if event == "Translate":
                 fileTypeList = subtitleFileTypeList
-            allFiles = list(
-                filter(lambda file: str(file).endswith(tuple(fileTypeList)), allFiles)
+            allFiles = list(filter(lambda file: str(file).endswith(tuple(fileTypeList)), allFiles)
             )
             allFiles = list(set(allFiles))
             allFiles.sort()
@@ -1675,8 +918,7 @@ class MyFrame1(wx.Frame):
             selectedFiles = eval(f"selectedFiles{event}")
             checkBoxListWindow = wx.FindWindowById(selectedFiles)
             oldFiles = checkBoxListWindow.GetItems()
-            openDirDialog = wx.DirDialog(
-                self, "Choose folder", style=wx.DD_DIR_MUST_EXIST
+            openDirDialog = wx.DirDialog(self, "Choose folder", style=wx.DD_DIR_MUST_EXIST
             )
             openDirDialog.ShowModal()
             selectedDir = openDirDialog.GetPath()
@@ -1685,9 +927,7 @@ class MyFrame1(wx.Frame):
             fileTypeList = defaultfileTypesList
             if event == "Translate":
                 fileTypeList = subtitleFileTypeList
-            filterFilesInDir = list(
-                filter(
-                    lambda file: str(file).endswith(tuple(fileTypeList)), absFilesInDir
+            filterFilesInDir = list(filter(    lambda file: str(file).endswith(tuple(fileTypeList)), absFilesInDir
                 )
             )
             allFiles = oldFiles + filterFilesInDir
@@ -1722,8 +962,7 @@ class MyFrame1(wx.Frame):
 
     def setMkvMergeFolder(self, event):
         try:
-            openDirDialog = wx.DirDialog(
-                self, "Choose folder", style=wx.DD_DIR_MUST_EXIST
+            openDirDialog = wx.DirDialog(self, "Choose folder", style=wx.DD_DIR_MUST_EXIST
             )
             openDirDialog.ShowModal()
             selectedDir = openDirDialog.GetPath()
@@ -2115,8 +1354,7 @@ class MyFileDropTarget(wx.FileDropTarget):
                 fileTypesList = subtitleFileTypeList
             else:
                 fileTypesList = defaultfileTypesList
-            allFiles = list(
-                filter(lambda file: str(file).endswith(tuple(fileTypesList)), allFiles)
+            allFiles = list(filter(lambda file: str(file).endswith(tuple(fileTypesList)), allFiles)
             )
             allFiles.sort()
             checkBoxList.Set(allFiles)
@@ -2155,8 +1393,6 @@ frame.m_checkList12.SetDropTarget(MyFileDropTarget(frame.m_checkList12, "ToAudio
 frame.m_checkList121.SetDropTarget(MyFileDropTarget(frame.m_checkList121, "Crop"))
 frame.m_filePicker1.SetDropTarget(MyFileDropTarget(frame.m_filePicker1, "Json"))
 frame.m_checkList1211.SetDropTarget(MyFileDropTarget(frame.m_checkList1211, "Options"))
-frame.m_checkList1212.SetDropTarget(
-    MyFileDropTarget(frame.m_checkList1212, "Translate")
-)
+frame.m_checkList1212.SetDropTarget(MyFileDropTarget(frame.m_checkList1212, "Translate"))
 frame.Show(True)
 app.MainLoop()
