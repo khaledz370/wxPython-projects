@@ -212,7 +212,6 @@ class MyFrame1(wx.Frame):
 
 		self.m_button211 = wx.Button( self.m_panel20, mkvmergeTomkv, u"mkvmerge old", wx.DefaultPosition, wx.DefaultSize, 0 )
 		bSizer42.Add( self.m_button211, 0, wx.ALL|wx.EXPAND, 5 )
-		self.m_button211.Disable()
 
 		self.m_staticText13 = wx.StaticText( self.m_panel20, mkvmergeOldFolderToMkv, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, wx.ALIGN_RIGHT )
 		self.m_staticText13.Wrap( -1 )
@@ -221,8 +220,8 @@ class MyFrame1(wx.Frame):
 
 		bSizer42.Add( self.m_staticText13, 1, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
 
-		self.m_checkBox4 = wx.CheckBox( self.m_panel20, sameFolderToMkv, u"same dir", wx.DefaultPosition, wx.DefaultSize, 0 )
-		self.m_checkBox4.SetValue(True)
+		self.m_checkBox4 = wx.CheckBox( self.m_panel20, sameFolderToMkv, u"Same Dir", wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.m_checkBox4.SetValue(False)
 		bSizer42.Add( self.m_checkBox4, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL|wx.EXPAND, 5 )
 
 		bSizer7.Add( bSizer42, 0, wx.EXPAND, 5 )
