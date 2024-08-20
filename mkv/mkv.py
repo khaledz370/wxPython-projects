@@ -18,52 +18,53 @@ selectAllToMkv = 1004
 dBtnToMkv = 1005
 mkvmergeTomkv = 1006
 mkvmergeOldFolderToMkv = 1007
-runToMkv = 1008
-currentFileToMkv = 1009
-pBarToMkv = 1010
-selectedFilesToAudio = 1011
-browseFilesToAudio = 1012
-browseFolderToAudio = 1013
-selectAllToAudio = 1014
-dBtnToAudio = 1015
-clearListToAudio = 1016
-runToAudio = 1017
-currentFileToAudio = 1018
-pBarToAudio = 1019
-selectedFilesCrop = 1020
-browseFilesCrop = 1021
-browseFolderCrop = 1022
-selectAllCrop = 1023
-dBtnCrop = 1024
-clearListCrop = 1025
-cTop = 1026
-cRight = 1027
-cBottom = 1028
-cLeft = 1029
-runCrop = 1030
-currentFileCrop = 1031
-pBarCrop = 1032
-selectedFilesOptions = 1033
-browseFilesOptions = 1034
-browseFolderOptions = 1035
-selectAllOptions = 1036
-dBtnOptions = 1037
-optionsFile = 1038
-runOptions = 1039
-currentFileOptions = 1040
-pBarOptions = 1041
-errorMissing = 1042
-selectedFilesTranslate = 1043
-browseFilesTranslate = 1044
-browseFolderTranslate = 1045
-selectAllTranslate = 1046
-dBtnTranslate = 1047
-clearListTranslate = 1048
-translateTo = 1049
-runTranslate = 1050
-currentFileTranslate = 1051
-pBarTranslate = 1052
-mkvDir = 1053
+sameFolderToMkv = 1008
+runToMkv = 1009
+currentFileToMkv = 1010
+pBarToMkv = 1011
+selectedFilesToAudio = 1012
+browseFilesToAudio = 1013
+browseFolderToAudio = 1014
+selectAllToAudio = 1015
+dBtnToAudio = 1016
+clearListToAudio = 1017
+runToAudio = 1018
+currentFileToAudio = 1019
+pBarToAudio = 1020
+selectedFilesCrop = 1021
+browseFilesCrop = 1022
+browseFolderCrop = 1023
+selectAllCrop = 1024
+dBtnCrop = 1025
+clearListCrop = 1026
+cTop = 1027
+cRight = 1028
+cBottom = 1029
+cLeft = 1030
+runCrop = 1031
+currentFileCrop = 1032
+pBarCrop = 1033
+selectedFilesOptions = 1034
+browseFilesOptions = 1035
+browseFolderOptions = 1036
+selectAllOptions = 1037
+dBtnOptions = 1038
+optionsFile = 1039
+runOptions = 1040
+currentFileOptions = 1041
+pBarOptions = 1042
+errorMissing = 1043
+selectedFilesTranslate = 1044
+browseFilesTranslate = 1045
+browseFolderTranslate = 1046
+selectAllTranslate = 1047
+dBtnTranslate = 1048
+clearListTranslate = 1049
+translateTo = 1050
+runTranslate = 1051
+currentFileTranslate = 1052
+pBarTranslate = 1053
+mkvDir = 1054
 
 ###########################################################################
 ## Class MyFrame1
@@ -72,7 +73,7 @@ mkvDir = 1053
 class MyFrame1 ( wx.Frame ):
 
 	def __init__( self, parent ):
-		wx.Frame.__init__ ( self, parent, id = wx.ID_ANY, title = u"Mkv batch v1.4", pos = wx.DefaultPosition, size = wx.Size( 660,590 ), style = wx.DEFAULT_FRAME_STYLE|wx.RESIZE_BORDER|wx.TAB_TRAVERSAL )
+		wx.Frame.__init__ ( self, parent, id = wx.ID_ANY, title = u"Mkv batch v1.5", pos = wx.DefaultPosition, size = wx.Size( 660,590 ), style = wx.DEFAULT_FRAME_STYLE|wx.RESIZE_BORDER|wx.TAB_TRAVERSAL )
 
 		self.SetSizeHints( wx.Size( 660,440 ), wx.Size( 660,700 ) )
 
@@ -163,6 +164,10 @@ class MyFrame1 ( wx.Frame ):
 
 		bSizer42.Add( self.m_staticText13, 1, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
 
+		self.m_checkBox4 = wx.CheckBox( self.m_panel20, sameFolderToMkv, u"same dir", wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.m_checkBox4.SetValue(True)
+		bSizer42.Add( self.m_checkBox4, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL|wx.EXPAND, 5 )
+
 
 		bSizer7.Add( bSizer42, 0, wx.EXPAND, 5 )
 
@@ -203,7 +208,7 @@ class MyFrame1 ( wx.Frame ):
 		self.tomkv.SetSizer( bSizer4 )
 		self.tomkv.Layout()
 		bSizer4.Fit( self.tomkv )
-		self.m_notebook30.AddPage( self.tomkv, u"to mkv", False )
+		self.m_notebook30.AddPage( self.tomkv, u"to mkv", True )
 		self.toAudio = wx.Panel( self.m_notebook30, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.TAB_TRAVERSAL )
 		bSizer41 = wx.BoxSizer( wx.VERTICAL )
 
@@ -730,7 +735,7 @@ class MyFrame1 ( wx.Frame ):
 		self.translate.SetSizer( bSizer4112 )
 		self.translate.Layout()
 		bSizer4112.Fit( self.translate )
-		self.m_notebook30.AddPage( self.translate, u"translate", True )
+		self.m_notebook30.AddPage( self.translate, u"translate", False )
 		self.Settings = wx.Panel( self.m_notebook30, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.TAB_TRAVERSAL )
 		bSizer41111 = wx.BoxSizer( wx.VERTICAL )
 
@@ -774,6 +779,7 @@ class MyFrame1 ( wx.Frame ):
 		self.m_button15.Bind( wx.EVT_BUTTON, self.selectAll("ToMkv") )
 		self.m_button111.Bind( wx.EVT_BUTTON, self.deleteFromList("ToMkv") )
 		self.m_button211.Bind( wx.EVT_BUTTON, self.setMkvMergeFolder )
+		self.m_checkBox4.Bind( wx.EVT_CHECKBOX, self.sameDirCheck )
 		self.m_button9.Bind( wx.EVT_BUTTON, self.runToMkv )
 		self.m_checkList12.Bind( wx.EVT_CHECKLISTBOX, self.checkCheckbox('ToAudio') )
 		self.m_button31.Bind( wx.EVT_BUTTON, self.openFilesSelector("ToAudio") )
@@ -823,6 +829,9 @@ class MyFrame1 ( wx.Frame ):
 		event.Skip()
 
 	def setMkvMergeFolder( self, event ):
+		event.Skip()
+
+	def sameDirCheck( self, event ):
 		event.Skip()
 
 	def runToMkv( self, event ):

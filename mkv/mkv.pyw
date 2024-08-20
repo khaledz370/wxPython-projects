@@ -51,70 +51,71 @@ languageCodes = config["languageCodes"]
 
 
 # widget ids
-allCrop = 1000
-allOptions = 1001
-allToAudio = 1002
-allToMkv = 1003
-browseFilesCrop = 1004
-browseFilesOptions = 1005
-browseFilesToAudio = 1006
-browseFilesToMkv = 1007
-browseFilesTranslate = 1008
-browseFolderCrop = 1009
-browseFolderOptions = 1010
-browseFolderToAudio = 1011
-browseFolderToMkv = 1012
-browseFolderTranslate = 1013
-cBottom = 1014
-cLeft = 1015
-cRight = 1016
-cTop = 1017
-clearListCrop = 1018
-clearListOptions = 1019
-clearListToAudio = 1020
-clearListTranslate = 1021
-currentFileCrop = 1022
-currentFileOptions = 1023
-currentFileToAudio = 1024
-currentFileToMkv = 1025
-currentFileTranslate = 1026
-dBtnCrop = 1027
-dBtnOptions = 1028
-dBtnToAudio = 1029
-dBtnToMkv = 1030
-dBtnTranslate = 1031
-errorMissing = 1032
-fileTypesCrop = 1033
-fileTypesOptions = 1034
-fileTypesToAudio = 1035
-fileTypesToMkv = 1036
-mkvDir = 1037
-mkvmergeOptions = 1038
-mkvmergeOldFolderToMkv = 1039
-mkvmergeTomkv = 1040
-pBarCrop = 1041
+allCrop = 990
+allOptions = 991
+allToAudio = 992
+allToMkv = 993
+fileTypesCrop = 994
+fileTypesOptions = 995
+fileTypesToAudio = 996
+fileTypesToMkv = 997
+mkvmergeOptions = 998
+optionsFile = 999
+tabContainer = 1000
+selectedFilesToMkv = 1001
+browseFilesToMkv = 1002
+browseFolderToMkv = 1003
+selectAllToMkv = 1004
+dBtnToMkv = 1005
+mkvmergeTomkv = 1006
+mkvmergeOldFolderToMkv = 1007
+sameFolderToMkv = 1008
+runToMkv = 1009
+currentFileToMkv = 1010
+pBarToMkv = 1011
+selectedFilesToAudio = 1012
+browseFilesToAudio = 1013
+browseFolderToAudio = 1014
+selectAllToAudio = 1015
+dBtnToAudio = 1016
+clearListToAudio = 1017
+runToAudio = 1018
+currentFileToAudio = 1019
+pBarToAudio = 1020
+selectedFilesCrop = 1021
+browseFilesCrop = 1022
+browseFolderCrop = 1023
+selectAllCrop = 1024
+dBtnCrop = 1025
+clearListCrop = 1026
+cTop = 1027
+cRight = 1028
+cBottom = 1029
+cLeft = 1030
+runCrop = 1031
+currentFileCrop = 1032
+pBarCrop = 1033
+selectedFilesOptions = 1034
+browseFilesOptions = 1035
+browseFolderOptions = 1036
+selectAllOptions = 1037
+dBtnOptions = 1038
+optionsFile = 1039
+runOptions = 1040
+currentFileOptions = 1041
 pBarOptions = 1042
-pBarToAudio = 1043
-pBarToMkv = 1044
-pBarTranslate = 1045
-runCrop = 1046
-runOptions = 1047
-runToAudio = 1048
-runToMkv = 1049
-runTranslate = 1050
-selectAllCrop = 1051
-selectAllOptions = 1052
-selectAllToAudio = 1053
-selectAllToMkv = 1054
-selectAllTranslate = 1055
-selectedFilesCrop = 1056
-selectedFilesOptions = 1057
-selectedFilesToAudio = 1058
-selectedFilesToMkv = 1059
-selectedFilesTranslate = 1060
-optionsFile = 1061
-tabContainer = 1062
-translateTo = 1063
+errorMissing = 1043
+selectedFilesTranslate = 1044
+browseFilesTranslate = 1045
+browseFolderTranslate = 1046
+selectAllTranslate = 1047
+dBtnTranslate = 1048
+clearListTranslate = 1049
+translateTo = 1050
+runTranslate = 1051
+currentFileTranslate = 1052
+pBarTranslate = 1053
+mkvDir = 1054
 # end of widget ids
 
 mainDir = f"{os.path.dirname(__file__)}"
@@ -128,7 +129,7 @@ settingsIcon = f"{mainDir}\\mkv.ico"
 
 class MyFrame1(wx.Frame):
 	def __init__(self, parent):
-		wx.Frame.__init__ ( self, parent, id = wx.ID_ANY, title = u"Mkv batch v1.4", pos = wx.DefaultPosition, size = wx.Size( 660,590 ), style = wx.DEFAULT_FRAME_STYLE|wx.RESIZE_BORDER|wx.TAB_TRAVERSAL )
+		wx.Frame.__init__ ( self, parent, id = wx.ID_ANY, title = u"Mkv batch v1.5", pos = wx.DefaultPosition, size = wx.Size( 660,590 ), style = wx.DEFAULT_FRAME_STYLE|wx.RESIZE_BORDER|wx.TAB_TRAVERSAL )
 
 		self.SetSizeHints( wx.Size( 660,440 ), wx.Size( 660,700 ) )
 
@@ -211,6 +212,7 @@ class MyFrame1(wx.Frame):
 
 		self.m_button211 = wx.Button( self.m_panel20, mkvmergeTomkv, u"mkvmerge old", wx.DefaultPosition, wx.DefaultSize, 0 )
 		bSizer42.Add( self.m_button211, 0, wx.ALL|wx.EXPAND, 5 )
+		self.m_button211.Disable()
 
 		self.m_staticText13 = wx.StaticText( self.m_panel20, mkvmergeOldFolderToMkv, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, wx.ALIGN_RIGHT )
 		self.m_staticText13.Wrap( -1 )
@@ -219,6 +221,9 @@ class MyFrame1(wx.Frame):
 
 		bSizer42.Add( self.m_staticText13, 1, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
 
+		self.m_checkBox4 = wx.CheckBox( self.m_panel20, sameFolderToMkv, u"same dir", wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.m_checkBox4.SetValue(True)
+		bSizer42.Add( self.m_checkBox4, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL|wx.EXPAND, 5 )
 
 		bSizer7.Add( bSizer42, 0, wx.EXPAND, 5 )
 
@@ -864,6 +869,7 @@ class MyFrame1(wx.Frame):
 		self.m_button9112.Bind(wx.EVT_BUTTON, lambda event: self.processThread("self.runTranslate"))
 		self.m_filePicker1.Bind(wx.EVT_FILEPICKER_CHANGED, self.setRunEnable)
 		self.m_dirPicker1.Bind(wx.EVT_DIRPICKER_CHANGED, self.setMkvDir)
+		self.m_checkBox4.Bind( wx.EVT_CHECKBOX, self.sameDirCheck )
 
 	def __del__(self):
 		pass
@@ -885,6 +891,14 @@ class MyFrame1(wx.Frame):
 			delBtnWindow.Enable()
 		else:
 			delBtnWindow.Disable()
+	
+	def sameDirCheck( self, event ):
+		isSameFolder = wx.FindWindowById(sameFolderToMkv)
+		mkvmergeDirBtn = wx.FindWindowById(mkvmergeTomkv)
+		if isSameFolder.IsChecked():
+			mkvmergeDirBtn.Disable()
+		else:
+			mkvmergeDirBtn.Enable()
 
 	# Virtual event handlers, override them in your derived class
 	def setMkvDir(self, event):
@@ -1073,6 +1087,7 @@ class MyFrame1(wx.Frame):
 
 	def runToMkv(self):
 		try:
+			isSameFolder = wx.FindWindowById(sameFolderToMkv)
 			bFilesWindow = wx.FindWindowById(browseFilesToMkv)
 			bFoldersWindow = wx.FindWindowById(browseFolderToMkv)
 			bSelectAllWindow = wx.FindWindowById(selectAllToMkv)
@@ -1101,6 +1116,8 @@ class MyFrame1(wx.Frame):
 					selectedDir = os.path.dirname(file)
 					fName = os.path.basename(file)
 					fNameNoExt = os.path.splitext(fName)[0]
+					if isSameFolder.IsChecked():
+						mkvmergeDir = selectedDir
 					if not os.path.exists((f"{mkvmergeDir}\\mkvmerge_old")):
 						os.makedirs((f"{mkvmergeDir}\\mkvmerge_old"))
 					mkvmerge_old = f"{mkvmergeDir}\mkvmerge_old\\{fName}"
