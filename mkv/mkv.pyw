@@ -16,12 +16,7 @@ import json
 import threading
 import traceback
 import sys
-import faulthandler
-import traceback
 import psutil 
-
-faulthandler.enable()
-
 
 appdataFolder = os.path.join(os.getenv('APPDATA'), 'mkvBatch')
 appdataFile = os.path.join(appdataFolder, 'config.json')
@@ -174,11 +169,13 @@ class MyFrame1(wx.Frame):
             self,
             parent,
             id=wx.ID_ANY,
-            title="Mkv batch v1.5",
+            title="Mkv batch v1.6",
             pos=wx.DefaultPosition,
             size=wx.Size(660, 590),
             style=wx.DEFAULT_FRAME_STYLE | wx.RESIZE_BORDER | wx.TAB_TRAVERSAL,
         )
+        
+        self.setup_window_icon()
 
         self.SetSizeHints(wx.Size(660, 440), wx.Size(660, 700))
 
@@ -623,6 +620,19 @@ class MyFrame1(wx.Frame):
         self.m_button91.Enable(False)
 
         bSizer121.Add(self.m_button91, 0, wx.ALL | wx.ALIGN_CENTER_VERTICAL, 5)
+        
+        # Add Abort button for ToAudio tab
+        self.m_buttonAbortAudio = wx.Button(
+            self.toAudio,
+            wx.ID_ANY,
+            "Abort",
+            wx.DefaultPosition,
+            wx.Size(-1, 30),
+            0,
+        )
+        self.m_buttonAbortAudio.Enable(False)
+        bSizer121.Add(self.m_buttonAbortAudio, 0, wx.ALL | wx.ALIGN_CENTER_VERTICAL, 5)
+
 
         self.m_staticText311 = wx.StaticText(
             self.toAudio,
@@ -1140,6 +1150,19 @@ class MyFrame1(wx.Frame):
         self.m_button9111.Enable(False)
 
         bSizer12111.Add(self.m_button9111, 0, wx.ALL | wx.ALIGN_CENTER_VERTICAL, 5)
+        
+        # Add Abort button for Crop tab
+        self.m_buttonAbortCrop = wx.Button(
+            self.crop,
+            wx.ID_ANY,
+            "Abort",
+            wx.DefaultPosition,
+            wx.Size(-1, 30),
+            0,
+        )
+        self.m_buttonAbortCrop.Enable(False)
+        bSizer1211.Add(self.m_buttonAbortCrop, 0, wx.ALL | wx.ALIGN_CENTER_VERTICAL, 5)
+
 
         self.m_staticText31111 = wx.StaticText(
             self.mkvOptions,
@@ -1152,6 +1175,19 @@ class MyFrame1(wx.Frame):
         self.m_staticText31111.Wrap(-1)
 
         bSizer12111.Add(self.m_staticText31111, 1, wx.ALL | wx.ALIGN_CENTER_VERTICAL, 5)
+        
+        # Add Abort button for Options tab
+        self.m_buttonAbortOptions = wx.Button(
+            self.mkvOptions,
+            wx.ID_ANY,
+            "Abort",
+            wx.DefaultPosition,
+            wx.Size(-1, 30),
+            0,
+        )
+        self.m_buttonAbortOptions.Enable(False)
+        bSizer12111.Add(self.m_buttonAbortOptions, 0, wx.ALL | wx.ALIGN_CENTER_VERTICAL, 5)
+
 
         bSizer11111.Add(bSizer12111, 0, wx.EXPAND, 5)
 
@@ -1401,6 +1437,19 @@ class MyFrame1(wx.Frame):
         bSizer12112.Add(
             self.m_button9112, 0, wx.ALL | wx.ALIGN_CENTER_VERTICAL | wx.EXPAND, 5
         )
+        
+        # Add Abort button for Translate tab
+        self.m_buttonAbortTranslate = wx.Button(
+            self.translate,
+            wx.ID_ANY,
+            "Abort",
+            wx.DefaultPosition,
+            wx.Size(-1, 30),
+            0,
+        )
+        self.m_buttonAbortTranslate.Enable(False)
+        bSizer12112.Add(self.m_buttonAbortTranslate, 0, wx.ALL | wx.ALIGN_CENTER_VERTICAL, 5)
+
 
         self.m_staticText31112 = wx.StaticText(
             self.translate,
@@ -1595,10 +1644,35 @@ class MyFrame1(wx.Frame):
         self.abort_flag = False
         
         self.m_buttonAbortMkv.Bind(wx.EVT_BUTTON, self.onAbortToMkv)
-
+        self.m_buttonAbortAudio.Bind(wx.EVT_BUTTON, self.onAbortToAudio)
+        self.m_buttonAbortCrop.Bind(wx.EVT_BUTTON, self.onAbortToCrop)
+        self.m_buttonAbortOptions.Bind(wx.EVT_BUTTON, self.onAbortToOptions)
+        self.m_buttonAbortTranslate.Bind(wx.EVT_BUTTON, self.onAbortToTranslate)
 
     def __del__(self):
         pass
+    
+    def setup_window_icon(self):
+        """Set the window icon with proper error handling"""
+        try:
+            # Get the directory where your script is located
+            main_dir = os.path.dirname(os.path.abspath(__file__))
+            icon_path = os.path.join(main_dir, "mkv.ico")
+            
+            # Check if icon exists
+            if os.path.exists(icon_path):
+                # Create and set the icon
+                icon = wx.Icon(icon_path, wx.BITMAP_TYPE_ICO)
+                self.SetIcon(icon)
+            else:
+                print(f"Icon file not found at: {icon_path}")
+                # Use a default system icon as fallback
+                self.SetIcon(wx.ArtProvider.GetIcon(wx.ART_EXECUTABLE_FILE, wx.ART_FRAME_ICON))
+                
+        except Exception as e:
+            print(f"Error setting icon: {e}")
+            # Use default system icon if there's any error
+            self.SetIcon(wx.ArtProvider.GetIcon(wx.ART_EXECUTABLE_FILE, wx.ART_FRAME_ICON))
 
     def processThread(self, event):
         if self.current_thread and self.current_thread.is_alive():
@@ -2163,6 +2237,105 @@ class MyFrame1(wx.Frame):
         # Reset progress and status
         wx.FindWindowById(pBarToMkv).SetValue(0)
         wx.FindWindowById(currentFileToMkv).SetLabel("Aborted by user")
+        
+    def onAbortToAudio(self, event):
+        """Abort ToAudio processing"""
+        self.abort_flag = True
+        
+        if self.current_process:
+            try:
+                self.kill_process_tree(self.current_process)
+                self.current_process = None
+            except Exception as e:
+                print(f"Error aborting process: {e}")
+        
+        # Re-enable controls
+        wx.FindWindowById(runToAudio).Enable()
+        wx.FindWindowById(browseFilesToAudio).Enable()
+        wx.FindWindowById(browseFolderToAudio).Enable()
+        wx.FindWindowById(selectAllToAudio).Enable()
+        wx.FindWindowById(clearListToAudio).Enable()
+        self.m_buttonAbortAudio.Enable(False)
+        
+        # Reset progress and status
+        wx.FindWindowById(pBarToAudio).SetValue(0)
+        wx.FindWindowById(currentFileToAudio).SetLabel("Aborted by user")
+
+    def onAbortToCrop(self, event):
+        """Abort Crop processing"""
+        self.abort_flag = True
+
+        if self.current_process:
+            try:
+                self.kill_process_tree(self.current_process)
+                self.current_process = None
+            except Exception as e:
+                print(f"Error aborting process: {e}")
+
+        # Re-enable controls
+        wx.FindWindowById(runCrop).Enable()
+        wx.FindWindowById(browseFilesCrop).Enable()
+        wx.FindWindowById(browseFolderCrop).Enable()
+        wx.FindWindowById(selectAllCrop).Enable()
+        wx.FindWindowById(clearListCrop).Enable()
+        # Re-enable crop controls
+        wx.FindWindowById(cTop).Enable()
+        wx.FindWindowById(cLeft).Enable()
+        wx.FindWindowById(cRight).Enable()
+        wx.FindWindowById(cBottom).Enable()
+        self.m_buttonAbortCrop.Enable(False)
+
+        # Reset progress and status
+        wx.FindWindowById(pBarCrop).SetValue(0)
+        wx.FindWindowById(currentFileCrop).SetLabel("Aborted by user")
+
+    def onAbortToOptions(self, event):
+        """Abort Options processing"""
+        self.abort_flag = True
+
+        if self.current_process:
+            try:
+                self.kill_process_tree(self.current_process)
+                self.current_process = None
+            except Exception as e:
+                print(f"Error aborting process: {e}")
+
+        # Re-enable controls
+        wx.FindWindowById(runOptions).Enable()
+        wx.FindWindowById(browseFilesOptions).Enable()
+        wx.FindWindowById(browseFolderOptions).Enable()
+        wx.FindWindowById(selectAllOptions).Enable()
+        wx.FindWindowById(optionsFile).Enable()
+        self.m_buttonAbortOptions.Enable(False)
+
+        # Reset progress and status
+        wx.FindWindowById(pBarOptions).SetValue(0)
+        wx.FindWindowById(currentFileOptions).SetLabel("Aborted by user")
+
+    def onAbortToTranslate(self, event):
+        """Abort Translate processing"""
+        self.abort_flag = True
+
+        if self.current_process:
+            try:
+                self.kill_process_tree(self.current_process)
+                self.current_process = None
+            except Exception as e:
+                print(f"Error aborting process: {e}")
+
+        # Re-enable controls
+        wx.FindWindowById(runTranslate).Enable()
+        wx.FindWindowById(browseFilesTranslate).Enable()
+        wx.FindWindowById(browseFolderTranslate).Enable()
+        wx.FindWindowById(selectAllTranslate).Enable()
+        wx.FindWindowById(translateTo).Enable()
+        wx.FindWindowById(clearListTranslate).Enable()
+        self.m_buttonAbortTranslate.Enable(False)
+
+        # Reset progress and status
+        wx.FindWindowById(pBarTranslate).SetValue(0)
+        wx.FindWindowById(currentFileTranslate).SetLabel("Aborted by user")
+
 
 
     def runToAudio(self):
@@ -2187,6 +2360,8 @@ class MyFrame1(wx.Frame):
                 bFoldersWindow.Disable()
                 bSelectAllWindow.Disable()
                 clearListCheckbox.Disable()
+                
+                self.m_buttonAbortAudio.Enable(True)
                 
                 for index, file in enumerate(allFiles):
                     currentFile.SetLabel(str(file))
@@ -2235,6 +2410,7 @@ class MyFrame1(wx.Frame):
                 bFilesWindow.Enable()
                 bFoldersWindow.Enable()
                 clearListCheckbox.Enable()
+                self.m_buttonAbortAudio.Enable(False)
                 
         except Exception as e:
             print(f"Error in runToAudio: {e}")
@@ -2283,6 +2459,8 @@ class MyFrame1(wx.Frame):
                 cRightWindow.Disable()
                 cBottomWindow.Disable()
                 clearListCheckbox.Disable()
+                
+                self.m_buttonAbortCrop.Enable(True)
                 
                 for index, file in enumerate(allFiles):
                     original_filename = os.path.basename(file)
@@ -2345,6 +2523,8 @@ class MyFrame1(wx.Frame):
                 cRightWindow.Enable()
                 cBottomWindow.Enable()
                 clearListCheckbox.Enable()
+                
+                self.m_buttonAbortCrop.Enable(False)
                 
         except Exception as e:
             print(f"Error in runCrop: {e}")
@@ -2415,6 +2595,8 @@ class MyFrame1(wx.Frame):
                     bFoldersWindow.Disable()
                     bSelectAllWindow.Disable()
                     
+                    self.m_buttonAbortOptions.Enable(True)
+                    
                     for index, file in enumerate(allFiles):
                         currentFile.SetLabel(str(file))
   
@@ -2443,6 +2625,8 @@ class MyFrame1(wx.Frame):
                     optionsFileWindow.Enable()
                     bFilesWindow.Enable()
                     bFoldersWindow.Enable()
+                    
+                    self.m_buttonAbortOptions.Enable(False)
                     
         except Exception as e:
             print(e)
@@ -2474,6 +2658,8 @@ class MyFrame1(wx.Frame):
                 bSelectAllWindow.Disable()
                 translateLangsWindow.Disable()
                 clearListCheckbox.Disable()
+                
+                self.m_buttonAbortTranslate.Enable(True)
                 
                 for index, file in enumerate(allFiles):
                     currentFile.SetLabel(str(file))
@@ -2516,6 +2702,8 @@ class MyFrame1(wx.Frame):
                     bFoldersWindow.Enable()
                     translateLangsWindow.Enable()
                     clearListCheckbox.Enable()
+                    
+                    self.m_buttonAbortTranslate.Enable(False)
                 
         except Exception as e:
             print(e)
