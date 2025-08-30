@@ -18,6 +18,7 @@ import traceback
 import sys
 import faulthandler
 import traceback
+import psutil 
 
 faulthandler.enable()
 
@@ -393,6 +394,19 @@ class MyFrame1(wx.Frame):
         self.m_button9.Enable(False)
 
         bSizer12.Add(self.m_button9, 0, wx.ALL | wx.ALIGN_CENTER_VERTICAL, 5)
+        
+        # In the bSizer12 section where you have the Convert button
+        self.m_buttonAbortMkv = wx.Button(
+            self.tomkv,
+            wx.ID_ANY,
+            "Abort",
+            wx.DefaultPosition,
+            wx.Size(-1, 30),
+            0,
+        )
+        self.m_buttonAbortMkv.Enable(False)  # Initially disabled
+        bSizer12.Add(self.m_buttonAbortMkv, 0, wx.ALL | wx.ALIGN_CENTER_VERTICAL, 5)
+
 
         self.m_staticText31 = wx.StaticText(
             self.tomkv,
@@ -1576,15 +1590,24 @@ class MyFrame1(wx.Frame):
         self.m_filePicker1.Bind(wx.EVT_FILEPICKER_CHANGED, self.setRunEnable)
         self.m_dirPicker1.Bind(wx.EVT_DIRPICKER_CHANGED, self.setMkvDir)
         self.m_checkBox4.Bind(wx.EVT_CHECKBOX, self.sameDirCheck)
+        self.current_thread = None
+        self.current_process = None
+        self.abort_flag = False
+        
+        self.m_buttonAbortMkv.Bind(wx.EVT_BUTTON, self.onAbortToMkv)
+
 
     def __del__(self):
         pass
 
     def processThread(self, event):
+        if self.current_thread and self.current_thread.is_alive():
+            return  # Don't start new thread if one is running
+            
         process = eval(event)
-        t = threading.Thread(target=process)
-        t.daemon = True  # set thread as daemon to terminate when main thread ends
-        t.start()
+        self.current_thread = threading.Thread(target=process)
+        self.current_thread.daemon = True
+        self.current_thread.start()
 
     def checkCheckbox(self, event):
         selectedFiles = eval(f"selectedFiles{event}")
@@ -1847,75 +1870,94 @@ class MyFrame1(wx.Frame):
             print(f"Error updating checklist item: {e}")
 
     def runCommandWithProgress(self, cmd, progressbar, statuslabel, startprogress, endprogress, 
-                          checklistbox=None, file_index=None, filename=None, inputfile=None, outputfile=None):
-        """Run command with real-time progress tracking from mkvmerge output"""
-        try:
-            import subprocess
-            import re
-            import threading
-    
-            # Set initial progress via CallAfter
-            wx.CallAfter(self.update_progress_safe, progressbar, startprogress, statuslabel, 
-                        f"Processing {os.path.basename(filename) if filename else 'file'}...")
-    
-            # Start the process
-            process = subprocess.Popen(
-                cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
-                universal_newlines=True, bufsize=1
-            )
-    
-            def monitor_progress():
-                progress_regex = re.compile(r"Progress: (\d+)%")
-                original_filename = os.path.basename(filename) if filename else ""
-    
-                for line in iter(process.stdout.readline, ''):
-                    if line:
-                        match = progress_regex.search(line.strip())
-                        if match:
-                            mkvmerge_progress = int(match.group(1))
-    
-                            # Calculate current progress
-                            current_progress = startprogress + int(mkvmerge_progress / 100.0 * (endprogress - startprogress))
-    
-                            # Update progress and checklist safely
-                            if checklistbox and file_index is not None:
-                                display_name = f"{original_filename} ({mkvmerge_progress}%)"
-                                wx.CallAfter(self.update_progress_safe, progressbar, current_progress, 
-                                           checklistbox, file_index, display_name)
-                            else:
-                                wx.CallAfter(self.update_progress_safe, progressbar, current_progress)
-    
-                process.stdout.close()
-    
-            # Start monitoring thread
-            monitor_thread = threading.Thread(target=monitor_progress)
-            monitor_thread.daemon = True
-            monitor_thread.start()
-    
-            # Wait for completion
-            returncode = process.wait()
-            monitor_thread.join(timeout=1.0)
-    
-            # Final update
-            if returncode == 0:
-                if checklistbox and file_index is not None:
-                    original_filename = os.path.basename(filename) if filename else ""
-                    wx.CallAfter(self.update_progress_safe, progressbar, endprogress, 
-                               checklistbox, file_index, f"{original_filename} (Complete)")
-                else:
-                    wx.CallAfter(self.update_progress_safe, progressbar, endprogress)
-            else:
-                if checklistbox and file_index is not None:
-                    original_filename = os.path.basename(filename) if filename else ""
-                    wx.CallAfter(self.update_progress_safe, progressbar, endprogress, 
-                               checklistbox, file_index, f"{original_filename} (Failed)")
-    
-            return returncode
-    
-        except Exception as e:
-            print(f"Error: {e}")
-            return 1
-    
+                      checklistbox=None, file_index=None, filename=None, inputfile=None, outputfile=None):
+       """Run command with real-time progress tracking and abort support"""
+       try:
+           import subprocess
+           import re
+           import threading
+
+           # Reset abort flag for new command
+           self.abort_flag = False
+
+           # Set initial progress
+           wx.CallAfter(self.update_progress_safe, progressbar, startprogress, statuslabel, 
+                       f"Processing {os.path.basename(filename) if filename else 'file'}...")
+
+           # Start the process
+           self.current_process = subprocess.Popen(
+               cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
+               universal_newlines=True, bufsize=1
+           )
+
+           def monitor_progress():
+               progress_regex = re.compile(r"Progress: (\d+)%")
+               original_filename = os.path.basename(filename) if filename else ""
+
+               try:
+                   for line in iter(self.current_process.stdout.readline, ''):
+                       if self.abort_flag:
+                           # Abort requested
+                           self.current_process.terminate()
+                           return -1
+
+                       if line:
+                           match = progress_regex.search(line.strip())
+                           if match:
+                               mkvmerge_progress = int(match.group(1))
+                               current_progress = startprogress + int(mkvmerge_progress / 100.0 * (endprogress - startprogress))
+
+                               if checklistbox and file_index is not None:
+                                   display_name = f"{original_filename} ({mkvmerge_progress}%)"
+                                   wx.CallAfter(self.update_progress_safe, progressbar, current_progress, 
+                                              checklistbox, file_index, display_name)
+                               else:
+                                   wx.CallAfter(self.update_progress_safe, progressbar, current_progress)
+               except:
+                   pass  # Process was terminated
+
+               if self.current_process:
+                   self.current_process.stdout.close()
+
+           # Start monitoring thread
+           monitor_thread = threading.Thread(target=monitor_progress)
+           monitor_thread.daemon = True
+           monitor_thread.start()
+
+           # Wait for completion
+           returncode = self.current_process.wait()
+           monitor_thread.join(timeout=1.0)
+
+           # Clear process reference
+           self.current_process = None
+
+           # Check if aborted
+           if self.abort_flag:
+               wx.CallAfter(self.update_progress_safe, progressbar, startprogress, statuslabel, 
+                           "Aborted")
+               return -1
+
+           # Final update
+           if returncode == 0:
+               if checklistbox and file_index is not None:
+                   original_filename = os.path.basename(filename) if filename else ""
+                   wx.CallAfter(self.update_progress_safe, progressbar, endprogress, 
+                              checklistbox, file_index, f"{original_filename} (Complete)")
+               else:
+                   wx.CallAfter(self.update_progress_safe, progressbar, endprogress)
+           else:
+               if checklistbox and file_index is not None:
+                   original_filename = os.path.basename(filename) if filename else ""
+                   wx.CallAfter(self.update_progress_safe, progressbar, endprogress, 
+                              checklistbox, file_index, f"{original_filename} (Failed)")
+
+           return returncode
+
+       except Exception as e:
+           print(f"Error: {e}")
+           self.current_process = None
+           return 1
+
         
     def update_progress_safe(self, progressbar, value, checklistbox=None, index=None, text=None, statuslabel=None, status_text=None):
         """Safe UI update method called from main thread"""
@@ -1930,6 +1972,33 @@ class MyFrame1(wx.Frame):
 
         except Exception as e:
             print(f"Error updating UI: {e}")
+
+    def kill_process_tree(self, p):
+        """Kill process and all its children"""
+        try:
+            parent = psutil.Process(p.pid)
+            children = parent.children(recursive=True)
+            # Terminate children first
+            for child in children:
+                try:
+                    child.terminate()
+                except psutil.NoSuchProcess:
+                    pass
+            # Wait a bit, then kill any that didn't terminate
+            gone, still_alive = psutil.wait_procs(children, timeout=3)
+            for p in still_alive:
+                try:
+                    p.kill()
+                except psutil.NoSuchProcess:
+                    pass
+            # Finally terminate/kill the parent
+            try:
+                parent.terminate()
+                parent.wait(3)
+            except (psutil.TimeoutExpired, psutil.NoSuchProcess):
+                parent.kill()
+        except (psutil.NoSuchProcess, psutil.AccessDenied) as e:
+            print(f"Error killing process tree: {e}")
 
 
     def runToMkv(self):
@@ -1964,151 +2033,137 @@ class MyFrame1(wx.Frame):
                 bFoldersWindow.Disable()
                 bSelectAllWindow.Disable()
                 mkvmergeDirBtn.Disable()
-
-                for index, file in enumerate(allFiles):
-                    try:
-                        currentFile.SetLabel(f"Processing: {str(file)}")
-                        
-                        wx.GetApp().Yield()  # Update UI
-
-                        selectedDir = os.path.dirname(file)
-                        fName = os.path.basename(file)
-                        fNameNoExt = os.path.splitext(fName)[0]
-
-                        if isSameFolder.IsChecked():
-                            mkvmergeDir = selectedDir
-
-                        # Create directories if needed
-                        if not os.path.exists(f"{mkvmergeDir}/mkvmerge_old"):
-                            os.makedirs(f"{mkvmergeDir}/mkvmerge_old")
-
-                        wx.GetApp().Yield()
-
-                        mkvmergeold = f"{mkvmergeDir}/mkvmerge_old/{fName}"
-                        shutil.move(file, mkvmergeold)
-
-                        wx.GetApp().Yield()
-
-                        outputFile = f"{selectedDir}/{fNameNoExt}.mkv"
-                        inputFile = f"{mkvmergeDir}/mkvmerge_old/{fName}"
-                        mkvCommand = (
-                            f'"{mkvMerge}" --output "{outputFile}" "{inputFile}"'
-                        )
-
-                        # Run command with error checking
-                        result = self.runCommandWithProgress(
-                            mkvCommand, 
-                            pBar, 
-                            currentFile,
-                            50, 100,
-                            checklistbox=checkBoxListWindow,
-                            file_index=index,
-                            filename=file,
-                            inputfile=inputFile, 
-                            outputfile=outputFile
-                        )
+                self.m_buttonAbortMkv.Enable(True)
 
 
-                    except Exception as e:
-                        print(f"Error processing {file}: {e}")
-                        failed_files.append(file)
-                        # Try to restore original file
+                try:
+                    for index, file in enumerate(allFiles):
                         try:
-                            if os.path.exists(f"{mkvmergeDir}/mkvmerge_old/{fName}"):
-                                shutil.move(f"{mkvmergeDir}/mkvmerge_old/{fName}", file)
-                        except:
-                            pass
+                            currentFile.SetLabel(f"Processing: {str(file)}")
 
-                    # Update overall progress
-                    percentage = int((100 * (index + 1)) / indexes)
-                    pBar.SetValue(percentage)
-                    wx.GetApp().Yield()
+                            selectedDir = os.path.dirname(file)
+                            fName = os.path.basename(file)
+                            fNameNoExt = os.path.splitext(fName)[0]
 
-                # Show completion summary
-                total_files = len(allFiles)
-                success_count = len(successful_files)
-                failed_count = len(failed_files)
+                            if isSameFolder.IsChecked():
+                                mkvmergeDir = selectedDir
 
-                summary_msg = (
-                    f"Conversion complete! Successful: {success_count}/{total_files}"
-                )
-                if failed_count > 0:
-                    summary_msg += f" | Failed/Skipped: {failed_count} files"
+                            # Create directories if needed
+                            if not os.path.exists(f"{mkvmergeDir}/mkvmerge_old"):
+                                os.makedirs(f"{mkvmergeDir}/mkvmerge_old")
 
+                            mkvmergeold = f"{mkvmergeDir}/mkvmerge_old/{fName}"
+                            shutil.move(file, mkvmergeold)
 
+                            outputFile = f"{selectedDir}/{fNameNoExt}.mkv"
+                            inputFile = f"{mkvmergeDir}/mkvmerge_old/{fName}"
+                            mkvCommand = (
+                                f'"{mkvMerge}" --output "{outputFile}" "{inputFile}"'
+                            )
 
-                # Reset progress bars
-                pBar.SetValue(0)
+                            # Run command with progress tracking
+                            result = self.runCommandWithProgress(
+                                mkvCommand, 
+                                pBar, 
+                                currentFile,
+                                50, 100,
+                                checklistbox=checkBoxListWindow,
+                                file_index=index,
+                                filename=file,
+                                inputfile=inputFile, 
+                                outputfile=outputFile
+                            )
 
-                # Clear the list and re-enable controls
-                checkBoxListWindow.SetItems([])
-                bFilesWindow.Enable()
-                bFoldersWindow.Enable()
-                mkvmergeDirBtn.Enable()
+                            if result == 0:
+                                successful_files.append(file)
+                            else:
+                                failed_files.append(file)
+                                # Try to restore original file
+                                try:
+                                    if os.path.exists(mkvmergeold):
+                                        shutil.move(mkvmergeold, file)
+                                except:
+                                    pass
+
+                        except Exception as e:
+                            print(f"Error processing {file}: {e}")
+                            failed_files.append(file)
+                            # Try to restore original file
+                            try:
+                                if os.path.exists(f"{mkvmergeDir}/mkvmerge_old/{fName}"):
+                                    shutil.move(f"{mkvmergeDir}/mkvmerge_old/{fName}", file)
+                            except:
+                                pass
+
+                        # Update overall progress
+                        percentage = int((100 * (index + 1)) / indexes)
+                        pBar.SetValue(percentage)
+
+                    # Show completion summary
+                    total_files = len(allFiles)
+                    success_count = len(successful_files)
+                    failed_count = len(failed_files)
+
+                    summary_msg = (
+                        f"Conversion complete! Successful: {success_count}/{total_files}"
+                    )
+                    if failed_count > 0:
+                        summary_msg += f" | Failed/Skipped: {failed_count} files"
+
+                finally:
+                    # ALWAYS execute cleanup - this ensures list is cleared
+                    currentFile.SetLabel("")
+                    pBar.SetValue(0)
+
+                    # **THIS IS THE KEY FIX - Clear the list after completion**
+                    checkBoxListWindow.SetItems([])
+
+                    # Re-enable controls
+                    convertTomkvWindow.Enable()
+                    bFilesWindow.Enable()
+                    bFoldersWindow.Enable()
+                    bSelectAllWindow.Enable()
+                    mkvmergeDirBtn.Enable()
+                    
+                    self.m_buttonAbortMkv.Enable(False)
+    
+                    # Clear process reference
+                    self.current_process = None
 
         except Exception as e:
             print(f"Critical error in runToMkv: {e}")
             # Re-enable controls even if there's a critical error
             try:
+                convertTomkvWindow.Enable()
                 bFilesWindow.Enable()
                 bFoldersWindow.Enable()
+                bSelectAllWindow.Enable()
                 mkvmergeDirBtn.Enable()
             except:
                 pass
-
+    def onAbortToMkv(self, event):
+        """Abort ToMkv processing"""
+        self.abort_flag = True
+        
+        # Kill the entire process tree, not just the main process
+        if self.current_process:
             try:
-                isSameFolder = wx.FindWindowById(sameFolderToMkv)
-                bFilesWindow = wx.FindWindowById(browseFilesToMkv)
-                bFoldersWindow = wx.FindWindowById(browseFolderToMkv)
-                bSelectAllWindow = wx.FindWindowById(selectAllToMkv)
-                checkBoxListWindow = wx.FindWindowById(selectedFilesToMkv)
-                currentFile = wx.FindWindowById(currentFileToMkv)
-                indexes = checkBoxListWindow.GetCount()
-                convertTomkvWindow = wx.FindWindowById(runToMkv)
-                pBar = wx.FindWindowById(pBarToMkv)
-                mkvmergeDirWindow = wx.FindWindowById(mkvmergeOldFolderToMkv)
-                mkvmergeDirBtn = wx.FindWindowById(mkvmergeTomkv)
-                if indexes:
-                    allFiles = checkBoxListWindow.GetItems()
-                    drive, path = os.path.splitdrive(os.path.dirname(allFiles[0]))
-                    if not os.path.isdir(mkvmergeDirWindow.GetLabel()):
-                        mkvmergeDir = drive
-                    else:
-                        mkvmergeDir = mkvmergeDirWindow.GetLabel()
-                    # duplicateFiles = list(allFiles)
-                    convertTomkvWindow.Disable()
-                    bFilesWindow.Disable()
-                    bFoldersWindow.Disable()
-                    bSelectAllWindow.Disable()
-                    mkvmergeDirBtn.Disable()
-                    for index, file in enumerate(allFiles):
-                        currentFile.SetLabel(str(file))
-                        selectedDir = os.path.dirname(file)
-                        fName = os.path.basename(file)
-                        fNameNoExt = os.path.splitext(fName)[0]
-                        if isSameFolder.IsChecked():
-                            mkvmergeDir = selectedDir
-                        if not os.path.exists((f"{mkvmergeDir}\\mkvmerge_old")):
-                            os.makedirs((f"{mkvmergeDir}\\mkvmerge_old"))
-                        mkvmerge_old = os.path.join(mkvmergeDir, 'mkvmerge_old', fName)
-                        shutil.move(file, mkvmerge_old)
-                        outputFile = f"{selectedDir}\\{fNameNoExt}.mkv"
-                        inputFile = f"{mkvmergeDir}\\mkvmerge_old\\{fName}"
-                        mkvCommand = (
-                            f'"{mkvMerge}" --output "{outputFile}" "{inputFile}"'
-                        )
-                        presentage = int(100 * (index + 1) / indexes)
-                        # print(presentage)
-                        pBar.SetValue((presentage))
-                        runCommand(mkvCommand)
-                currentFile.SetLabel("")
-                pBar.SetValue(0)
-                checkBoxListWindow.SetItems([])
-                bFilesWindow.Enable()
-                bFoldersWindow.Enable()
-                mkvmergeDirBtn.Enable()
+                self.kill_process_tree(self.current_process)
+                self.current_process = None
             except Exception as e:
-                print(e)
+                print(f"Error aborting process: {e}")
+        
+        # Re-enable controls
+        wx.FindWindowById(runToMkv).Enable()
+        wx.FindWindowById(browseFilesToMkv).Enable()
+        wx.FindWindowById(browseFolderToMkv).Enable()
+        wx.FindWindowById(selectAllToMkv).Enable()
+        self.m_buttonAbortMkv.Enable(False)
+    
+        # Reset progress and status
+        wx.FindWindowById(pBarToMkv).SetValue(0)
+        wx.FindWindowById(currentFileToMkv).SetLabel("Aborted by user")
+
 
     def runToAudio(self):
         try:
