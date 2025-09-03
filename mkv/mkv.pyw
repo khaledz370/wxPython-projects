@@ -16,10 +16,10 @@ import json
 import threading
 import traceback
 import sys
-import psutil 
+import psutil
 
-appdataFolder = os.path.join(os.getenv('APPDATA'), 'mkvBatch')
-appdataFile = os.path.join(appdataFolder, 'config.json')
+appdataFolder = os.path.join(os.getenv("APPDATA"), "mkvBatch")
+appdataFile = os.path.join(appdataFolder, "config.json")
 
 try:
     if not os.path.exists(appdataFolder):
@@ -174,7 +174,7 @@ class MyFrame1(wx.Frame):
             size=wx.Size(660, 590),
             style=wx.DEFAULT_FRAME_STYLE | wx.RESIZE_BORDER | wx.TAB_TRAVERSAL,
         )
-        
+
         self.setup_window_icon()
 
         self.SetSizeHints(wx.Size(660, 440), wx.Size(660, 700))
@@ -391,7 +391,7 @@ class MyFrame1(wx.Frame):
         self.m_button9.Enable(False)
 
         bSizer12.Add(self.m_button9, 0, wx.ALL | wx.ALIGN_CENTER_VERTICAL, 5)
-        
+
         # In the bSizer12 section where you have the Convert button
         self.m_buttonAbortMkv = wx.Button(
             self.tomkv,
@@ -403,7 +403,6 @@ class MyFrame1(wx.Frame):
         )
         self.m_buttonAbortMkv.Enable(False)  # Initially disabled
         bSizer12.Add(self.m_buttonAbortMkv, 0, wx.ALL | wx.ALIGN_CENTER_VERTICAL, 5)
-
 
         self.m_staticText31 = wx.StaticText(
             self.tomkv,
@@ -428,7 +427,7 @@ class MyFrame1(wx.Frame):
             wx.GA_HORIZONTAL,
         )
         self.m_gauge1.SetValue(0)
-        bSizer11.Add(self.m_gauge1, 0, wx.ALL | wx.EXPAND, 5)        
+        bSizer11.Add(self.m_gauge1, 0, wx.ALL | wx.EXPAND, 5)
 
         bSizer6.Add(bSizer11, 0, wx.EXPAND, 5)
 
@@ -620,7 +619,7 @@ class MyFrame1(wx.Frame):
         self.m_button91.Enable(False)
 
         bSizer121.Add(self.m_button91, 0, wx.ALL | wx.ALIGN_CENTER_VERTICAL, 5)
-        
+
         # Add Abort button for ToAudio tab
         self.m_buttonAbortAudio = wx.Button(
             self.toAudio,
@@ -632,7 +631,6 @@ class MyFrame1(wx.Frame):
         )
         self.m_buttonAbortAudio.Enable(False)
         bSizer121.Add(self.m_buttonAbortAudio, 0, wx.ALL | wx.ALIGN_CENTER_VERTICAL, 5)
-
 
         self.m_staticText311 = wx.StaticText(
             self.toAudio,
@@ -951,7 +949,7 @@ class MyFrame1(wx.Frame):
         )
         self.m_gauge111.SetValue(0)
         bSizer1111.Add(self.m_gauge111, 0, wx.ALL | wx.EXPAND, 5)
-       
+
         bSizer611.Add(bSizer1111, 0, wx.EXPAND, 5)
 
         bSizer411.Add(bSizer611, 1, wx.EXPAND, 5)
@@ -1150,7 +1148,7 @@ class MyFrame1(wx.Frame):
         self.m_button9111.Enable(False)
 
         bSizer12111.Add(self.m_button9111, 0, wx.ALL | wx.ALIGN_CENTER_VERTICAL, 5)
-        
+
         # Add Abort button for Crop tab
         self.m_buttonAbortCrop = wx.Button(
             self.crop,
@@ -1163,7 +1161,6 @@ class MyFrame1(wx.Frame):
         self.m_buttonAbortCrop.Enable(False)
         bSizer1211.Add(self.m_buttonAbortCrop, 0, wx.ALL | wx.ALIGN_CENTER_VERTICAL, 5)
 
-
         self.m_staticText31111 = wx.StaticText(
             self.mkvOptions,
             currentFileOptions,
@@ -1175,7 +1172,7 @@ class MyFrame1(wx.Frame):
         self.m_staticText31111.Wrap(-1)
 
         bSizer12111.Add(self.m_staticText31111, 1, wx.ALL | wx.ALIGN_CENTER_VERTICAL, 5)
-        
+
         # Add Abort button for Options tab
         self.m_buttonAbortOptions = wx.Button(
             self.mkvOptions,
@@ -1186,8 +1183,9 @@ class MyFrame1(wx.Frame):
             0,
         )
         self.m_buttonAbortOptions.Enable(False)
-        bSizer12111.Add(self.m_buttonAbortOptions, 0, wx.ALL | wx.ALIGN_CENTER_VERTICAL, 5)
-
+        bSizer12111.Add(
+            self.m_buttonAbortOptions, 0, wx.ALL | wx.ALIGN_CENTER_VERTICAL, 5
+        )
 
         bSizer11111.Add(bSizer12111, 0, wx.EXPAND, 5)
 
@@ -1437,7 +1435,7 @@ class MyFrame1(wx.Frame):
         bSizer12112.Add(
             self.m_button9112, 0, wx.ALL | wx.ALIGN_CENTER_VERTICAL | wx.EXPAND, 5
         )
-        
+
         # Add Abort button for Translate tab
         self.m_buttonAbortTranslate = wx.Button(
             self.translate,
@@ -1448,8 +1446,9 @@ class MyFrame1(wx.Frame):
             0,
         )
         self.m_buttonAbortTranslate.Enable(False)
-        bSizer12112.Add(self.m_buttonAbortTranslate, 0, wx.ALL | wx.ALIGN_CENTER_VERTICAL, 5)
-
+        bSizer12112.Add(
+            self.m_buttonAbortTranslate, 0, wx.ALL | wx.ALIGN_CENTER_VERTICAL, 5
+        )
 
         self.m_staticText31112 = wx.StaticText(
             self.translate,
@@ -1475,7 +1474,7 @@ class MyFrame1(wx.Frame):
         )
         self.m_gauge1112.SetValue(0)
         bSizer11112.Add(self.m_gauge1112, 0, wx.ALL | wx.EXPAND, 5)
-       
+
         bSizer6112.Add(bSizer11112, 0, wx.EXPAND, 5)
 
         bSizer4112.Add(bSizer6112, 1, wx.EXPAND, 5)
@@ -1642,7 +1641,7 @@ class MyFrame1(wx.Frame):
         self.current_thread = None
         self.current_process = None
         self.abort_flag = False
-        
+
         self.m_buttonAbortMkv.Bind(wx.EVT_BUTTON, self.onAbortToMkv)
         self.m_buttonAbortAudio.Bind(wx.EVT_BUTTON, self.onAbortToAudio)
         self.m_buttonAbortCrop.Bind(wx.EVT_BUTTON, self.onAbortToCrop)
@@ -1651,14 +1650,14 @@ class MyFrame1(wx.Frame):
 
     def __del__(self):
         pass
-    
+
     def setup_window_icon(self):
         """Set the window icon with proper error handling"""
         try:
             # Get the directory where your script is located
             main_dir = os.path.dirname(os.path.abspath(__file__))
             icon_path = os.path.join(main_dir, "mkv.ico")
-            
+
             # Check if icon exists
             if os.path.exists(icon_path):
                 # Create and set the icon
@@ -1667,17 +1666,21 @@ class MyFrame1(wx.Frame):
             else:
                 print(f"Icon file not found at: {icon_path}")
                 # Use a default system icon as fallback
-                self.SetIcon(wx.ArtProvider.GetIcon(wx.ART_EXECUTABLE_FILE, wx.ART_FRAME_ICON))
-                
+                self.SetIcon(
+                    wx.ArtProvider.GetIcon(wx.ART_EXECUTABLE_FILE, wx.ART_FRAME_ICON)
+                )
+
         except Exception as e:
             print(f"Error setting icon: {e}")
             # Use default system icon if there's any error
-            self.SetIcon(wx.ArtProvider.GetIcon(wx.ART_EXECUTABLE_FILE, wx.ART_FRAME_ICON))
+            self.SetIcon(
+                wx.ArtProvider.GetIcon(wx.ART_EXECUTABLE_FILE, wx.ART_FRAME_ICON)
+            )
 
     def processThread(self, event):
         if self.current_thread and self.current_thread.is_alive():
             return  # Don't start new thread if one is running
-            
+
         process = eval(event)
         self.current_thread = threading.Thread(target=process)
         self.current_thread.daemon = True
@@ -1902,7 +1905,7 @@ class MyFrame1(wx.Frame):
                 delBtnWindow.Disable()
         except Exception as e:
             print(e)
-            
+
     def update_checklist_item(self, checklistbox, index, new_text):
         """Update a specific item in the checklist with new text"""
         try:
@@ -1943,100 +1946,145 @@ class MyFrame1(wx.Frame):
         except Exception as e:
             print(f"Error updating checklist item: {e}")
 
-    def runCommandWithProgress(self, cmd, progressbar, statuslabel, startprogress, endprogress, 
-                      checklistbox=None, file_index=None, filename=None, inputfile=None, outputfile=None):
-       """Run command with real-time progress tracking and abort support"""
-       try:
-           import subprocess
-           import re
-           import threading
+    def runCommandWithProgress(
+        self,
+        cmd,
+        progressbar,
+        statuslabel,
+        startprogress,
+        endprogress,
+        checklistbox=None,
+        file_index=None,
+        filename=None,
+        inputfile=None,
+        outputfile=None,
+        total_files=1,
+    ):
+        """Run command with real-time progress tracking and abort support"""
+        try:
+            import subprocess
+            import re
+            import threading
 
-           # Reset abort flag for new command
-           self.abort_flag = False
+            # Reset abort flag for new command
+            self.abort_flag = False
 
-           # Set initial progress
-           wx.CallAfter(self.update_progress_safe, progressbar, startprogress, statuslabel, 
-                       f"Processing {os.path.basename(filename) if filename else 'file'}...")
+            base_progress = int((file_index * 100) / total_files) if file_index is not None and total_files > 0 else 0
 
-           # Start the process
-           self.current_process = subprocess.Popen(
-               cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
-               universal_newlines=True, bufsize=1
-           )
+            # Set initial progress
+            wx.CallAfter(
+                self.update_progress_safe,
+                progressbar,
+                startprogress,
+                statuslabel,
+                f"Processing {os.path.basename(filename) if filename else 'file'}...",
+            )
 
-           def monitor_progress():
-               progress_regex = re.compile(r"Progress: (\d+)%")
-               original_filename = os.path.basename(filename) if filename else ""
+            # Start the process
+            self.current_process = subprocess.Popen(
+                cmd,
+                shell=True,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.STDOUT,
+                universal_newlines=True,
+                bufsize=1,
+            )
 
-               try:
-                   for line in iter(self.current_process.stdout.readline, ''):
-                       if self.abort_flag:
-                           # Abort requested
-                           self.current_process.terminate()
-                           return -1
+            def monitor_progress():
+                progress_regex = re.compile(r"Progress: (\d+)%")
+                original_filename = os.path.basename(filename) if filename else ""
 
-                       if line:
-                           match = progress_regex.search(line.strip())
-                           if match:
-                               mkvmerge_progress = int(match.group(1))
-                               current_progress = startprogress + int(mkvmerge_progress / 100.0 * (endprogress - startprogress))
+                try:
+                    for line in iter(self.current_process.stdout.readline, ""):
+                        if self.abort_flag:
+                            # Abort requested
+                            self.current_process.terminate()
+                            return -1
 
-                               if checklistbox and file_index is not None:
-                                   display_name = f"{original_filename} ({mkvmerge_progress}%)"
-                                   wx.CallAfter(self.update_progress_safe, progressbar, current_progress, 
-                                              checklistbox, file_index, display_name)
-                               else:
-                                   wx.CallAfter(self.update_progress_safe, progressbar, current_progress)
-               except:
-                   pass  # Process was terminated
+                        if line:
+                            match = progress_regex.search(line.strip())
+                            if match:
+                                mkvmerge_progress = int(match.group(1))
+                                #    current_progress = startprogress + int(mkvmerge_progress / 100.0 * (endprogress - startprogress))
 
-               if self.current_process:
-                   self.current_process.stdout.close()
+                                if checklistbox and file_index is not None:
+                                    # Calculate progress: base progress + current file's contribution
+                                    file_contribution = int((mkvmerge_progress / 100.0) * (100 / total_files))
+                                    overall_progress = base_progress + file_contribution
 
-           # Start monitoring thread
-           monitor_thread = threading.Thread(target=monitor_progress)
-           monitor_thread.daemon = True
-           monitor_thread.start()
+                                    display_name = f"{original_filename} ({mkvmerge_progress}%)"
+                                    wx.CallAfter(self.update_progress_safe, progressbar, overall_progress, checklistbox, file_index, display_name)
 
-           # Wait for completion
-           returncode = self.current_process.wait()
-           monitor_thread.join(timeout=1.0)
+                except:
+                    pass  # Process was terminated
 
-           # Clear process reference
-           self.current_process = None
+                if self.current_process:
+                    self.current_process.stdout.close()
 
-           # Check if aborted
-           if self.abort_flag:
-               wx.CallAfter(self.update_progress_safe, progressbar, startprogress, statuslabel, 
-                           "Aborted")
-               return -1
+            # Start monitoring thread
+            monitor_thread = threading.Thread(target=monitor_progress)
+            monitor_thread.daemon = True
+            monitor_thread.start()
 
-           # Final update
-           if returncode == 0:
-               if checklistbox and file_index is not None:
-                   original_filename = os.path.basename(filename) if filename else ""
-                   wx.CallAfter(self.update_progress_safe, progressbar, endprogress, 
-                              checklistbox, file_index, f"{original_filename} (Complete)")
-               else:
-                   wx.CallAfter(self.update_progress_safe, progressbar, endprogress)
-           else:
-               if checklistbox and file_index is not None:
-                   original_filename = os.path.basename(filename) if filename else ""
-                   wx.CallAfter(self.update_progress_safe, progressbar, endprogress, 
-                              checklistbox, file_index, f"{original_filename} (Failed)")
+            # Wait for completion
+            returncode = self.current_process.wait()
+            monitor_thread.join(timeout=1.0)
 
-           return returncode
+            # Clear process reference
+            self.current_process = None
 
-       except Exception as e:
-           print(f"Error: {e}")
-           self.current_process = None
-           return 1
+            # Check if aborted
+            if self.abort_flag:
+                wx.CallAfter(
+                    self.update_progress_safe,
+                    progressbar,
+                    startprogress,
+                    statuslabel,
+                    "Aborted",
+                )
+                return -1
 
-        
-    def update_progress_safe(self, progressbar, value, checklistbox=None, index=None, text=None, statuslabel=None, status_text=None):
+            # Final update
+            if returncode == 0:
+                if checklistbox and file_index is not None:
+                    original_filename = os.path.basename(filename) if filename else ""
+                    final_progress = int(((file_index + 1) * 100) / total_files)
+                    wx.CallAfter(self.update_progress_safe, progressbar, final_progress, checklistbox, file_index, f"{original_filename} (Complete)")
+                else:
+                    wx.CallAfter(self.update_progress_safe, progressbar, endprogress)
+            else:
+                if checklistbox and file_index is not None:
+                    original_filename = os.path.basename(filename) if filename else ""
+                    wx.CallAfter(
+                        self.update_progress_safe,
+                        progressbar,
+                        endprogress,
+                        checklistbox,
+                        file_index,
+                        f"{original_filename} (Failed)",
+                    )
+
+            return returncode
+
+        except Exception as e:
+            print(f"Error: {e}")
+            self.current_process = None
+            return 1
+
+    def update_progress_safe(
+        self,
+        progressbar,
+        value,
+        checklistbox=None,
+        index=None,
+        text=None,
+        statuslabel=None,
+        status_text=None,
+    ):
         """Safe UI update method called from main thread"""
         try:
-            progressbar.SetValue(value)
+            if progressbar:
+                progressbar.SetValue(value)
 
             if statuslabel and status_text:
                 statuslabel.SetLabel(status_text)
@@ -2074,7 +2122,6 @@ class MyFrame1(wx.Frame):
         except (psutil.NoSuchProcess, psutil.AccessDenied) as e:
             print(f"Error killing process tree: {e}")
 
-
     def runToMkv(self):
         try:
             isSameFolder = wx.FindWindowById(sameFolderToMkv)
@@ -2109,9 +2156,9 @@ class MyFrame1(wx.Frame):
                 mkvmergeDirBtn.Disable()
                 self.m_buttonAbortMkv.Enable(True)
 
-
                 try:
                     for index, file in enumerate(allFiles):
+
                         try:
                             currentFile.SetLabel(f"Processing: {str(file)}")
 
@@ -2137,15 +2184,16 @@ class MyFrame1(wx.Frame):
 
                             # Run command with progress tracking
                             result = self.runCommandWithProgress(
-                                mkvCommand, 
-                                pBar, 
+                                mkvCommand,
+                                pBar,
                                 currentFile,
-                                50, 100,
+                                0,
+                                0,
                                 checklistbox=checkBoxListWindow,
                                 file_index=index,
                                 filename=file,
-                                inputfile=inputFile, 
-                                outputfile=outputFile
+                                inputfile=inputFile,
+                                outputfile=outputFile,
                             )
 
                             if result == 0:
@@ -2164,23 +2212,24 @@ class MyFrame1(wx.Frame):
                             failed_files.append(file)
                             # Try to restore original file
                             try:
-                                if os.path.exists(f"{mkvmergeDir}/mkvmerge_old/{fName}"):
-                                    shutil.move(f"{mkvmergeDir}/mkvmerge_old/{fName}", file)
+                                if os.path.exists(
+                                    f"{mkvmergeDir}/mkvmerge_old/{fName}"
+                                ):
+                                    shutil.move(
+                                        f"{mkvmergeDir}/mkvmerge_old/{fName}", file
+                                    )
                             except:
                                 pass
 
                         # Update overall progress
-                        percentage = int((100 * (index + 1)) / indexes)
-                        pBar.SetValue(percentage)
+                        pass
 
                     # Show completion summary
                     total_files = len(allFiles)
                     success_count = len(successful_files)
                     failed_count = len(failed_files)
 
-                    summary_msg = (
-                        f"Conversion complete! Successful: {success_count}/{total_files}"
-                    )
+                    summary_msg = f"Conversion complete! Successful: {success_count}/{total_files}"
                     if failed_count > 0:
                         summary_msg += f" | Failed/Skipped: {failed_count} files"
 
@@ -2198,9 +2247,9 @@ class MyFrame1(wx.Frame):
                     bFoldersWindow.Enable()
                     bSelectAllWindow.Enable()
                     mkvmergeDirBtn.Enable()
-                    
+
                     self.m_buttonAbortMkv.Enable(False)
-    
+
                     # Clear process reference
                     self.current_process = None
 
@@ -2215,10 +2264,11 @@ class MyFrame1(wx.Frame):
                 mkvmergeDirBtn.Enable()
             except:
                 pass
+
     def onAbortToMkv(self, event):
         """Abort ToMkv processing"""
         self.abort_flag = True
-        
+
         # Kill the entire process tree, not just the main process
         if self.current_process:
             try:
@@ -2226,29 +2276,29 @@ class MyFrame1(wx.Frame):
                 self.current_process = None
             except Exception as e:
                 print(f"Error aborting process: {e}")
-        
+
         # Re-enable controls
         wx.FindWindowById(runToMkv).Enable()
         wx.FindWindowById(browseFilesToMkv).Enable()
         wx.FindWindowById(browseFolderToMkv).Enable()
         wx.FindWindowById(selectAllToMkv).Enable()
         self.m_buttonAbortMkv.Enable(False)
-    
+
         # Reset progress and status
         wx.FindWindowById(pBarToMkv).SetValue(0)
         wx.FindWindowById(currentFileToMkv).SetLabel("Aborted by user")
-        
+
     def onAbortToAudio(self, event):
         """Abort ToAudio processing"""
         self.abort_flag = True
-        
+
         if self.current_process:
             try:
                 self.kill_process_tree(self.current_process)
                 self.current_process = None
             except Exception as e:
                 print(f"Error aborting process: {e}")
-        
+
         # Re-enable controls
         wx.FindWindowById(runToAudio).Enable()
         wx.FindWindowById(browseFilesToAudio).Enable()
@@ -2256,7 +2306,7 @@ class MyFrame1(wx.Frame):
         wx.FindWindowById(selectAllToAudio).Enable()
         wx.FindWindowById(clearListToAudio).Enable()
         self.m_buttonAbortAudio.Enable(False)
-        
+
         # Reset progress and status
         wx.FindWindowById(pBarToAudio).SetValue(0)
         wx.FindWindowById(currentFileToAudio).SetLabel("Aborted by user")
@@ -2336,8 +2386,6 @@ class MyFrame1(wx.Frame):
         wx.FindWindowById(pBarTranslate).SetValue(0)
         wx.FindWindowById(currentFileTranslate).SetLabel("Aborted by user")
 
-
-
     def runToAudio(self):
         try:
             bFilesWindow = wx.FindWindowById(browseFilesToAudio)
@@ -2350,60 +2398,60 @@ class MyFrame1(wx.Frame):
             pBar = wx.FindWindowById(pBarToAudio)
             clearListCheckbox = wx.FindWindowById(clearListToAudio)
             isClearChecked = clearListCheckbox.GetValue()
-            
+
             if indexes:
                 allFiles = checkBoxListWindow.GetItems()
-                
+
                 # Disable controls
                 convertToAudioWindow.Disable()
                 bFilesWindow.Disable()
                 bFoldersWindow.Disable()
                 bSelectAllWindow.Disable()
                 clearListCheckbox.Disable()
-                
+
                 self.m_buttonAbortAudio.Enable(True)
-                
+
                 for index, file in enumerate(allFiles):
                     currentFile.SetLabel(str(file))
                     selectedDir = os.path.dirname(file)
                     fName = os.path.basename(file)
                     fNameNoExt = os.path.splitext(fName)[0]
-                    
+
                     wx.GetApp().Yield()
-                    
-                    if not os.path.exists(f'{selectedDir}/audio'):
-                        os.makedirs(f'{selectedDir}/audio')
-                    
+
+                    if not os.path.exists(f"{selectedDir}/audio"):
+                        os.makedirs(f"{selectedDir}/audio")
+
                     audioCommand = f'"{mkvMerge}" --output "{selectedDir}/audio/{fNameNoExt}.mka" --no-video --language 1:und "{selectedDir}/{fName}"'
-                    
+
                     # Use the improved progress tracking method
                     inputFile = f"{selectedDir}/{fName}"
                     outputFile = f"{selectedDir}/audio/{fNameNoExt}.mka"
-                    
+
                     result = self.runCommandWithProgress(
-                        audioCommand, 
-                        pBar, 
+                        audioCommand,
+                        pBar,
                         currentFile,
-                        50, 100,
+                        0,
+                        0,
                         checklistbox=checkBoxListWindow,
                         file_index=index,
                         filename=file,
-                        inputfile=inputFile, 
-                        outputfile=outputFile
+                        inputfile=inputFile,
+                        outputfile=outputFile,
                     )
 
-                    
                     # Update overall progress
                     percentage = int(100 * (index + 1) / indexes)
                     pBar.SetValue(percentage)
                     wx.GetApp().Yield()
-                
+
                 currentFile.SetLabel("")
                 pBar.SetValue(0)
-                
+
                 if isClearChecked:
                     checkBoxListWindow.Set([])
-                
+
                 # Re-enable controls
                 convertToAudioWindow.Enable()
                 bSelectAllWindow.Enable()
@@ -2411,7 +2459,7 @@ class MyFrame1(wx.Frame):
                 bFoldersWindow.Enable()
                 clearListCheckbox.Enable()
                 self.m_buttonAbortAudio.Enable(False)
-                
+
         except Exception as e:
             print(f"Error in runToAudio: {e}")
             # Re-enable controls on error
@@ -2423,7 +2471,6 @@ class MyFrame1(wx.Frame):
                 clearListCheckbox.Enable()
             except:
                 pass
-
 
     def runCrop(self):
         try:
@@ -2445,10 +2492,10 @@ class MyFrame1(wx.Frame):
             cBottomValue = int(cBottomWindow.GetTextValue())
             clearListCheckbox = wx.FindWindowById(clearListCrop)
             isClearChecked = clearListCheckbox.GetValue()
-            
+
             if indexes:
                 allFiles = checkBoxListWindow.GetItems()
-                
+
                 # Disable controls
                 convertCropWindow.Disable()
                 bFilesWindow.Disable()
@@ -2459,60 +2506,62 @@ class MyFrame1(wx.Frame):
                 cRightWindow.Disable()
                 cBottomWindow.Disable()
                 clearListCheckbox.Disable()
-                
+
                 self.m_buttonAbortCrop.Enable(True)
-                
+
                 for index, file in enumerate(allFiles):
                     original_filename = os.path.basename(file)
-                    self.update_checklist_item(checkBoxListWindow, index, original_filename)
-                    
+                    self.update_checklist_item(
+                        checkBoxListWindow, index, original_filename
+                    )
+
                     currentFile.SetLabel(str(file))
                     selectedDir = os.path.dirname(file)
                     fName = os.path.basename(file)
                     fNameNoExt = os.path.splitext(fName)[0]
                     fNameExt = os.path.splitext(fName)[1]
-                    
+
                     wx.GetApp().Yield()
-                    
-                    if not str(fNameExt).lower() == '.mkv':
+
+                    if not str(fNameExt).lower() == ".mkv":
                         # File operations with progress updates
-                        if not os.path.exists(f'{selectedDir}/old'):
-                            os.makedirs(f'{selectedDir}/old')
+                        if not os.path.exists(f"{selectedDir}/old"):
+                            os.makedirs(f"{selectedDir}/old")
 
                         wx.GetApp().Yield()
-                        
-                        mkvmergeold = os.path.join(selectedDir, 'old', fName)
+
+                        mkvmergeold = os.path.join(selectedDir, "old", fName)
                         shutil.move(file, mkvmergeold)
 
                         wx.GetApp().Yield()
-                        
+
                         mkvCommand = f'"{mkvMerge}" --output "{selectedDir}/{fNameNoExt}.mkv" "{selectedDir}/old/{fName}"'
                         result = runCommand(mkvCommand)
-                         
+
                     wx.GetApp().Yield()
-                    
+
                     # Remove existing crop settings
                     mkvCropCommand = f'"{mkvpropedit}" "{selectedDir}/{fNameNoExt}.mkv" --edit track:v1 --delete pixel-crop-top --delete pixel-crop-left --delete pixel-crop-right     --delete pixel-crop-bottom'
                     runCommand(mkvCropCommand)
-                    
+
                     # Set new crop values
                     mkvCropCommand = f'"{mkvpropedit}" "{selectedDir}/{fNameNoExt}.mkv" --edit track:v1 --set pixel-crop-top={int(cTopValue)} --set pixel-crop-left={int    (cLeftValue)} --set pixel-crop-right={int(cRightValue)} --set pixel-crop-bottom={int(cBottomValue)}'
                     result = runCommand(mkvCropCommand)
 
                     wx.GetApp().Yield()
-                    
+
                     # Update overall progress
                     percentage = int(100 * (index + 1) / indexes)
-                    pBar.SetValue(percentage)
+                    wx.CallAfter(pBar.SetValue, percentage)
                     wx.GetApp().Yield()
-                
+
                 # Completion cleanup
                 currentFile.SetLabel("")
                 pBar.SetValue(0)
-                
+
                 if isClearChecked:
                     checkBoxListWindow.Set([])
-                
+
                 # Re-enable controls
                 convertCropWindow.Enable()
                 bSelectAllWindow.Enable()
@@ -2523,9 +2572,9 @@ class MyFrame1(wx.Frame):
                 cRightWindow.Enable()
                 cBottomWindow.Enable()
                 clearListCheckbox.Enable()
-                
+
                 self.m_buttonAbortCrop.Enable(False)
-                
+
         except Exception as e:
             print(f"Error in runCrop: {e}")
             # Re-enable controls on error
@@ -2588,46 +2637,46 @@ class MyFrame1(wx.Frame):
                 jsonFile = tempJsonFile
                 if indexes:
                     allFiles = checkBoxListWindow.GetItems()
-                    
+
                     # Disable controls
                     optionsFileWindow.Disable()
                     bFilesWindow.Disable()
                     bFoldersWindow.Disable()
                     bSelectAllWindow.Disable()
-                    
+
                     self.m_buttonAbortOptions.Enable(True)
-                    
+
                     for index, file in enumerate(allFiles):
                         currentFile.SetLabel(str(file))
-  
+
                         wx.GetApp().Yield()
-                        
+
                         selectedDir = os.path.dirname(file)
                         fName = os.path.basename(file)
 
                         wx.GetApp().Yield()
-                        
+
                         optionsCommand = f'{mkvMerge} @"{jsonFile}" --output "{selectedDir}/{fName}" "{file}"'
                         runCommand(optionsCommand)
 
                         wx.GetApp().Yield()
-                        
+
                         # Update overall progress
                         percentage = int(100 * (index + 1) / indexes)
                         pBar.SetValue(percentage)
                         wx.GetApp().Yield()
-                    
+
                     # Cleanup
                     currentFile.SetLabel("")
                     pBar.SetValue(0)
-                    
+
                     # Re-enable controls
                     optionsFileWindow.Enable()
                     bFilesWindow.Enable()
                     bFoldersWindow.Enable()
-                    
+
                     self.m_buttonAbortOptions.Enable(False)
-                    
+
         except Exception as e:
             print(e)
 
@@ -2650,7 +2699,7 @@ class MyFrame1(wx.Frame):
             # print(indexes)
             if indexes:
                 allFiles = checkBoxListWindow.GetItems()
-                
+
                 # Disable controls
                 translateWindow.Disable()
                 bFilesWindow.Disable()
@@ -2658,40 +2707,42 @@ class MyFrame1(wx.Frame):
                 bSelectAllWindow.Disable()
                 translateLangsWindow.Disable()
                 clearListCheckbox.Disable()
-                
+
                 self.m_buttonAbortTranslate.Enable(True)
-                
+
                 for index, file in enumerate(allFiles):
                     currentFile.SetLabel(str(file))
                     selectedDir = os.path.dirname(file)
                     fName = os.path.basename(file)
                     fNameNoExt = os.path.splitext(fName)[0]
-                    
-                    wx.GetApp().Yield()
-                    
-                    fixIndex = 0
-                    sourceFile = f'{selectedDir}/{fName}'
-                    outputFile = f'{selectedDir}/{fNameNoExt}.{selectedLang}.srt'
-                    
-                    while os.path.exists(outputFile):
-                        fixIndex += 1
-                        outputFile = f'{selectedDir}/{fNameNoExt}.{selectedLang}_{fixIndex}.srt'
 
                     wx.GetApp().Yield()
-                    
+
+                    fixIndex = 0
+                    sourceFile = f"{selectedDir}/{fName}"
+                    outputFile = f"{selectedDir}/{fNameNoExt}.{selectedLang}.srt"
+
+                    while os.path.exists(outputFile):
+                        fixIndex += 1
+                        outputFile = (
+                            f"{selectedDir}/{fNameNoExt}.{selectedLang}_{fixIndex}.srt"
+                        )
+
+                    wx.GetApp().Yield()
+
                     translateCommand = f'translatesubs "{sourceFile}" "{outputFile}" --tolang {selectedLang}'
                     runCommand(translateCommand)
 
                     wx.GetApp().Yield()
-                    
+
                     # Update overall progress
                     percentage = int(100 * (index + 1) / indexes)
                     pBar.SetValue(percentage)
                     wx.GetApp().Yield()
-                
+
                 currentFile.SetLabel("")
                 pBar.SetValue(0)
-                
+
                 if isClearChecked:
                     checkBoxListWindow.Set([])
                 else:
@@ -2702,9 +2753,9 @@ class MyFrame1(wx.Frame):
                     bFoldersWindow.Enable()
                     translateLangsWindow.Enable()
                     clearListCheckbox.Enable()
-                    
+
                     self.m_buttonAbortTranslate.Enable(False)
-                
+
         except Exception as e:
             print(e)
 
