@@ -16,6 +16,14 @@ def main():
         QMessageBox.critical(None, "Already Running", "Another instance of MKV Batch App is already running.")
         sys.exit(1)
 
+    # Validating taskbar icon on Windows
+    import ctypes
+    myappid = 'mkvbatchapp.v2.0' # arbitrary string
+    try:
+        ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(myappid)
+    except Exception:
+        pass
+
     app, window = create_app()
     
     exit_code = app.exec()

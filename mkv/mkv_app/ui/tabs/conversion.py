@@ -14,8 +14,8 @@ class ToMkvTab(BaseTab):
         # Custom controls for To MKV
         options_layout = QHBoxLayout()
         
-        self.chk_same_folder = QCheckBox("Process in same folder (recommmended)")
-        self.chk_same_folder.setChecked(True)
+        self.chk_same_folder = QCheckBox("Process in same folder")
+        self.chk_same_folder.setChecked(False)
         self.chk_same_folder.setToolTip("Moves original files to a 'mkvmerge_old' subdirectory within the source folder.")
         
         # Output folder override (optional, if they uncheck same folder?)

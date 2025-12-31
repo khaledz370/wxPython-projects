@@ -2,50 +2,58 @@ from .base import BaseTab
 from ...core.utils import VIDEO_FILTER
 from ...core.logic import MkvLogic
 from PyQt6.QtWidgets import QHBoxLayout, QLabel, QSpinBox, QGroupBox, QGridLayout
+from PyQt6.QtCore import Qt
 
 class CropTab(BaseTab):
     def __init__(self, parent=None):
         super().__init__(parent)
         self.logic = MkvLogic()
 
+    def create_spinbox(self):
+        spinbox = QSpinBox()
+        spinbox.setRange(0, 500)
+        return spinbox
+
     def init_ui(self):
         super().init_ui()
         
         # Crop Controls
-        group = QGroupBox("Crop Settings (Pixels)")
-        layout = QGridLayout()
+        # We use a visual grid for Top, Left, Right, Bottom
+        self.grp_crop = QGroupBox("Crop Settings (Pixels)")
+        self.grp_crop.setMaximumHeight(200) # Keep it compact
         
-        self.spin_top = QSpinBox()
-        self.spin_top.setRange(0, 500)
-        self.spin_bottom = QSpinBox()
-        self.spin_bottom.setRange(0, 500)
-        self.spin_left = QSpinBox()
-        self.spin_left.setRange(0, 500)
-        self.spin_right = QSpinBox()
-        self.spin_right.setRange(0, 500)
-
-        # Layout like a frame: Top centered, Left/Right middle, Bottom centered
-        layout.addWidget(QLabel("Top:"), 0, 1)
-        layout.addWidget(self.spin_top, 1, 1)
+        grid = QGridLayout()
         
-        layout.addWidget(QLabel("Left:"), 2, 0)
-        layout.addWidget(self.spin_left, 3, 0)
+        # Center the grid content
+        grid.setAlignment(Qt.AlignmentFlag.AlignCenter)
         
-        layout.addWidget(QLabel("Right:"), 2, 2)
-        layout.addWidget(self.spin_right, 3, 2)
+        self.spin_top = self.create_spinbox()
+        self.spin_bottom = self.create_spinbox()
+        self.spin_left = self.create_spinbox()
+        self.spin_right = self.create_spinbox()
         
-        layout.addWidget(QLabel("Bottom:"), 4, 1)
-        layout.addWidget(self.spin_bottom, 5, 1)
+        # Layout:
+        #       Top
+        # Left       Right
+        #      Bottom
         
-        group.setLayout(layout)
+        grid.addWidget(QLabel("Top:"), 0, 1, alignment=Qt.AlignmentFlag.AlignCenter)
+        grid.addWidget(self.spin_top, 1, 1)
         
-        # Add to custom area
-        h_layout = QHBoxLayout()
-        h_layout.addStretch()
-        h_layout.addWidget(group)
-        h_layout.addStretch()
+        grid.addWidget(QLabel("Left:"), 2, 0, alignment=Qt.AlignmentFlag.AlignCenter)
+        grid.addWidget(self.spin_left, 3, 0)
         
-        self.custom_layout.addLayout(h_layout)
+        grid.addWidget(QLabel("Right:"), 2, 2, alignment=Qt.AlignmentFlag.AlignCenter)
+        grid.addWidget(self.spin_right, 3, 2)
+        
+        grid.addWidget(QLabel("Bottom:"), 4, 1, alignment=Qt.AlignmentFlag.AlignCenter)
+        grid.addWidget(self.spin_bottom, 5, 1)
+        
+        self.grp_crop.setLayout(grid)
+        
+        self.custom_layout.addWidget(self.grp_crop)
+        # Add stretch to push the box up if needed, though BaseTab handles this
+        # self.custom_layout.addStretch()
 
     def get_file_filter(self):
         return VIDEO_FILTER

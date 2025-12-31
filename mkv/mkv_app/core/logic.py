@@ -17,7 +17,7 @@ class MkvLogic:
         f_name_no_ext = os.path.splitext(f_name)[0]
         source_dir = os.path.dirname(file_path)
         
-        mkvmerge_dir = output_dir if output_dir else source_dir
+        mkvmerge_dir = output_dir if output_dir else os.path.splitdrive(file_path)[0] + os.sep  # Root of drive
         if same_folder:
             mkvmerge_dir = source_dir
 
