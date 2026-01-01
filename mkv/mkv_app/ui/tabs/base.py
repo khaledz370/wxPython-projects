@@ -1,7 +1,7 @@
 import os
 from PyQt6.QtWidgets import (
     QWidget, QVBoxLayout, QHBoxLayout, QPushButton, QCheckBox, 
-    QLabel, QProgressBar, QFileDialog, QMessageBox
+    QLabel, QProgressBar, QFileDialog, QMessageBox, QSplitter
 )
 from PyQt6.QtCore import Qt
 from ..widgets import FileListWidget
@@ -85,16 +85,29 @@ class BaseTab(QWidget):
         
         self.layout.addLayout(top_layout)
         
+        # Splitter for File List and Custom Controls
+        self.splitter = QSplitter(Qt.Orientation.Vertical)
+        
         # 2. File List
         self.file_list = FileListWidget(self.allowed_extensions)
         self.file_list.selection_changed.connect(self.on_selection_changed)
         # CRITICAL FIX: Update run button when files are dropped onto the list widget directly
         self.file_list.files_dropped.connect(lambda _: self.update_run_button_state())
-        self.layout.addWidget(self.file_list)
+        
+        self.splitter.addWidget(self.file_list)
         
         # 3. Middle / Custom Controls Area (To be populated by subclasses)
-        self.custom_layout = QVBoxLayout()
-        self.layout.addLayout(self.custom_layout)
+        self.custom_widget = QWidget()
+        self.custom_layout = QVBoxLayout(self.custom_widget)
+        self.custom_layout.setContentsMargins(0, 5, 0, 5) # Add small vertical margins
+        
+        self.splitter.addWidget(self.custom_widget)
+
+        # Set stretch factors: List (1) usually takes more space, Custom (0) takes what it needs
+        self.splitter.setStretchFactor(0, 1)
+        self.splitter.setStretchFactor(1, 0)
+        
+        self.layout.addWidget(self.splitter)
         
         # 4. Progress and Run
         bottom_layout = QHBoxLayout()
@@ -107,6 +120,7 @@ class BaseTab(QWidget):
         
         self.btn_run = QPushButton("Run")
         self.btn_run.clicked.connect(self.run_process)
+        self.btn_run.setProperty("class", "primary")
         self.btn_run.setEnabled(False)
         
         self.btn_abort = QPushButton("Abort")

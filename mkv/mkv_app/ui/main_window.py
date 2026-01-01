@@ -4,6 +4,7 @@ from .tabs.conversion import ToMkvTab, ToAudioTab
 from .tabs.crop import CropTab
 from .tabs.options import OptionsTab
 from .tabs.translate import TranslateTab
+from .tabs.image_conversion import ImageConversionTab
 from .dialogs import SettingsDialog
 from ..core.settings import AppSettings
 import os
@@ -31,12 +32,14 @@ class MainWindow(QMainWindow):
         self.tab_crop = CropTab(self)
         self.tab_options = OptionsTab(self)
         self.tab_translate = TranslateTab(self)
+        self.tab_image_convert = ImageConversionTab(self)
         
         self.tabs.addTab(self.tab_mkv, "To MKV")
         self.tabs.addTab(self.tab_audio, "To Audio")
         self.tabs.addTab(self.tab_crop, "Crop")
         self.tabs.addTab(self.tab_options, "Options")
         self.tabs.addTab(self.tab_translate, "Translate")
+        self.tabs.addTab(self.tab_image_convert, "Image Convert")
         
         # Menu Bar
         menu_bar = self.menuBar()
@@ -70,7 +73,7 @@ class MainWindow(QMainWindow):
     def closeEvent(self, event):
         """Ensure all processes are aborted on close."""
         # Iterate through all tabs and abort if running
-        tabs = [self.tab_mkv, self.tab_audio, self.tab_crop, self.tab_options, self.tab_translate]
+        tabs = [self.tab_mkv, self.tab_audio, self.tab_crop, self.tab_options, self.tab_translate, self.tab_image_convert]
         for tab in tabs:
             if hasattr(tab, 'worker') and tab.worker is not None:
                 print(f"Aborting worker in tab: {tab}")

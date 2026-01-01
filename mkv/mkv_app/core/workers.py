@@ -140,6 +140,8 @@ class WorkerThread(QThread):
         try:
             self.progress.emit(base_progress, index, f"Processing: {description}")
             
+            print(f"DEBUG: Running command: {cmd}")
+            
             self.current_process = subprocess.Popen(
                 cmd,
                 shell=True,
@@ -151,6 +153,7 @@ class WorkerThread(QThread):
             
             progress_regex = re.compile(r"Progress: (\d+)%")
             
+            all_output = []
             while True:
                 if self.is_aborted:
                     self.current_process.terminate()
@@ -161,6 +164,8 @@ class WorkerThread(QThread):
                     break
                     
                 if line:
+                    all_output.append(line.strip())
+                    print(f"DEBUG OUTPUT: {line.strip()}")
                     match = progress_regex.search(line.strip())
                     if match:
                         file_progress = int(match.group(1))
@@ -169,6 +174,9 @@ class WorkerThread(QThread):
                         self.progress.emit(overall_progress, index, f"{description} ({file_progress}%)")
             
             returncode = self.current_process.poll()
+            print(f"DEBUG: Command finished with return code: {returncode}")
+            if returncode != 0:
+                print(f"DEBUG: Full output was: {''.join(all_output)}")
             return returncode == 0
             
         except Exception as e:

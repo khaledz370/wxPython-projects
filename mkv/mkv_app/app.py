@@ -29,21 +29,15 @@ def create_app():
     else:
         print(f"DEBUG: Icon not found at {icon_path}")
 
-    # Set Stylesheet
-    # We expect mkv_app/ui/styles.qss. 
-    # In PyInstaller with --add-data "mkv_app/ui/styles.qss;mkv_app/ui", it will be at root/mkv_app/ui/styles.qss
-    style_path = resolve_path(os.path.join("mkv_app", "ui", "styles.qss"))
+    # Theme Management
+    from .ui.theme import ThemeManager, AppTheme
     
-    # Fallback for dev mode where 'mkv_app' is the folder we are in, but resolve_path goes to root
-    if not os.path.exists(style_path):
-         style_path = resolve_path(os.path.join("mkv_app", "ui", "styles.qss")) 
-
-    if os.path.exists(style_path):
-        print(f"Loading stylesheet from: {style_path}")
-        with open(style_path, "r") as f:
-            app.setStyleSheet(f.read())
-    else:
-        print(f"ERROR: Stylesheet not found at {style_path}")
+    # Apply Dark Theme by default
+    ThemeManager.apply_theme(app, AppTheme.DARK)
+    
+    # We no longer load 'styles.qss' manually, but we keep the file existence check for legacy reasons if needed, 
+    # or just remove it. The ThemeManager generates it dynamically.
+    print("Theme applied: Dark Mode")
 
     window = MainWindow()
     window.show()

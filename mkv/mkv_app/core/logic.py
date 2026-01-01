@@ -145,3 +145,96 @@ class MkvLogic:
             "command": cmd,
             "description": f"Translating {f_name} to {lang_code}"
         }
+
+    def get_image_conversion_command(self, file_path, output_format, same_folder=False):
+        """
+        Generates command for image format conversion using ffmpeg.
+        
+        Args:
+            file_path: Path to the source image file
+            output_format: Target format extension (e.g., '.jpg', '.png')
+            same_folder: If True, output to same folder as source. If False, output to 'converted_images' subfolder.
+        
+        Returns:
+            A job dict for the worker thread
+        """
+        from .utils import get_ffmpeg_path
+        
+        f_name = os.path.basename(file_path)
+        f_name_no_ext = os.path.splitext(f_name)[0]
+        source_dir = os.path.dirname(file_path)
+        
+        # Determine output directory
+        if same_folder:
+            output_dir = source_dir
+        else:
+            # Output to 'converted_images' folder in drive root (e.g., D:\converted_images\)
+            drive_root = os.path.splitdrive(file_path)[0]
+            if drive_root: # If a drive letter exists (Windows)
+                output_dir = os.path.join(drive_root + os.sep, "converted_images")
+            else: # Unix-like or relative path, use source_dir as base
+                output_dir = os.path.join(source_dir, "converted_images")
+        
+        # Create output filename with format suffix and new extension
+        # e.g., "image.png" -> "image_jpg.jpg" when converting to JPEG
+        format_suffix = output_format.lstrip('.')  # Remove the leading dot (e.g., ".jpg" -> "jpg")
+        
+        # Check if file exists and add incremental suffix if needed
+        base_output = os.path.join(output_dir, f"{f_name_no_ext}_{format_suffix}")
+        output_file = f"{base_output}{output_format}"
+        
+        counter = 1
+        while os.path.exists(output_file):
+            output_file = f"{base_output}_{counter:02d}{output_format}"
+            counter += 1
+        
+        # Get ffmpeg path
+        ffmpeg_path = get_ffmpeg_path()
+        if not ffmpeg_path:
+            ffmpeg_path = "ffmpeg"  # Fallback to PATH
+        
+        # Build ffmpeg command with proper flags for image conversion
+        # -y: Overwrite output without asking
+        # -i: Input file
+        # -frames:v 1: Output only 1 frame (for single image)
+        
+        # Format-specific options
+        filter_opts = ""
+        quality_opts = ""
+        
+        if output_format in [".jpg", ".jpeg"]:
+            quality_opts = "-q:v 2"  # High quality JPEG (2-31, lower is better)
+        elif output_format == ".png":
+            quality_opts = ""  # PNG uses lossless compression by default
+        elif output_format == ".webp":
+            quality_opts = "-quality 90"  # High quality WebP
+        elif output_format == ".ico":
+            # ICO format has max 256x256 dimension limit
+            # Scale down while maintaining aspect ratio if larger
+            filter_opts = '-vf "scale=\'min(256,iw)\':\'min(256,ih)\':force_original_aspect_ratio=decrease"'
+        elif output_format == ".bmp":
+            quality_opts = ""  # BMP is uncompressed
+        elif output_format == ".gif":
+            quality_opts = ""  # Single frame GIF
+        elif output_format == ".tiff":
+            quality_opts = ""  # TIFF default compression
+        
+        # Build the command
+        cmd = f'"{ffmpeg_path}" -y -i "{file_path}" -frames:v 1 {filter_opts} {quality_opts} "{output_file}"'
+        
+        # Clean up any double spaces from empty options
+        cmd = ' '.join(cmd.split())
+        
+        # Build job dict
+        job = {
+            "type": "command",
+            "command": cmd,
+            "description": f"Converting {f_name} to {output_format}",
+            "source_file": file_path
+        }
+        
+        # Only include ensure_dir if output is to a different directory than source
+        if output_dir != source_dir:
+            job["ensure_dir"] = output_dir
+        
+        return job

@@ -204,3 +204,52 @@ QMenu::item:selected {
     background-color: #094771;
     color: white;
 }
+
+/* --- Crop Tab Modern UI --- */
+
+/* Header */
+QLabel#h2 {
+    font-size: 16px;
+    font-weight: bold;
+    color: #007acc;
+    margin-bottom: 20px;
+}
+
+/* Central Visualizer (The Screen) */
+QFrame#cropVisualizer {
+    background-color: #000000;
+    border: 2px solid #333333;
+    border-radius: 8px;
+    /* Simulate a screen look */
+}
+
+/* Modern Input Boxes */
+QSpinBox#cropInput {
+    background-color: #252526;
+    border: 1px solid #3e3e42;
+    border-radius: 4px;
+    padding: 8px 12px;
+    font-size: 14px;
+    font-weight: bold;
+    color: #ffffff;
+    min-width: 60px;
+    max-width: 80px;
+}
+
+QSpinBox#cropInput:hover {
+    background-color: #2a2d2e;
+    border-color: #007acc;
+}
+
+QSpinBox#cropInput:focus {
+    background-color: #1e1e1e;
+    border: 1px solid #007acc;
+    color: #007acc;
+}
+
+/* Hide the up/down arrows for a cleaner look */
+QSpinBox#cropInput::up-button, QSpinBox#cropInput::down-button {
+    width: 0px;
+    height: 0px;
+    border: none;
+}

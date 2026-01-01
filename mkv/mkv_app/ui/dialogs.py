@@ -42,6 +42,11 @@ class SettingsDialog(QDialog):
         buttons.accepted.connect(self.save_settings)
         buttons.rejected.connect(self.reject)
         
+        # Style the OK button as primary
+        btn_ok = buttons.button(QDialogButtonBox.StandardButton.Ok)
+        if btn_ok:
+            btn_ok.setProperty("class", "primary")
+        
         layout.addWidget(buttons)
 
     def browse_mkv_path(self):
