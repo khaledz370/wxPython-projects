@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>MKV Batch</title>
+  <link rel="stylesheet" href="css/app.css" />
+</head>
+<body>
+  <div class="shell">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-mark" aria-hidden="true"></div>
+        <div>
+          <div class="brand-name">MKV Batch</div>
+          <div class="brand-sub">media toolkit · v2.0</div>
+        </div>
+      </div>
+      <nav id="nav" class="nav"></nav>
+      <div class="sidebar-foot">
+        <div id="toolDots" class="tool-dots"></div>
+        <button id="logToggle" class="log-toggle" type="button">
+          <span data-icon="log"></span><span>Activity log</span><span id="logBadge" class="badge" hidden>0</span>
+        </button>
+      </div>
+    </aside>
+
+    <main class="main">
+      <div id="pages" class="pages"></div>
+      <section id="logPanel" class="log-panel" hidden>
+        <header class="log-head">
+          <strong>Activity log</strong>
+          <label class="check small"><input type="checkbox" id="logShowCmd" /><span>show commands</span></label>
+          <span class="grow"></span>
+          <button class="btn ghost small" id="logCopy" type="button">Copy</button>
+          <button class="btn ghost small" id="logClear" type="button">Clear</button>
+          <button class="btn ghost small icon-only" id="logClose" type="button" aria-label="Close log"><span data-icon="x"></span></button>
+        </header>
+        <div id="logBody" class="log-body"></div>
+      </section>
+    </main>
+  </div>
+
+  <div id="dropOverlay" class="drop-overlay" hidden>
+    <div class="drop-card"><span data-icon="plus"></span><div id="dropText">Drop to add files</div></div>
+  </div>
+  <div id="toasts" class="toasts"></div>
+  <div id="modalRoot"></div>
+
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>

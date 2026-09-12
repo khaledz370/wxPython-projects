@@ -1,0 +1,42 @@
+[package]
+name = "mkv-batch"
+version = "2.0.0"
+description = "Batch toolkit for Matroska files, subtitles, images and audio"
+authors = ["kz370"]
+edition = "2021"
+
+[build-dependencies]
+tauri-build = { version = "2", features = [] }
+
+[dependencies]
+tauri = { version = "2", features = [] }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+# native file / folder pickers
+rfd = "0.16"
+# image decoding / encoding (pure Rust) + lossy WebP
+image = { version = "0.25", default-features = false, features = ["png", "jpeg", "gif", "webp", "bmp", "tiff", "ico", "tga", "qoi", "pnm", "hdr", "rayon"] }
+webp = { version = "0.3", default-features = false }
+# audio tags + embedded cover art
+lofty = "0.22"
+# HTTP for translation providers
+reqwest = { version = "0.12", default-features = false, features = ["blocking", "json", "native-tls"] }
+# subtitle charset detection
+encoding_rs = "0.8"
+chardetng = "0.1"
+rayon = "1"
+trash = "5"
+fs4 = "0.13"
+shell-words = "1"
+base64 = "0.22"
+dirs = "6"
+
+[features]
+# Always serve the bundled ui/ folder, so plain `cargo build` / `cargo run` works without tauri-cli.
+default = ["custom-protocol"]
+custom-protocol = ["tauri/custom-protocol"]
+
+[profile.release]
+opt-level = 3
+lto = "thin"
+strip = true
