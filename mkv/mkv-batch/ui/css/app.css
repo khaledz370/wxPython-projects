@@ -229,6 +229,7 @@ input[type="checkbox"]:focus-visible { box-shadow: 0 0 0 3px var(--accent-soft);
 /* ---------- queue ---------- */
 .queue { flex: 1; min-height: 240px; display: flex; flex-direction: column; overflow: hidden; container-type: inline-size; }
 .q-toolbar { display: flex; align-items: center; gap: 4px; padding: 9px 10px; border-bottom: 1px solid var(--line); flex-wrap: wrap; }
+.q-toolbar .subfolders, .q-toolbar .exclude-mkv { margin-left: 8px; }
 @container (max-width: 760px) {
   .q-toolbar .bt, .q-count { display: none; }
 }

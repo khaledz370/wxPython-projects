@@ -64,8 +64,8 @@ export class Queue {
 
     return h('div', { class: 'card queue' },
       h('div', { class: 'q-toolbar' }, this.btnAdd, this.btnFolder,
-        h('label', { class: 'check small', title: 'Include files in subfolders when adding a folder' }, rec, h('span', {}, 'subfolders')),
-        h('label', { class: 'check small', title: 'Skip MKV files when adding a folder' }, excludeMkv, h('span', {}, 'exclude MKV')),
+        h('label', { class: 'check small subfolders', title: 'Include files in subfolders when adding a folder' }, rec, h('span', {}, 'subfolders')),
+        h('label', { class: 'check small exclude-mkv', title: 'Skip MKV files when adding a folder' }, excludeMkv, h('span', {}, 'exclude MKV')),
         h('span', { class: 'grow' }), this.countEl, this.btnRemove, this.btnReset, this.btnSweep, this.btnClear),
       h('div', { class: 'q-head' }, h('span', {}, this.checkAll), h('span', {}, 'File'), h('span', { class: 'right' }, 'Size'), h('span', {}, 'Status'), h('span', {})),
       this.body, this.empty);
