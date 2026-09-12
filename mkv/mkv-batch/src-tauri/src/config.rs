@@ -119,7 +119,9 @@ fn save(settings: &Settings) -> Result<(), String> {
     if let Some(dir) = path.parent() {
         fs::create_dir_all(dir).map_err(|e| format!("Can't create settings folder: {e}"))?;
     }
-    let text = serde_json::to_string_pretty(settings).map_err(|e| e.to_string())?;
+    let mut persisted = settings.clone();
+    persisted.backup_same_dir = false;
+    let text = serde_json::to_string_pretty(&persisted).map_err(|e| e.to_string())?;
     // write-then-rename so a crash never leaves a half written settings file
     let tmp = path.with_extension("json.tmp");
     fs::write(&tmp, text).map_err(|e| format!("Can't save settings: {e}"))?;

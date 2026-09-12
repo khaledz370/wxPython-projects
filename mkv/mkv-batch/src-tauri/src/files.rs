@@ -211,10 +211,11 @@ pub fn backup_dir_for(s: &Settings, original: &Path) -> PathBuf {
     let name = s.backup_dir.trim();
     let name = if name.is_empty() { "mkv_old" } else { name };
     let p = Path::new(name);
-    if p.is_absolute() {
+    if s.backup_same_dir {
+        let folder = p.file_name().unwrap_or_else(|| std::ffi::OsStr::new("mkv_old"));
+        original.parent().unwrap_or(Path::new(".")).join(folder)
+    } else if p.is_absolute() {
         p.to_path_buf()
-    } else if s.backup_same_dir {
-        original.parent().unwrap_or(Path::new(".")).to_path_buf()
     } else {
         let mut root = PathBuf::new();
         for component in original.components() {
@@ -240,6 +241,15 @@ pub fn dispose_original(s: &Settings, original: &Path) -> Result<String, String>
             Ok(format!("original moved to {}", name_of(&dir)))
         }
     }
+}
+
+/// Moves an original to its backup folder before a replacement is created.
+pub fn backup_original(s: &Settings, original: &Path) -> Result<(PathBuf, String), String> {
+    let dir = backup_dir_for(s, original);
+    fs::create_dir_all(&dir).map_err(|e| format!("Can't create {}: {e}", dir.display()))?;
+    let dst = unique_path(&dir.join(name_of(original)));
+    move_file(original, &dst).map_err(|e| format!("Can't move original: {e}"))?;
+    Ok((dst, format!("original moved to {}", name_of(&dir))))
 }
 
 pub struct Finalized {

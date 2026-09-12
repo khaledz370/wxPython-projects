@@ -117,6 +117,18 @@ function buildNav() {
     TOOLS.filter((t) => t.group === g).forEach((t) => nav.append(navItem(t.id, t.label, t.icon)));
   }
   nav.append(h('div', { class: 'nav-spacer' }), navItem('settings', 'Settings', 'settings'));
+  const sameDir = h('input', {
+    type: 'checkbox',
+    checked: !!ctx.settings.backupSameDir,
+    onchange: async () => {
+      ctx.settings.backupSameDir = sameDir.checked;
+      await ctx.saveSettings();
+    },
+  });
+  document.getElementById('backupLocationControl').replaceChildren(
+    h('label', { class: 'check small', title: 'Choose where replaced originals are backed up' },
+      sameDir, h('span', {}, 'backup in same directory')),
+  );
 }
 
 function navItem(id, label, iconName) {

@@ -134,6 +134,8 @@ input, textarea, .q-dir, .mono, .code, .log-body { user-select: text; }
 .nav-item.running .run-dot { display: block; animation: pulse 1.2s ease-in-out infinite; }
 @keyframes pulse { 50% { opacity: .25; } }
 
+.sidebar-option { padding: 10px 12px; border-top: 1px solid var(--line); }
+.sidebar-option .check { line-height: 1.25; }
 .sidebar-foot { border-top: 1px solid var(--line); padding-top: 10px; display: flex; flex-direction: column; gap: 6px; }
 .tool-dots { display: flex; gap: 6px; flex-wrap: wrap; padding: 0 4px; }
 .tool-dot {

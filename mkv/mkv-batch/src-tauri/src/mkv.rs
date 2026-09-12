@@ -341,7 +341,12 @@ pub fn remux(ctx: &JobCtx, s: &Settings, list: &[PathBuf], opts: Value) -> Resul
 }
 
 fn remux_one(ctx: &JobCtx, s: &Settings, t: &Tools, o: &RemuxOpts, index: usize, file: &Path) -> FileResult {
-    let info = identify(&t.mkvmerge, file)?;
+    let (input, backup_note) = if s.original_policy == config::OriginalPolicy::Backup {
+        files::backup_original(s, file)?
+    } else {
+        (file.to_path_buf(), String::new())
+    };
+    let info = identify(&t.mkvmerge, &input)?;
     let out = mkv_target(file);
     let tmp = TempFile::new(files::temp_sibling(&out));
 
@@ -394,10 +399,17 @@ fn remux_one(ctx: &JobCtx, s: &Settings, t: &Tools, o: &RemuxOpts, index: usize,
     if o.no_global_tags {
         a.add("--no-global-tags");
     }
-    a.add(file);
+    a.add(&input);
 
-    files::check_space(&out, files::size_of(file))?;
+    files::check_space(&out, files::size_of(&input))?;
     let warnings = run_tool(ctx, index, &t.mkvmerge, &a.0, (0.0, 100.0))?;
+    if !backup_note.is_empty() {
+        files::move_file(tmp.path(), &out).map_err(|e| format!("Can't save output: {e}"))?;
+        return Ok(outcome(
+            Finalized { path: out, note: backup_note, warning: false },
+            &warnings,
+        ));
+    }
     let fin = files::finalize(s, file, tmp.path(), &out)?;
     Ok(outcome(fin, &warnings))
 }
