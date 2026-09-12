@@ -11,7 +11,7 @@ use std::cmp::Ordering;
 use std::collections::HashSet;
 use std::fs;
 use std::io;
-use std::path::{Path, PathBuf};
+use std::path::{Component, Path, PathBuf};
 
 pub const TEMP_MARKER: &str = ".mkvbatch-tmp.";
 
@@ -209,12 +209,19 @@ pub fn same_file(a: &Path, b: &Path) -> bool {
 
 pub fn backup_dir_for(s: &Settings, original: &Path) -> PathBuf {
     let name = s.backup_dir.trim();
-    let name = if name.is_empty() { "_originals" } else { name };
+    let name = if name.is_empty() { "mkv_old" } else { name };
     let p = Path::new(name);
     if p.is_absolute() {
         p.to_path_buf()
+    } else if s.backup_same_dir {
+        original.parent().unwrap_or(Path::new(".")).to_path_buf()
     } else {
-        original.parent().unwrap_or(Path::new(".")).join(p)
+        let mut root = PathBuf::new();
+        for component in original.components() {
+            root.push(component.as_os_str());
+            if matches!(component, Component::RootDir) { break; }
+        }
+        if root.as_os_str().is_empty() { original.parent().unwrap_or(Path::new(".")).join(p) } else { root.join(p) }
     }
 }
 

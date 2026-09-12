@@ -55,8 +55,9 @@ pub struct Settings {
     pub mkvtoolnix_dir: String,
     pub ffmpeg_path: String,
     pub original_policy: OriginalPolicy,
-    /// Relative name = folder next to each source file, absolute path = one central folder.
+    /// Folder name under the source drive root, or an absolute central folder.
     pub backup_dir: String,
+    pub backup_same_dir: bool,
     pub theme: String,
     pub translate: TranslateSettings,
 }
@@ -67,7 +68,8 @@ impl Default for Settings {
             mkvtoolnix_dir: String::new(),
             ffmpeg_path: String::new(),
             original_policy: OriginalPolicy::Backup,
-            backup_dir: "_originals".into(),
+            backup_dir: "mkv_old".into(),
+            backup_same_dir: false,
             theme: "dark".into(),
             translate: TranslateSettings::default(),
         }
@@ -78,7 +80,7 @@ pub struct SettingsState(Mutex<Settings>);
 
 impl SettingsState {
     pub fn load() -> Self {
-        let settings = fs::read_to_string(settings_path())
+        let mut settings = fs::read_to_string(settings_path())
             .ok()
             .and_then(|text| serde_json::from_str(&text).ok())
             .unwrap_or_else(|| {
@@ -88,6 +90,9 @@ impl SettingsState {
                 }
                 s
             });
+        if settings.backup_dir.trim().eq_ignore_ascii_case("_originals") {
+            settings.backup_dir = "mkv_old".into();
+        }
         Self(Mutex::new(settings))
     }
 
