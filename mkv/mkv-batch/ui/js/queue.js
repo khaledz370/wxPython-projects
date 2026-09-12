@@ -24,6 +24,7 @@ export class Queue {
     this.onFocus = onFocus || (() => {});
     this.onChange = onChange || (() => {});
     this.recursive = true;
+    this.excludeMkv = true;
     this.el = this.build(acceptLabel);
   }
 
@@ -31,6 +32,7 @@ export class Queue {
     this.btnAdd = h('button', { class: 'btn small', type: 'button', onclick: () => this.browseFiles() }, icon('plus'), 'Add files');
     this.btnFolder = h('button', { class: 'btn small', type: 'button', onclick: () => this.browseFolder() }, icon('folder'), 'Add folder');
     const rec = h('input', { type: 'checkbox', checked: true, onchange: () => { this.recursive = rec.checked; } });
+    const excludeMkv = h('input', { type: 'checkbox', checked: true, onchange: () => { this.excludeMkv = excludeMkv.checked; } });
     // labels hide on narrow queues (see .bt in app.css); the title keeps them discoverable
     const tool = (ico, text, title, onclick) =>
       h('button', { class: 'btn ghost small', type: 'button', title, onclick }, icon(ico), h('span', { class: 'bt' }, text));
@@ -63,6 +65,7 @@ export class Queue {
     return h('div', { class: 'card queue' },
       h('div', { class: 'q-toolbar' }, this.btnAdd, this.btnFolder,
         h('label', { class: 'check small', title: 'Include files in subfolders when adding a folder' }, rec, h('span', {}, 'subfolders')),
+        h('label', { class: 'check small', title: 'Skip MKV files when adding a folder' }, excludeMkv, h('span', {}, 'exclude MKV')),
         h('span', { class: 'grow' }), this.countEl, this.btnRemove, this.btnReset, this.btnSweep, this.btnClear),
       h('div', { class: 'q-head' }, h('span', {}, this.checkAll), h('span', {}, 'File'), h('span', { class: 'right' }, 'Size'), h('span', {}, 'Status'), h('span', {})),
       this.body, this.empty);
@@ -81,7 +84,8 @@ export class Queue {
 
   async addPaths(paths, recursive = true) {
     if (this.running) { toast('Wait for the current job to finish before adding files.', 'info'); return 0; }
-    const entries = await api.scan(paths, this.accept, recursive);
+    const scanned = await api.scan(paths, this.accept, recursive);
+    const entries = recursive && this.excludeMkv ? scanned.filter((e) => !e.path.toLowerCase().endsWith('.mkv')) : scanned;
     const added = this.add(entries);
     if (!added) toast(entries.length ? 'Those files are already in the list.' : 'No supported files found.', 'info');
     return added;
