@@ -330,7 +330,7 @@ function enginePanel(page) {
 export const TOOLS = [
   {
     id: 'remux', job: 'remux', group: 'Matroska', label: 'Remux', icon: 'remux', requires: 'mkvtoolnix',
-    title: 'Remux to MKV', startLabel: 'Remux',
+    title: 'Remux to MKV', startLabel: 'Remux', excludeMkvOption: true,
     blurb: 'Rewrap MP4, AVI, TS, MOV or MKV into Matroska without re-encoding. Drop unwanted languages, fix default tracks and strip extras in the same pass.',
     accept: EXT.video, acceptLabel: 'MKV · MP4 · AVI · TS · M2TS · MOV · WebM · FLV · MPG · VOB',
     fields: [

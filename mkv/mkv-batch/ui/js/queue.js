@@ -16,7 +16,7 @@ export class Queue {
    * @param {Function} o.onFocus  (item) when a row is clicked
    * @param {Function} o.onChange () when items are added/removed
    */
-  constructor({ accept, acceptLabel, onFocus, onChange }) {
+  constructor({ accept, acceptLabel, onFocus, onChange, excludeMkvOption }) {
     this.accept = accept;
     this.items = [];
     this.focus = -1;
@@ -24,7 +24,8 @@ export class Queue {
     this.onFocus = onFocus || (() => {});
     this.onChange = onChange || (() => {});
     this.recursive = true;
-    this.excludeMkv = true;
+    this.excludeMkvOption = !!excludeMkvOption;
+    this.excludeMkv = this.excludeMkvOption;
     this.el = this.build(acceptLabel);
   }
 
@@ -33,6 +34,9 @@ export class Queue {
     this.btnFolder = h('button', { class: 'btn small', type: 'button', onclick: () => this.browseFolder() }, icon('folder'), 'Add folder');
     const rec = h('input', { type: 'checkbox', checked: true, onchange: () => { this.recursive = rec.checked; } });
     const excludeMkv = h('input', { type: 'checkbox', checked: true, onchange: () => { this.excludeMkv = excludeMkv.checked; } });
+    const excludeMkvLabel = this.excludeMkvOption
+      ? h('label', { class: 'check small exclude-mkv', title: 'Skip MKV files when adding a folder' }, excludeMkv, h('span', {}, 'exclude MKV'))
+      : null;
     // labels hide on narrow queues (see .bt in app.css); the title keeps them discoverable
     const tool = (ico, text, title, onclick) =>
       h('button', { class: 'btn ghost small', type: 'button', title, onclick }, icon(ico), h('span', { class: 'bt' }, text));
@@ -65,7 +69,7 @@ export class Queue {
     return h('div', { class: 'card queue' },
       h('div', { class: 'q-toolbar' }, this.btnAdd, this.btnFolder,
         h('label', { class: 'check small subfolders', title: 'Include files in subfolders when adding a folder' }, rec, h('span', {}, 'subfolders')),
-        h('label', { class: 'check small exclude-mkv', title: 'Skip MKV files when adding a folder' }, excludeMkv, h('span', {}, 'exclude MKV')),
+        excludeMkvLabel,
         h('span', { class: 'grow' }), this.countEl, this.btnRemove, this.btnReset, this.btnSweep, this.btnClear),
       h('div', { class: 'q-head' }, h('span', {}, this.checkAll), h('span', {}, 'File'), h('span', { class: 'right' }, 'Size'), h('span', {}, 'Status'), h('span', {})),
       this.body, this.empty);

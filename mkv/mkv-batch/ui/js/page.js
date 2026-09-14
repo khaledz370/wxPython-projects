@@ -40,6 +40,7 @@ export class ToolPage {
       acceptLabel: tool.acceptLabel,
       onFocus: (item) => tool.onFocus?.(item, this),
       onChange: () => { tool.onQueueChange?.(this); this.updateRunbar(); },
+      excludeMkvOption: tool.excludeMkvOption,
     });
     this.el = this.build();
     this.queue.render();
