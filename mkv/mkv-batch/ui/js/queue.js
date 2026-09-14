@@ -32,8 +32,8 @@ export class Queue {
   build(acceptLabel) {
     this.btnAdd = h('button', { class: 'btn small', type: 'button', onclick: () => this.browseFiles() }, icon('plus'), 'Add files');
     this.btnFolder = h('button', { class: 'btn small', type: 'button', onclick: () => this.browseFolder() }, icon('folder'), 'Add folder');
-    const rec = h('input', { type: 'checkbox', checked: true, onchange: () => { this.recursive = rec.checked; } });
-    const excludeMkv = h('input', { type: 'checkbox', checked: true, onchange: () => { this.excludeMkv = excludeMkv.checked; } });
+    const rec = h('input', { type: 'checkbox', class: 'toggle', checked: true, onchange: () => { this.recursive = rec.checked; } });
+    const excludeMkv = h('input', { type: 'checkbox', class: 'toggle', checked: true, onchange: () => { this.excludeMkv = excludeMkv.checked; } });
     const excludeMkvLabel = this.excludeMkvOption
       ? h('label', { class: 'check small exclude-mkv', title: 'Skip MKV files when adding a folder' }, excludeMkv, h('span', {}, 'exclude MKV'))
       : null;

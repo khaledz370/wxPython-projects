@@ -118,6 +118,7 @@ function buildNav() {
   nav.append(h('div', { class: 'nav-spacer' }), navItem('settings', 'Settings', 'settings'));
   const sameDir = h('input', {
     type: 'checkbox',
+    class: 'toggle',
     checked: !!ctx.settings.backupSameDir,
     onchange: async () => {
       ctx.settings.backupSameDir = sameDir.checked;

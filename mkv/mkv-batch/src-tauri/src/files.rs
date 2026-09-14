@@ -210,8 +210,9 @@ pub fn same_file(a: &Path, b: &Path) -> bool {
 /// Writes the bundled trash icon next to settings.json (once) and returns its path.
 fn ensure_trash_icon_file() -> Option<PathBuf> {
     let path = crate::config::settings_path().parent()?.join("trash.ico");
-    if !path.exists() {
-        fs::write(&path, include_bytes!("../icons/trash.ico")).ok()?;
+    let bytes: &[u8] = include_bytes!("../icons/trash.ico");
+    if fs::read(&path).map(|existing| existing != bytes).unwrap_or(true) {
+        fs::write(&path, bytes).ok()?;
     }
     Some(path)
 }
