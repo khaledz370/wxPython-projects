@@ -16,6 +16,12 @@ use tauri::{Emitter, Manager, RunEvent, WindowEvent};
 
 fn main() {
     let app = tauri::Builder::default()
+        .plugin(tauri_plugin_single_instance::init(|app, _args, _cwd| {
+            if let Some(w) = app.get_webview_window("main") {
+                let _ = w.unminimize();
+                let _ = w.set_focus();
+            }
+        }))
         .manage(config::SettingsState::load())
         .manage(jobs::JobRegistry::default())
         .invoke_handler(tauri::generate_handler![

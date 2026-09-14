@@ -40,7 +40,6 @@ const ctx = {
     ctx.active = id;
     Object.entries(ctx.pages).forEach(([pid, p]) => { p.el.hidden = pid !== id; });
     document.querySelectorAll('.nav-item').forEach((n) => n.classList.toggle('active', n.dataset.id === id));
-    try { localStorage.setItem('mkvbatch.page', id); } catch { /* ignore */ }
   },
 
   applyTheme(theme) {
@@ -190,9 +189,7 @@ async function init() {
   ctx.pages.settings = new SettingsPage(ctx);
   pagesRoot.append(ctx.pages.settings.el);
 
-  let last = 'remux';
-  try { last = localStorage.getItem('mkvbatch.page') || 'remux'; } catch { /* ignore */ }
-  ctx.show(last);
+  ctx.show('remux');
 
   await listen('job', (e) => route(e.payload));
   await listen('confirm-close', async () => {

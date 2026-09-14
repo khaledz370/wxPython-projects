@@ -207,6 +207,46 @@ pub fn same_file(a: &Path, b: &Path) -> bool {
     }
 }
 
+/// Writes the bundled trash icon next to settings.json (once) and returns its path.
+fn ensure_trash_icon_file() -> Option<PathBuf> {
+    let path = crate::config::settings_path().parent()?.join("trash.ico");
+    if !path.exists() {
+        fs::write(&path, include_bytes!("../icons/trash.ico")).ok()?;
+    }
+    Some(path)
+}
+
+#[cfg(windows)]
+fn set_attrs(path: &Path, flags: &str) {
+    use std::os::windows::process::CommandExt;
+    const CREATE_NO_WINDOW: u32 = 0x0800_0000;
+    let _ = std::process::Command::new("attrib")
+        .args(flags.split_whitespace())
+        .arg(path)
+        .creation_flags(CREATE_NO_WINDOW)
+        .status();
+}
+
+/// Stamps a folder with a custom Explorer icon via desktop.ini. Best-effort: any
+/// failure (no write access, non-NTFS volume, ...) is silently ignored.
+#[cfg(windows)]
+pub fn apply_folder_icon(dir: &Path, kind: &str) {
+    if kind != "trash" {
+        return;
+    }
+    let Some(icon_path) = ensure_trash_icon_file() else { return };
+    let ini_path = dir.join("desktop.ini");
+    set_attrs(&ini_path, "-h -s -r");
+    let content = format!("[.ShellClassInfo]\r\nIconResource={},0\r\n", icon_path.display());
+    if fs::write(&ini_path, content).is_ok() {
+        set_attrs(&ini_path, "+h +s");
+        set_attrs(dir, "+r");
+    }
+}
+
+#[cfg(not(windows))]
+pub fn apply_folder_icon(_dir: &Path, _kind: &str) {}
+
 pub fn backup_dir_for(s: &Settings, original: &Path) -> PathBuf {
     let name = s.backup_dir.trim();
     let name = if name.is_empty() { "mkv_old" } else { name };
@@ -236,6 +276,7 @@ pub fn dispose_original(s: &Settings, original: &Path) -> Result<String, String>
         OriginalPolicy::Backup => {
             let dir = backup_dir_for(s, original);
             fs::create_dir_all(&dir).map_err(|e| format!("Can't create {}: {e}", dir.display()))?;
+            apply_folder_icon(&dir, &s.backup_icon);
             let dst = unique_path(&dir.join(name_of(original)));
             move_file(original, &dst).map_err(|e| format!("Can't move original: {e}"))?;
             Ok(format!("original moved to {}", name_of(&dir)))
@@ -247,6 +288,7 @@ pub fn dispose_original(s: &Settings, original: &Path) -> Result<String, String>
 pub fn backup_original(s: &Settings, original: &Path) -> Result<(PathBuf, String), String> {
     let dir = backup_dir_for(s, original);
     fs::create_dir_all(&dir).map_err(|e| format!("Can't create {}: {e}", dir.display()))?;
+    apply_folder_icon(&dir, &s.backup_icon);
     let dst = unique_path(&dir.join(name_of(original)));
     move_file(original, &dst).map_err(|e| format!("Can't move original: {e}"))?;
     Ok((dst, format!("original moved to {}", name_of(&dir))))

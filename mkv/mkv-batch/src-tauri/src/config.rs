@@ -58,6 +58,8 @@ pub struct Settings {
     /// Folder name under the source drive root, or an absolute central folder.
     pub backup_dir: String,
     pub backup_same_dir: bool,
+    /// "none" | "trash" - a Windows folder icon to stamp the backup folder with.
+    pub backup_icon: String,
     pub theme: String,
     pub translate: TranslateSettings,
 }
@@ -70,6 +72,7 @@ impl Default for Settings {
             original_policy: OriginalPolicy::Backup,
             backup_dir: "mkv_old".into(),
             backup_same_dir: false,
+            backup_icon: "trash".into(),
             theme: "dark".into(),
             translate: TranslateSettings::default(),
         }
