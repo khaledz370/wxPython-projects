@@ -13,8 +13,17 @@ use std::sync::Mutex;
 pub enum OriginalPolicy {
     #[default]
     Backup,
+    /// Backup folder inside a folder the user picked (`backup_folder`).
+    Folder,
     Recycle,
     Keep,
+}
+
+impl OriginalPolicy {
+    /// The original is moved into a backup folder (drive root / same dir, or the picked folder).
+    pub fn moves_to_backup(self) -> bool {
+        matches!(self, Self::Backup | Self::Folder)
+    }
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug)]
@@ -29,6 +38,8 @@ pub struct TranslateSettings {
     /// Negative = do not send a temperature (some models reject it).
     pub temperature: f32,
     pub batch_size: usize,
+    /// Requests sent at the same time (AI engine); the server must allow parallel predictions.
+    pub parallel_requests: usize,
     pub context_hint: String,
     pub timeout_secs: u64,
 }
@@ -43,6 +54,7 @@ impl Default for TranslateSettings {
             openai_model: String::new(),
             temperature: 0.2,
             batch_size: 25,
+            parallel_requests: 1,
             context_hint: String::new(),
             timeout_secs: 180,
         }
@@ -58,6 +70,10 @@ pub struct Settings {
     /// Folder name under the source drive root, or an absolute central folder.
     pub backup_dir: String,
     pub backup_same_dir: bool,
+    /// Parent folder for the backup folder when `original_policy` is `Folder`.
+    pub backup_folder: String,
+    /// MKVToolNix files processed at the same time.
+    pub parallel_files: usize,
     /// "none" | "trash" - a Windows folder icon to stamp the backup folder with.
     pub backup_icon: String,
     /// Remove successfully processed files from the queue when a job ends.
@@ -74,6 +90,8 @@ impl Default for Settings {
             original_policy: OriginalPolicy::Backup,
             backup_dir: "mkv_old".into(),
             backup_same_dir: false,
+            backup_folder: String::new(),
+            parallel_files: 2,
             backup_icon: "trash".into(),
             clear_after_finish: true,
             theme: "dark".into(),

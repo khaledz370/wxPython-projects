@@ -16,19 +16,23 @@ use serde_json::{json, Value};
 use std::ffi::OsString;
 use std::fs;
 use std::path::{Path, PathBuf};
+use std::sync::atomic::{AtomicBool, AtomicUsize, Ordering};
+use std::sync::mpsc;
 use std::thread;
 use std::time::Duration;
 
 pub enum TrError {
     /// The engine returned a different number of lines: retry with smaller batches.
     Mismatch,
+    /// Some lines came back (matched by number); the `None` ones must be asked again.
+    Partial(Vec<Option<String>>),
     Retry(String),
     Fatal(String),
 }
 
 pub trait Translator: Send + Sync {
-    /// (max lines per request, max characters per request)
-    fn limits(&self) -> (usize, usize);
+    /// (max lines per request, max characters per request, requests in flight at once)
+    fn limits(&self) -> (usize, usize, usize);
     fn translate(&self, texts: &[String], src: &str, tgt: &str) -> Result<Vec<String>, TrError>;
 }
 
@@ -63,6 +67,7 @@ pub fn build(t: &TranslateSettings) -> Result<Box<dyn Translator>, String> {
                 model: t.openai_model.trim().into(),
                 temperature: t.temperature,
                 batch: t.batch_size.clamp(1, 200),
+                parallel: t.parallel_requests.clamp(1, 8),
                 hint: t.context_hint.trim().into(),
             }))
         }
@@ -156,8 +161,8 @@ struct GoogleFree {
 }
 
 impl Translator for GoogleFree {
-    fn limits(&self) -> (usize, usize) {
-        (60, 4500)
+    fn limits(&self) -> (usize, usize, usize) {
+        (60, 4500, 1)
     }
 
     fn translate(&self, texts: &[String], src: &str, tgt: &str) -> Result<Vec<String>, TrError> {
@@ -215,8 +220,8 @@ struct GoogleCloud {
 }
 
 impl Translator for GoogleCloud {
-    fn limits(&self) -> (usize, usize) {
-        (100, 9000)
+    fn limits(&self) -> (usize, usize, usize) {
+        (100, 9000, 4)
     }
 
     fn translate(&self, texts: &[String], src: &str, tgt: &str) -> Result<Vec<String>, TrError> {
@@ -252,12 +257,13 @@ struct OpenAi {
     model: String,
     temperature: f32,
     batch: usize,
+    parallel: usize,
     hint: String,
 }
 
 impl Translator for OpenAi {
-    fn limits(&self) -> (usize, usize) {
-        (self.batch, 6000)
+    fn limits(&self) -> (usize, usize, usize) {
+        (self.batch, 6000, self.parallel)
     }
 
     fn translate(&self, texts: &[String], src: &str, tgt: &str) -> Result<Vec<String>, TrError> {
@@ -266,12 +272,13 @@ impl Translator for OpenAi {
         } else {
             langs::name(src)
         };
+        // Numbered lines: when a small model drops or merges a few, the rest is still usable.
         let mut system = format!(
-            "You are a professional subtitle translator. Translate every item of the JSON array \"lines\" \
-             from {src_name} into {tgt_name}.\n\
+            "You are a professional subtitle translator. The user sends a JSON object mapping line numbers \
+             to subtitle lines in {src_name}. Translate each line into {tgt_name}.\n\
              Rules:\n\
-             - Reply with ONLY a JSON object of the form {{\"t\": [\"...\"]}} containing exactly {n} strings, in the same order.\n\
-             - Never merge, split, skip or reorder items.\n\
+             - Reply with ONLY a JSON object with the same keys (\"1\" to \"{n}\"), each mapped to its translation.\n\
+             - Translate every key; never merge, split or skip lines, even when lines repeat.\n\
              - Keep line breaks (\\n) and markup such as <i> and </i>.\n\
              - Use natural, concise subtitle language. Keep names as they are.\n\
              - No notes, explanations or transliterations.",
@@ -286,7 +293,9 @@ impl Translator for OpenAi {
             "stream": false,
             "messages": [
                 { "role": "system", "content": system },
-                { "role": "user", "content": json!({ "lines": texts }).to_string() }
+                { "role": "user", "content": Value::Object(
+                    texts.iter().enumerate().map(|(i, t)| ((i + 1).to_string(), json!(t))).collect()
+                ).to_string() }
             ]
         });
         if self.temperature >= 0.0 {
@@ -298,17 +307,56 @@ impl Translator for OpenAi {
         }
         let v = send(req, &self.base)?;
         let content = v["choices"][0]["message"]["content"].as_str().unwrap_or("");
-        let out = parse_llm_array(content).ok_or(TrError::Mismatch)?;
-        if out.len() != texts.len() {
-            return Err(TrError::Mismatch);
+        let got = parse_llm_reply(content, texts.len()).ok_or(TrError::Mismatch)?;
+        if got.iter().all(Option::is_some) {
+            Ok(got.into_iter().flatten().collect())
+        } else if got.iter().any(Option::is_some) {
+            Err(TrError::Partial(got))
+        } else {
+            Err(TrError::Mismatch)
         }
-        Ok(out)
     }
 }
 
-/// Pulls the translated array out of a model reply, tolerating reasoning blocks,
-/// code fences and chatty text around the JSON.
-fn parse_llm_array(content: &str) -> Option<Vec<String>> {
+fn numbered(o: &serde_json::Map<String, Value>) -> bool {
+    o.keys().any(|k| k.trim().parse::<usize>().is_ok())
+}
+
+/// Reads the numbered translations out of a model reply: `{"1": "...", "2": "..."}`,
+/// or a plain array when it has exactly `n` items. Missing lines are `None`.
+fn parse_llm_reply(content: &str, n: usize) -> Option<Vec<Option<String>>> {
+    let v = parse_llm_json(content)?;
+    let obj = match &v {
+        Value::Object(o) if numbered(o) => Some(o),
+        Value::Object(o) => o.values().find_map(|x| x.as_object().filter(|m| numbered(m))),
+        _ => None,
+    };
+    if let Some(o) = obj {
+        let mut out = vec![None; n];
+        for (k, x) in o {
+            if let (Ok(i), Some(s)) = (k.trim().parse::<usize>(), value_text(x)) {
+                if (1..=n).contains(&i) {
+                    out[i - 1] = Some(s);
+                }
+            }
+        }
+        return Some(out);
+    }
+    pick_array(&v).filter(|a| a.len() == n).map(|a| a.into_iter().map(Some).collect())
+}
+
+fn value_text(x: &Value) -> Option<String> {
+    match x {
+        Value::String(s) => Some(s.clone()),
+        Value::Object(o) => o.get("text").or(o.get("t")).and_then(Value::as_str).map(String::from),
+        Value::Number(n) => Some(n.to_string()),
+        _ => None,
+    }
+}
+
+/// Pulls the JSON out of a model reply, tolerating reasoning blocks,
+/// code fences and chatty text around it.
+fn parse_llm_json(content: &str) -> Option<Value> {
     let mut s = content.to_string();
     while let Some(start) = s.find("<think>") {
         match s[start..].find("</think>") {
@@ -325,8 +373,7 @@ fn parse_llm_array(content: &str) -> Option<Vec<String>> {
     };
     [s.to_string(), slice('{', '}'), slice('[', ']')]
         .iter()
-        .filter_map(|c| serde_json::from_str::<Value>(c).ok())
-        .find_map(|v| pick_array(&v))
+        .find_map(|c| serde_json::from_str::<Value>(c).ok())
 }
 
 fn pick_array(v: &Value) -> Option<Vec<String>> {
@@ -338,14 +385,7 @@ fn pick_array(v: &Value) -> Option<Vec<String>> {
             .or_else(|| o.values().find_map(Value::as_array))?,
         _ => return None,
     };
-    arr.iter()
-        .map(|x| match x {
-            Value::String(s) => Some(s.clone()),
-            Value::Object(o) => o.get("text").or(o.get("t")).and_then(Value::as_str).map(String::from),
-            Value::Number(n) => Some(n.to_string()),
-            _ => None,
-        })
-        .collect()
+    arr.iter().map(value_text).collect()
 }
 
 // --- batching / retries -------------------------------------------------------
@@ -355,12 +395,12 @@ pub fn translate_texts(
     texts: &[String],
     src: &str,
     tgt: &str,
-    cancelled: &dyn Fn() -> bool,
+    cancelled: &(dyn Fn() -> bool + Sync),
     progress: &mut dyn FnMut(usize, usize),
     warn: &mut dyn FnMut(String),
 ) -> Result<Vec<String>, String> {
     let mut out = texts.to_vec();
-    let (max_items, max_chars) = tr.limits();
+    let (max_items, max_chars, parallel) = tr.limits();
     let mut batches: Vec<Vec<usize>> = Vec::new();
     let mut current = Vec::new();
     let mut chars = 0;
@@ -380,16 +420,56 @@ pub fn translate_texts(
     let total: usize = batches.iter().map(Vec::len).sum();
     let mut done = 0;
     progress(0, total);
-    for batch in batches {
-        let input: Vec<String> = batch.iter().map(|&i| texts[i].clone()).collect();
-        let result = translate_robust(tr, &input, src, tgt, cancelled, warn)?;
-        for (k, &i) in batch.iter().enumerate() {
-            out[i] = result[k].clone();
+
+    // `parallel` workers pull batches in order; results come back here, where
+    // the (non thread-safe) progress / warning callbacks are called.
+    let next = AtomicUsize::new(0);
+    let stop = AtomicBool::new(false);
+    let (tx, rx) = mpsc::channel::<(usize, Result<Vec<String>, String>, Vec<String>)>();
+    let mut failure = None;
+    thread::scope(|scope| {
+        for _ in 0..parallel.clamp(1, batches.len().max(1)) {
+            let (tx, next, stop, batches) = (tx.clone(), &next, &stop, &batches);
+            scope.spawn(move || loop {
+                let b = next.fetch_add(1, Ordering::SeqCst);
+                if b >= batches.len() || stop.load(Ordering::SeqCst) {
+                    break;
+                }
+                let input: Vec<String> = batches[b].iter().map(|&i| texts[i].clone()).collect();
+                let mut warnings = Vec::new();
+                let result = translate_robust(tr, &input, src, tgt, cancelled, &mut |w| warnings.push(w));
+                if result.is_err() {
+                    stop.store(true, Ordering::SeqCst);
+                }
+                if tx.send((b, result, warnings)).is_err() {
+                    break;
+                }
+            });
         }
-        done += batch.len();
-        progress(done, total);
+        drop(tx);
+        for (b, result, warnings) in rx {
+            warnings.into_iter().for_each(&mut *warn);
+            match result {
+                Ok(result) => {
+                    for (k, &i) in batches[b].iter().enumerate() {
+                        out[i] = result[k].clone();
+                    }
+                    done += batches[b].len();
+                    progress(done, total);
+                }
+                Err(e) => {
+                    // a real error beats the "Cancelled" of workers that stopped because of it
+                    if failure.is_none() || failure.as_deref() == Some(CANCELLED) {
+                        failure = Some(e);
+                    }
+                }
+            }
+        }
+    });
+    match failure {
+        Some(e) => Err(e),
+        None => Ok(out),
     }
-    Ok(out)
 }
 
 fn translate_robust(
@@ -397,7 +477,7 @@ fn translate_robust(
     input: &[String],
     src: &str,
     tgt: &str,
-    cancelled: &dyn Fn() -> bool,
+    cancelled: &(dyn Fn() -> bool + Sync),
     warn: &mut dyn FnMut(String),
 ) -> Result<Vec<String>, String> {
     let mut attempt = 0u64;
@@ -408,6 +488,16 @@ fn translate_robust(
         match tr.translate(input, src, tgt) {
             Ok(v) => return Ok(v),
             Err(TrError::Fatal(e)) => return Err(e),
+            Err(TrError::Partial(got)) => {
+                // keep what came back, ask again only for the missing lines
+                let missing: Vec<usize> = (0..input.len()).filter(|&i| got[i].is_none()).collect();
+                let retry: Vec<String> = missing.iter().map(|&i| input[i].clone()).collect();
+                let mut filled = translate_robust(tr, &retry, src, tgt, cancelled, warn)?.into_iter();
+                return Ok(got
+                    .into_iter()
+                    .map(|g| g.or_else(|| filled.next()).unwrap_or_default())
+                    .collect());
+            }
             Err(TrError::Mismatch) if input.len() > 1 => {
                 let mid = input.len() / 2;
                 let mut first = translate_robust(tr, &input[..mid], src, tgt, cancelled, warn)?;
@@ -449,7 +539,7 @@ pub fn list_models(t: &TranslateSettings) -> Result<Vec<String>, String> {
     }
     let v = send(req, base).map_err(|e| match e {
         TrError::Fatal(m) | TrError::Retry(m) => m,
-        TrError::Mismatch => "unexpected reply".into(),
+        TrError::Mismatch | TrError::Partial(_) => "unexpected reply".into(),
     })?;
     let mut models: Vec<String> = v["data"]
         .as_array()
@@ -582,7 +672,11 @@ fn translate_one(
         &texts,
         &src,
         &o.target,
-        &|| ctx.is_cancelled(),
+        // checked between requests, so Pause holds the translation there
+        &|| {
+            ctx.wait_if_paused();
+            ctx.is_cancelled()
+        },
         &mut |done, total| ctx.progress(index, from + span * done as f32 / total.max(1) as f32),
         &mut |w| {
             warnings += 1;

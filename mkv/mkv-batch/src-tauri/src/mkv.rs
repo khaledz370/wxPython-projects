@@ -337,11 +337,11 @@ struct RemuxOpts {
 pub fn remux(ctx: &JobCtx, s: &Settings, list: &[PathBuf], opts: Value) -> Result<Summary, String> {
     let o: RemuxOpts = parse_opts(opts)?;
     let t = tools(s)?;
-    Ok(run_files(ctx, list, 1, |i, f| remux_one(ctx, s, &t, &o, i, f)))
+    Ok(run_files(ctx, list, s.parallel_files.clamp(1, 16), |i, f| remux_one(ctx, s, &t, &o, i, f)))
 }
 
 fn remux_one(ctx: &JobCtx, s: &Settings, t: &Tools, o: &RemuxOpts, index: usize, file: &Path) -> FileResult {
-    let (input, backup_note) = if s.original_policy == config::OriginalPolicy::Backup {
+    let (input, backup_note) = if s.original_policy.moves_to_backup() {
         files::backup_original(s, file)?
     } else {
         (file.to_path_buf(), String::new())
@@ -493,7 +493,7 @@ fn codec_ext(codec_id: &str) -> &'static str {
 pub fn extract(ctx: &JobCtx, s: &Settings, list: &[PathBuf], opts: Value) -> Result<Summary, String> {
     let o: ExtractOpts = parse_opts(opts)?;
     let t = tools(s)?;
-    Ok(run_files(ctx, list, 1, |i, f| extract_one(ctx, &t, &o, i, f)))
+    Ok(run_files(ctx, list, s.parallel_files.clamp(1, 16), |i, f| extract_one(ctx, &t, &o, i, f)))
 }
 
 fn extract_one(ctx: &JobCtx, t: &Tools, o: &ExtractOpts, index: usize, file: &Path) -> FileResult {
@@ -720,7 +720,7 @@ impl Default for MuxOpts {
 pub fn mux(ctx: &JobCtx, s: &Settings, list: &[PathBuf], opts: Value) -> Result<Summary, String> {
     let o: MuxOpts = parse_opts(opts)?;
     let t = tools(s)?;
-    Ok(run_files(ctx, list, 1, |i, f| mux_one(ctx, s, &t, &o, i, f)))
+    Ok(run_files(ctx, list, s.parallel_files.clamp(1, 16), |i, f| mux_one(ctx, s, &t, &o, i, f)))
 }
 
 fn mux_one(ctx: &JobCtx, s: &Settings, t: &Tools, o: &MuxOpts, index: usize, file: &Path) -> FileResult {
@@ -809,7 +809,7 @@ pub fn crop(ctx: &JobCtx, s: &Settings, list: &[PathBuf], opts: Value) -> Result
         return Err("All crop values are 0. Enter values or choose \"Remove crop\".".into());
     }
     let t = tools(s)?;
-    Ok(run_files(ctx, list, 1, |i, f| crop_one(ctx, s, &t, &o, i, f)))
+    Ok(run_files(ctx, list, s.parallel_files.clamp(1, 16), |i, f| crop_one(ctx, s, &t, &o, i, f)))
 }
 
 fn parse_dims(dims: &str) -> Option<(u32, u32)> {
@@ -911,7 +911,7 @@ pub fn props(ctx: &JobCtx, s: &Settings, list: &[PathBuf], opts: Value) -> Resul
         fs::write(&path, bytes).map_err(|e| format!("Cover: {e}"))?;
         Some(Cover { path, name: format!("cover.{ext}"), mime: mime.to_string() })
     };
-    Ok(run_files(ctx, list, 1, |i, f| props_one(ctx, &t, &o, cover.as_ref(), i, f)))
+    Ok(run_files(ctx, list, s.parallel_files.clamp(1, 16), |i, f| props_one(ctx, &t, &o, cover.as_ref(), i, f)))
 }
 
 fn parse_selector(sel: &str) -> Option<(&'static str, usize)> {
@@ -1082,7 +1082,7 @@ pub fn preset(ctx: &JobCtx, s: &Settings, list: &[PathBuf], opts: Value) -> Resu
         return Err("The preset has no options".into());
     }
     let t = tools(s)?;
-    Ok(run_files(ctx, list, 1, |i, file| {
+    Ok(run_files(ctx, list, s.parallel_files.clamp(1, 16), |i, file| {
         let out = mkv_target(file);
         let tmp = TempFile::new(files::temp_sibling(&out));
         let mut a = Args::new();

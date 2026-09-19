@@ -297,11 +297,18 @@ pub fn apply_folder_icon(dir: &Path, kind: &str) {
 #[cfg(not(windows))]
 pub fn apply_folder_icon(_dir: &Path, _kind: &str) {}
 
-pub fn backup_dir_for(s: &Settings, original: &Path) -> PathBuf {
+pub fn backup_dir_for(s: &Settings, original: &Path) -> Result<PathBuf, String> {
     let name = s.backup_dir.trim();
     let name = if name.is_empty() { "mkv_old" } else { name };
     let p = Path::new(name);
-    if s.backup_same_dir {
+    Ok(if s.original_policy == OriginalPolicy::Folder {
+        let parent = s.backup_folder.trim();
+        if parent.is_empty() {
+            return Err("Choose the folder for backups in Settings".into());
+        }
+        let folder = p.file_name().unwrap_or_else(|| std::ffi::OsStr::new("mkv_old"));
+        Path::new(parent).join(folder)
+    } else if s.backup_same_dir {
         let folder = p.file_name().unwrap_or_else(|| std::ffi::OsStr::new("mkv_old"));
         original.parent().unwrap_or(Path::new(".")).join(folder)
     } else if p.is_absolute() {
@@ -313,7 +320,7 @@ pub fn backup_dir_for(s: &Settings, original: &Path) -> PathBuf {
             if matches!(component, Component::RootDir) { break; }
         }
         if root.as_os_str().is_empty() { original.parent().unwrap_or(Path::new(".")).join(p) } else { root.join(p) }
-    }
+    })
 }
 
 /// Moves a replaced source out of the way according to the user's policy.
@@ -323,8 +330,8 @@ pub fn dispose_original(s: &Settings, original: &Path) -> Result<String, String>
         OriginalPolicy::Recycle => trash::delete(original)
             .map(|_| "original sent to Recycle Bin".to_string())
             .map_err(|e| format!("Recycle Bin: {e}")),
-        OriginalPolicy::Backup => {
-            let dir = backup_dir_for(s, original);
+        OriginalPolicy::Backup | OriginalPolicy::Folder => {
+            let dir = backup_dir_for(s, original)?;
             fs::create_dir_all(&dir).map_err(|e| format!("Can't create {}: {e}", dir.display()))?;
             apply_folder_icon(&dir, &s.backup_icon);
             let dst = unique_path(&dir.join(name_of(original)));
@@ -336,7 +343,7 @@ pub fn dispose_original(s: &Settings, original: &Path) -> Result<String, String>
 
 /// Moves an original to its backup folder before a replacement is created.
 pub fn backup_original(s: &Settings, original: &Path) -> Result<(PathBuf, String), String> {
-    let dir = backup_dir_for(s, original);
+    let dir = backup_dir_for(s, original)?;
     fs::create_dir_all(&dir).map_err(|e| format!("Can't create {}: {e}", dir.display()))?;
     apply_folder_icon(&dir, &s.backup_icon);
     let dst = unique_path(&dir.join(name_of(original)));

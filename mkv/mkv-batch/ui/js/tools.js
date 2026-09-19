@@ -296,6 +296,8 @@ function enginePanel(page) {
       { type: 'number', key: 'batchSize', label: 'Lines / request', min: 1, max: 200 },
       { type: 'number', key: 'timeoutSecs', label: 'Timeout (s)', min: 10, max: 1800 },
     ] },
+    { type: 'number', key: 'parallelRequests', label: 'Parallel requests', min: 1, max: 8, show: isAi,
+      hint: 'Batches translated at the same time. Raise it only if your server runs several predictions at once (LM Studio: "Max concurrent predictions", Ollama: OLLAMA_NUM_PARALLEL).' },
     { type: 'range', key: 'temperature', label: 'Temperature', min: 0, max: 1, step: 0.05, show: isAi },
     { type: 'textarea', key: 'contextHint', label: 'Extra instructions', rows: 3, show: isAi,
       placeholder: 'e.g. Anime series, keep Japanese honorifics. Use Modern Standard Arabic.' },
