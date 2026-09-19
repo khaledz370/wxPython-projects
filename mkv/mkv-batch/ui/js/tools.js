@@ -260,6 +260,136 @@ const AI_PRESETS = [
   ['Groq', 'https://api.groq.com/openai/v1'],
 ];
 
+// Models reported by each server URL, so reopening the list is instant.
+const modelCache = new Map();
+
+/**
+ * Model field: free text plus a dropdown that always lists every model the server has
+ * (the chosen one is ticked). Typing narrows the list; opening it never does.
+ */
+function modelPicker(t, value, onPick) {
+  const input = h('input', { type: 'text', value, placeholder: 'e.g. qwen2.5:14b, gpt-4o-mini', spellcheck: false, autocomplete: 'off' });
+  const toggle = h('button', { class: 'btn small icon-only', type: 'button', title: 'Show the models on the server' }, icon('chevron'));
+  const reload = h('button', { class: 'btn small icon-only', type: 'button', title: 'Ask the server for its models again' }, icon('refresh'));
+  const menu = h('div', { class: 'combo-menu', role: 'listbox' });
+  let open = false;
+  let filter = '';
+  let active = -1;
+  let shown = [];
+
+  const models = () => modelCache.get(t.openaiBaseUrl.trim());
+
+  async function fetchModels(force) {
+    if (!force && models()) return;
+    menu.replaceChildren(h('div', { class: 'combo-note' }, h('span', { class: 'spinner' }), 'Loading models…'));
+    reload.disabled = true;
+    try {
+      modelCache.set(t.openaiBaseUrl.trim(), await api.models(t));
+    } catch (e) {
+      menu.replaceChildren(h('div', { class: 'combo-note err-text' }, String(e)));
+      return;
+    } finally {
+      reload.disabled = false;
+    }
+    if (open) paint();
+  }
+
+  function pick(m) {
+    input.value = m;
+    onPick(m);
+    close();
+    input.focus();
+  }
+
+  function paint() {
+    const all = models();
+    if (!all) return;
+    const q = filter.trim().toLowerCase();
+    shown = q ? all.filter((m) => m.toLowerCase().includes(q)) : all;
+    if (!shown.length) {
+      menu.replaceChildren(h('div', { class: 'combo-note' }, all.length ? `No model matches "${filter.trim()}"` : 'The server reports no models'));
+      return;
+    }
+    const current = input.value.trim();
+    if (active >= shown.length) active = shown.length - 1;
+    menu.replaceChildren(...shown.map((m, i) => h('div', {
+      class: `combo-item${m === current ? ' on' : ''}${i === active ? ' active' : ''}`, role: 'option', title: m,
+      onmousedown: (e) => { e.preventDefault(); pick(m); },
+    }, h('span', { class: 'combo-tick' }, m === current ? icon('check') : null), h('span', { class: 'combo-label' }, m))));
+    (menu.querySelector('.combo-item.active') || menu.querySelector('.combo-item.on'))?.scrollIntoView({ block: 'nearest' });
+  }
+
+  function place() {
+    const r = input.getBoundingClientRect();
+    const below = window.innerHeight - r.bottom - 12;
+    const up = below < 180 && r.top > below;
+    Object.assign(menu.style, {
+      left: `${r.left}px`,
+      width: `${r.width}px`,
+      top: up ? '' : `${r.bottom + 4}px`,
+      bottom: up ? `${window.innerHeight - r.top + 4}px` : '',
+      maxHeight: `${Math.max(140, Math.min(300, (up ? r.top : below) - 8))}px`,
+    });
+  }
+
+  function onOutside(e) {
+    if (!menu.contains(e.target) && e.target !== input && !toggle.contains(e.target)) close();
+  }
+
+  function show() {
+    if (open) return;
+    if (!t.openaiBaseUrl.trim()) { toast('Enter the server URL first', 'info'); return; }
+    open = true;
+    filter = '';
+    active = -1;
+    document.body.append(menu);
+    place();
+    document.addEventListener('mousedown', onOutside, true);
+    window.addEventListener('resize', close);
+    // the options panel scrolls; keep the menu glued to the field
+    document.addEventListener('scroll', place, true);
+    if (models()) paint(); else fetchModels(false);
+  }
+
+  function close() {
+    if (!open) return;
+    open = false;
+    menu.remove();
+    document.removeEventListener('mousedown', onOutside, true);
+    window.removeEventListener('resize', close);
+    document.removeEventListener('scroll', place, true);
+  }
+
+  input.addEventListener('input', () => {
+    onPick(input.value);
+    filter = input.value;
+    active = 0;
+    if (!open) show(); else paint();
+  });
+  input.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+      e.preventDefault();
+      if (!open) { show(); return; }
+      if (!shown.length) return;
+      active = e.key === 'ArrowDown' ? Math.min(shown.length - 1, active + 1) : Math.max(0, active - 1);
+      paint();
+    } else if (e.key === 'Enter' && open && shown[active]) {
+      e.preventDefault();
+      pick(shown[active]);
+    } else if (e.key === 'Escape' && open) {
+      e.stopPropagation();
+      close();
+    }
+  });
+  input.addEventListener('blur', () => setTimeout(() => { if (document.activeElement !== input) close(); }, 120));
+  // keep focus in the field (also when dragging the menu's scrollbar), so its blur doesn't close the menu
+  [toggle, reload, menu].forEach((b) => b.addEventListener('mousedown', (e) => e.preventDefault()));
+  toggle.addEventListener('click', () => { if (open) close(); else { show(); input.focus(); } });
+  reload.addEventListener('click', () => { if (!open) show(); fetchModels(true); });
+
+  return h('div', { class: 'path-input combo' }, input, toggle, reload);
+}
+
 function enginePanel(page) {
   const ctx = page.ctx;
   const t = ctx.settings.translate;
@@ -276,22 +406,7 @@ function enginePanel(page) {
       AI_PRESETS.map(([name, url]) => h('button', { type: 'button', class: `chip-btn${v.openaiBaseUrl === url ? ' on' : ''}`, onclick: () => { set('openaiBaseUrl', url); draw(); } }, name))) },
     { type: 'text', key: 'openaiBaseUrl', label: 'Base URL (OpenAI-compatible)', placeholder: 'http://localhost:11434/v1', show: isAi },
     { type: 'password', key: 'openaiApiKey', label: 'API key', placeholder: 'not needed for local servers', show: isAi },
-    { type: 'custom', label: 'Model', show: isAi, render: (v, set) => {
-      const listId = 'models-list';
-      const input = h('input', { type: 'text', value: v.openaiModel, list: listId, placeholder: 'e.g. qwen2.5:14b, gpt-4o-mini', spellcheck: false, oninput: () => set('openaiModel', input.value) });
-      const dl = h('datalist', { id: listId });
-      const load = h('button', { class: 'btn small', type: 'button', onclick: async () => {
-        load.disabled = true;
-        try {
-          const models = await api.models(t);
-          dl.replaceChildren(...models.map((m) => h('option', { value: m })));
-          toast(models.length ? `${models.length} models available, pick one from the list` : 'The server returned no models', 'info');
-          input.focus();
-        } catch (e) { toast(String(e), 'error'); }
-        load.disabled = false;
-      } }, icon('refresh'), 'List');
-      return h('div', { class: 'path-input' }, input, dl, load);
-    } },
+    { type: 'custom', label: 'Model', show: isAi, render: (v, set) => modelPicker(t, v.openaiModel, (m) => set('openaiModel', m)) },
     { type: 'row', show: isAi, children: [
       { type: 'number', key: 'batchSize', label: 'Lines / request', min: 1, max: 200 },
       { type: 'number', key: 'timeoutSecs', label: 'Timeout (s)', min: 10, max: 1800 },
