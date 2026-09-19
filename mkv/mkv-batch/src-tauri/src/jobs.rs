@@ -10,7 +10,8 @@ use std::panic::{catch_unwind, AssertUnwindSafe};
 use std::path::{Path, PathBuf};
 use std::process::Child;
 use std::sync::atomic::{AtomicBool, AtomicU64, AtomicUsize, Ordering};
-use std::sync::{Arc, Mutex};
+use std::sync::{Arc, Condvar, Mutex};
+use std::time::Duration;
 use tauri::{AppHandle, Emitter};
 
 pub const CANCELLED: &str = "Cancelled";
@@ -63,6 +64,8 @@ pub struct JobCtx {
     pub id: String,
     app: AppHandle,
     cancelled: AtomicBool,
+    paused: Mutex<bool>,
+    resumed: Condvar,
     children: Mutex<HashMap<u64, Arc<Mutex<Child>>>>,
     next_child: AtomicU64,
     last_progress: Mutex<HashMap<usize, i32>>,
@@ -78,11 +81,40 @@ impl JobCtx {
         for child in self.children.lock().unwrap().values() {
             let _ = child.lock().unwrap().kill();
         }
+        self.resumed.notify_all();
+    }
+
+    /// Pausing freezes running tools (ffmpeg, mkvmerge...) and holds back files not started yet.
+    pub fn set_paused(&self, on: bool) {
+        let mut paused = self.paused.lock().unwrap();
+        if *paused == on {
+            return;
+        }
+        *paused = on;
+        for child in self.children.lock().unwrap().values() {
+            suspend(&child.lock().unwrap(), on);
+        }
+        drop(paused);
+        self.resumed.notify_all();
+    }
+
+    /// Blocks while the job is paused (returns straight away on cancel).
+    pub fn wait_if_paused(&self) {
+        let mut paused = self.paused.lock().unwrap();
+        while *paused && !self.is_cancelled() {
+            paused = self.resumed.wait_timeout(paused, Duration::from_millis(250)).unwrap().0;
+        }
     }
 
     pub fn register_child(&self, child: Arc<Mutex<Child>>) -> u64 {
         let key = self.next_child.fetch_add(1, Ordering::SeqCst);
+        // hold the pause lock so a pause can't slip in between spawn and registration
+        let paused = self.paused.lock().unwrap();
+        if *paused {
+            suspend(&child.lock().unwrap(), true);
+        }
         self.children.lock().unwrap().insert(key, child);
+        drop(paused);
         key
     }
 
@@ -148,6 +180,7 @@ where
     let skipped = AtomicUsize::new(0);
 
     let one = |index: usize, path: &PathBuf| {
+        ctx.wait_if_paused();
         if ctx.is_cancelled() {
             ctx.status(index, "cancelled", 0.0, "");
             return;
@@ -205,6 +238,25 @@ where
     }
 }
 
+/// Suspends or resumes a whole process (all its threads).
+#[cfg(windows)]
+fn suspend(child: &Child, on: bool) {
+    use std::os::windows::io::AsRawHandle;
+    #[link(name = "ntdll")]
+    extern "system" {
+        fn NtSuspendProcess(process: *mut std::ffi::c_void) -> i32;
+        fn NtResumeProcess(process: *mut std::ffi::c_void) -> i32;
+    }
+    let handle = child.as_raw_handle() as *mut std::ffi::c_void;
+    // SAFETY: the handle belongs to a live `Child` we hold a lock on
+    unsafe {
+        if on { NtSuspendProcess(handle) } else { NtResumeProcess(handle) };
+    }
+}
+
+#[cfg(not(windows))]
+fn suspend(_child: &Child, _on: bool) {}
+
 #[derive(Default)]
 pub struct JobRegistry {
     jobs: Mutex<HashMap<String, Arc<JobCtx>>>,
@@ -218,6 +270,8 @@ impl JobRegistry {
             id: format!("{kind}-{n}-{}", std::process::id()),
             app: app.clone(),
             cancelled: AtomicBool::new(false),
+            paused: Mutex::new(false),
+            resumed: Condvar::new(),
             children: Mutex::new(HashMap::new()),
             next_child: AtomicU64::new(0),
             last_progress: Mutex::new(HashMap::new()),

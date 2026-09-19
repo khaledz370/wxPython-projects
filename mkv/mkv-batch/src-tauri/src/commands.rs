@@ -209,6 +209,13 @@ pub fn cancel_job(registry: State<'_, JobRegistry>, id: String) {
 }
 
 #[tauri::command]
+pub fn pause_job(registry: State<'_, JobRegistry>, id: String, paused: bool) {
+    if let Some(job) = registry.get(&id) {
+        job.set_paused(paused);
+    }
+}
+
+#[tauri::command]
 pub async fn image_thumb(path: String, size: u32) -> Result<images::Thumb, String> {
     blocking(move || images::thumbnail(Path::new(&path), size.clamp(64, 1024))).await
 }

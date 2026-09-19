@@ -24,6 +24,7 @@ export const api = {
   presetParse: (source, optionsFile, args) => invoke('preset_parse', { source, optionsFile, args }),
   startJob: (kind, files, options) => invoke('start_job', { kind, files, options }),
   cancelJob: (id) => invoke('cancel_job', { id }),
+  pauseJob: (id, paused) => invoke('pause_job', { id, paused }),
   imageThumb: (path, size = 360) => invoke('image_thumb', { path, size }),
   audioCover: (path) => invoke('audio_cover', { path }),
   models: (settings) => invoke('translate_models', { settings }),

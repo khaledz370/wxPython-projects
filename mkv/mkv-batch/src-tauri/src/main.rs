@@ -37,6 +37,7 @@ fn main() {
             commands::preset_parse,
             commands::start_job,
             commands::cancel_job,
+            commands::pause_job,
             commands::image_thumb,
             commands::audio_cover,
             commands::translate_models,

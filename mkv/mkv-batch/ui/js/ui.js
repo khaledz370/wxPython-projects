@@ -34,6 +34,7 @@ const PATHS = {
   trash: '<path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"/>',
   play: '<path d="M7 4l13 8-13 8z"/>',
   stop: '<rect x="6" y="6" width="12" height="12" rx="1.5"/>',
+  pause: '<rect x="6" y="5" width="4" height="14" rx="1"/><rect x="14" y="5" width="4" height="14" rx="1"/>',
   log: '<path d="M5 4h14v16H5zM9 8h6M9 12h6M9 16h4"/>',
   x: '<path d="M6 6l12 12M18 6 6 18"/>',
   check: '<path d="M5 12l5 5 9-10"/>',

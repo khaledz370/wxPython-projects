@@ -69,6 +69,8 @@ export class Queue {
           h('button', { class: 'btn small', type: 'button', onclick: () => this.browseFiles() }, 'Browse files'),
           h('button', { class: 'btn small', type: 'button', onclick: () => this.browseFolder() }, 'Browse folder'))));
     this.countEl = h('span', { class: 'q-count' });
+    this.scanText = h('span', { class: 'q-scan-text' });
+    this.scanEl = h('div', { class: 'q-scan', hidden: true, role: 'status' }, h('span', { class: 'spinner' }), this.scanText);
 
     return h('div', { class: 'card queue' },
       h('div', { class: 'q-toolbar' }, this.btnAdd, this.btnFolder,
@@ -76,7 +78,7 @@ export class Queue {
         excludeMkvLabel,
         h('span', { class: 'grow' }), this.countEl, this.btnRemove, this.btnReset, this.btnSweep, this.btnClear),
       h('div', { class: 'q-head' }, h('span', {}, this.checkAll), h('span', {}, 'File'), h('span', { class: 'right' }, 'Size'), h('span', {}, 'Status'), h('span', {})),
-      this.body, this.empty);
+      this.scanEl, this.body, this.empty);
   }
 
   async browseFiles() {
@@ -96,12 +98,14 @@ export class Queue {
     const keep = (list) => (recursive && this.excludeMkv ? list.filter((e) => e.ext !== 'mkv') : list);
     const mine = new Set();
     let found = 0;
-    this.scanning++;
-    this.updateCount();
+    if (!this.scanning++) this.scanFound = 0;
+    this.showScan();
     try {
       const all = await api.scan(paths, this.accept, recursive, (batch) => {
         const entries = keep(batch);
         found += entries.length;
+        this.scanFound += entries.length;
+        this.showScan();
         this.add(entries).forEach((it) => mine.add(it));
       });
       this.add(keep(all)).forEach((it) => mine.add(it));
@@ -110,7 +114,7 @@ export class Queue {
       toast(`Could not read ${paths.length === 1 ? paths[0] : 'those folders'}: ${e}`, 'error');
     } finally {
       this.scanning--;
-      this.updateCount();
+      this.showScan();
     }
     if (!mine.size) toast(found ? 'Those files are already in the list.' : 'No supported files found.', 'info');
     return mine.size;
@@ -252,8 +256,7 @@ export class Queue {
     const checked = this.checkedIndices().length;
     const n = this.items.length;
     const text = n ? (checked ? `${checked} of ${n} selected` : `${n} file${n === 1 ? '' : 's'}`) : '';
-    this.countEl.textContent = this.scanning ? `Scanning… ${text}`.trim() : text;
-    this.countEl.classList.toggle('scanning', this.scanning > 0);
+    this.countEl.textContent = text;
     this.checkAll.checked = this.items.length > 0 && checked === this.items.length;
     this.checkAll.indeterminate = checked > 0 && checked < this.items.length;
   }
@@ -266,7 +269,16 @@ export class Queue {
 
   showEmpty() {
     const empty = this.items.length === 0;
-    this.empty.hidden = !empty;
+    this.empty.hidden = !empty || this.scanning > 0;
     this.body.hidden = empty;
+    this.scanEl.classList.toggle('alone', empty);
+  }
+
+  /** Spinner while folders are being read: centred when the list is still empty, a strip on top otherwise. */
+  showScan() {
+    this.scanEl.hidden = !this.scanning;
+    const n = this.scanFound || 0;
+    this.scanText.textContent = n ? `Scanning folders… ${n.toLocaleString()} found` : 'Scanning folders…';
+    this.showEmpty();
   }
 }

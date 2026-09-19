@@ -59,6 +59,7 @@ pub fn run(
     mut cmd: Command,
     mut on_line: impl FnMut(Stream, &str),
 ) -> Result<i32, String> {
+    ctx.wait_if_paused();
     if ctx.is_cancelled() {
         return Err(CANCELLED.into());
     }

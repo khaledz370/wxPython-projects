@@ -64,6 +64,8 @@ export class ToolPage {
     const main = tool.main ? tool.main(this) : null;
 
     this.startBtn = h('button', { class: 'btn primary', type: 'button', onclick: () => this.start() }, icon('play'), tool.startLabel || 'Start');
+    this.pauseBtn = h('button', { class: 'btn', type: 'button', disabled: true, onclick: () => this.togglePause() });
+    this.paintPause(false);
     this.cancelBtn = h('button', { class: 'btn', type: 'button', disabled: true, onclick: () => this.cancel() }, icon('stop'), 'Cancel');
     this.meter = h('span');
     this.runText = h('span', { class: 'run-text' });
@@ -74,7 +76,7 @@ export class ToolPage {
       h('div', { class: 'page-body' },
         h('div', { class: 'work' }, this.queue.el, main),
         h('aside', { class: 'card options' }, h('div', { class: 'options-title' }, 'Options'), this.fieldsRoot, side)),
-      h('footer', { class: 'runbar' }, this.startBtn, this.cancelBtn,
+      h('footer', { class: 'runbar' }, this.startBtn, this.pauseBtn, this.cancelBtn,
         h('div', { class: 'run-info' }, h('div', { class: 'run-line' }, this.runText, this.runCounts), h('div', { class: 'meter' }, this.meter))));
   }
 
@@ -129,7 +131,7 @@ export class ToolPage {
 
     const options = this.tool.collect ? this.tool.collect(this.values, this) : { ...this.values };
     idx.forEach((i) => { Object.assign(q.items[i], { status: 'queued', progress: 0, message: '' }); q.update(i); });
-    this.job = { id: null, map: idx, started: Date.now() };
+    this.job = { id: null, map: idx, started: Date.now(), paused: false, pausedAt: 0, pausedMs: 0 };
     q.setRunning(true);
     this.setRunning(true);
     try {
@@ -142,9 +144,33 @@ export class ToolPage {
     }
   }
 
+  /** Freezes the running tools and holds back the remaining files; elapsed time stops too. */
+  async togglePause() {
+    const job = this.job;
+    if (!job?.id) return;
+    const on = !job.paused;
+    try { await api.pauseJob(job.id, on); } catch (e) { toast(String(e), 'error'); return; }
+    job.paused = on;
+    if (on) job.pausedAt = Date.now();
+    else { job.pausedMs += Date.now() - job.pausedAt; job.pausedAt = 0; }
+    this.paintPause(on);
+    this.el.classList.toggle('paused', on);
+    this.updateRunbar();
+  }
+
+  paintPause(paused) {
+    this.pauseBtn.replaceChildren(icon(paused ? 'play' : 'pause'), paused ? 'Resume' : 'Pause');
+    this.pauseBtn.title = paused ? 'Continue the job' : 'Pause the job (running tools are frozen, nothing is lost)';
+  }
+
+  elapsed(job) {
+    return Date.now() - job.started - job.pausedMs - (job.pausedAt ? Date.now() - job.pausedAt : 0);
+  }
+
   cancel() {
     if (!this.job?.id) return;
     api.cancelJob(this.job.id);
+    this.pauseBtn.disabled = true;
     this.cancelBtn.disabled = true;
     this.runText.textContent = 'Cancelling…';
   }
@@ -182,7 +208,7 @@ export class ToolPage {
       if (ev.failed) parts.push(`${ev.failed} failed`);
       if (ev.skipped) parts.push(`${ev.skipped} skipped`);
       const kind = ev.failed ? 'error' : ev.cancelled ? 'info' : 'ok';
-      toast(`${this.tool.title}: ${ev.cancelled ? 'cancelled · ' : ''}${parts.join(' · ')} in ${fmtTime(Date.now() - job.started)}`, kind, 7000);
+      toast(`${this.tool.title}: ${ev.cancelled ? 'cancelled · ' : ''}${parts.join(' · ')} in ${fmtTime(this.elapsed(job))}`, kind, 7000);
     }
     this.tool.afterJob?.(this);
     if (ev && job && this.ctx.settings.clearAfterFinish !== false) this.queue.clearFinished();
@@ -192,7 +218,10 @@ export class ToolPage {
   setRunning(v) {
     this.startBtn.disabled = v;
     this.cancelBtn.disabled = !v;
+    this.pauseBtn.disabled = !v;
+    this.paintPause(false);
     this.el.classList.toggle('running', v);
+    this.el.classList.remove('paused');
     this.ctx.markRunning(this.tool.id, v);
     clearInterval(this.timer);
     if (v) this.timer = setInterval(() => this.updateRunbar(), 1000);
@@ -208,7 +237,8 @@ export class ToolPage {
       const running = items.filter((it) => it.status === 'running');
       const current = running.length === 1 ? running[0].name : running.length ? `${running.length} files in parallel` : 'starting…';
       this.meter.style.width = `${pct.toFixed(1)}%`;
-      this.runText.textContent = `${finished} of ${items.length} · ${current} · ${fmtTime(Date.now() - this.job.started)}`;
+      const state = this.job.paused ? 'Paused · ' : '';
+      this.runText.textContent = `${state}${finished} of ${items.length} · ${current} · ${fmtTime(this.elapsed(this.job))}`;
     } else {
       this.meter.style.width = '0%';
       const n = q.runnable().length;
