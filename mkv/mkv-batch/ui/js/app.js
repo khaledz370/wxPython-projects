@@ -129,6 +129,19 @@ function buildNav() {
     h('label', { class: 'check small', title: 'Choose where replaced originals are backed up' },
       sameDir, h('span', {}, 'backup in same directory')),
   );
+  const clearAfter = h('input', {
+    type: 'checkbox',
+    class: 'toggle',
+    checked: ctx.settings.clearAfterFinish !== false,
+    onchange: async () => {
+      ctx.settings.clearAfterFinish = clearAfter.checked;
+      await ctx.saveSettings();
+    },
+  });
+  document.getElementById('clearAfterControl').replaceChildren(
+    h('label', { class: 'check small', title: 'Remove successfully processed files from the list when a job ends (failed files stay)' },
+      clearAfter, h('span', {}, 'clear after finish')),
+  );
 }
 
 function navItem(id, label, iconName) {

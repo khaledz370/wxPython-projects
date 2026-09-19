@@ -185,6 +185,7 @@ export class ToolPage {
       toast(`${this.tool.title}: ${ev.cancelled ? 'cancelled · ' : ''}${parts.join(' · ')} in ${fmtTime(Date.now() - job.started)}`, kind, 7000);
     }
     this.tool.afterJob?.(this);
+    if (ev && job && this.ctx.settings.clearAfterFinish !== false) this.queue.clearFinished();
     this.updateRunbar();
   }
 

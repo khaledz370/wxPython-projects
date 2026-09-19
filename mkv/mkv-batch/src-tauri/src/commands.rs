@@ -6,6 +6,7 @@ use crate::{audio, files, images, langs, mkv, translate};
 use serde::{Deserialize, Serialize};
 use serde_json::Value;
 use std::path::{Path, PathBuf};
+use tauri::ipc::Channel;
 use tauri::{AppHandle, Manager, State, WebviewWindow};
 
 /// Runs blocking work (disk, processes, HTTP) off the async runtime.
@@ -102,8 +103,18 @@ pub async fn pick_folder(window: WebviewWindow, title: String) -> Result<Option<
 }
 
 #[tauri::command]
-pub async fn scan_paths(paths: Vec<String>, exts: Vec<String>, recursive: bool) -> Result<Vec<files::FileEntry>, String> {
-    blocking(move || Ok(files::scan(&paths, &exts, recursive))).await
+pub async fn scan_paths(
+    paths: Vec<String>,
+    exts: Vec<String>,
+    recursive: bool,
+    on_batch: Channel<Vec<files::FileEntry>>,
+) -> Result<Vec<files::FileEntry>, String> {
+    blocking(move || {
+        Ok(files::scan(&paths, &exts, recursive, &mut |batch| {
+            let _ = on_batch.send(batch);
+        }))
+    })
+    .await
 }
 
 #[tauri::command]

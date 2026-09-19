@@ -12,7 +12,12 @@ export const api = {
   languages: () => invoke('languages'),
   pickFiles: (title, filters = [], multiple = true) => invoke('pick_files', { title, filters, multiple }),
   pickFolder: (title) => invoke('pick_folder', { title }),
-  scan: (paths, exts, recursive) => invoke('scan_paths', { paths, exts, recursive }),
+  /** Resolves with the full sorted list; `onBatch(entries)` gets files as soon as they are found. */
+  scan: (paths, exts, recursive, onBatch) => {
+    const onBatchCh = new T.core.Channel();
+    onBatchCh.onmessage = (entries) => onBatch?.(entries);
+    return invoke('scan_paths', { paths, exts, recursive, onBatch: onBatchCh });
+  },
   identify: (path) => invoke('mkv_identify', { path }),
   muxPreview: (files, subtitles, audio, defaultLang) =>
     invoke('mux_preview', { files, subtitles, audio, defaultLang }),

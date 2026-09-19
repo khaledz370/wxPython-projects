@@ -19,6 +19,10 @@ export class Queue {
   constructor({ accept, acceptLabel, onFocus, onChange, excludeMkvOption }) {
     this.accept = accept;
     this.items = [];
+    /** lower-cased paths already listed, so the same file is never queued twice */
+    this.known = new Set();
+    /** folder scans still in progress */
+    this.scanning = 0;
     this.focus = -1;
     this.running = false;
     this.onFocus = onFocus || (() => {});
@@ -86,33 +90,73 @@ export class Queue {
     if (dir) await this.addPaths([dir], this.recursive);
   }
 
+  /** Files are listed as the scan finds them, then put in natural order once it completes. */
   async addPaths(paths, recursive = true) {
     if (this.running) { toast('Wait for the current job to finish before adding files.', 'info'); return 0; }
-    const scanned = await api.scan(paths, this.accept, recursive);
-    const entries = recursive && this.excludeMkv ? scanned.filter((e) => !e.path.toLowerCase().endsWith('.mkv')) : scanned;
-    const added = this.add(entries);
-    if (!added) toast(entries.length ? 'Those files are already in the list.' : 'No supported files found.', 'info');
-    return added;
+    const keep = (list) => (recursive && this.excludeMkv ? list.filter((e) => e.ext !== 'mkv') : list);
+    const mine = new Set();
+    let found = 0;
+    this.scanning++;
+    this.updateCount();
+    try {
+      const all = await api.scan(paths, this.accept, recursive, (batch) => {
+        const entries = keep(batch);
+        found += entries.length;
+        this.add(entries).forEach((it) => mine.add(it));
+      });
+      this.add(keep(all)).forEach((it) => mine.add(it));
+      this.sortAdded(mine, keep(all));
+    } catch (e) {
+      toast(`Could not read ${paths.length === 1 ? paths[0] : 'those folders'}: ${e}`, 'error');
+    } finally {
+      this.scanning--;
+      this.updateCount();
+    }
+    if (!mine.size) toast(found ? 'Those files are already in the list.' : 'No supported files found.', 'info');
+    return mine.size;
   }
 
+  /** Appends entries whose path isn't listed yet; returns the new items. */
   add(entries) {
-    const known = new Set(this.items.map((i) => i.path.toLowerCase()));
-    let added = 0;
+    const fresh = [];
     for (const e of entries) {
-      if (known.has(e.path.toLowerCase())) continue;
-      known.add(e.path.toLowerCase());
-      this.items.push({ ...e, status: 'queued', progress: 0, message: '', note: '', checked: false });
-      added++;
+      const key = e.path.toLowerCase();
+      if (this.known.has(key)) continue;
+      this.known.add(key);
+      const item = { ...e, status: 'queued', progress: 0, message: '', note: '', checked: false };
+      this.items.push(item);
+      fresh.push(item);
     }
-    if (added) { this.render(); this.onChange(); }
+    if (fresh.length) {
+      const start = this.items.length - fresh.length;
+      this.body.append(...fresh.map((it, k) => this.rowEl(it, start + k)));
+      this.showEmpty();
+      this.updateCount();
+      this.onChange();
+    }
     if (this.focus < 0 && this.items.length) this.setFocus(0);
-    return added;
+    return fresh;
+  }
+
+  /** Reorders the items one scan added (they arrive folder by folder) to match the sorted scan result. */
+  sortAdded(mine, sorted) {
+    if (!mine.size || this.running) return;
+    const rank = new Map(sorted.map((e, i) => [e.path.toLowerCase(), i]));
+    const slots = [];
+    this.items.forEach((it, i) => { if (mine.has(it)) slots.push(i); });
+    const ordered = slots.map((i) => this.items[i]).sort((a, b) => rank.get(a.path.toLowerCase()) - rank.get(b.path.toLowerCase()));
+    if (ordered.every((it, k) => this.items[slots[k]] === it)) return;
+    const focused = this.items[this.focus];
+    slots.forEach((i, k) => { this.items[i] = ordered[k]; });
+    this.focus = focused ? this.items.indexOf(focused) : -1;
+    this.render();
   }
 
   remove(indices) {
     const drop = new Set(indices);
     const focused = this.items[this.focus];
     this.items = this.items.filter((_, i) => !drop.has(i));
+    this.known = new Set(this.items.map((it) => it.path.toLowerCase()));
     this.focus = focused ? this.items.indexOf(focused) : -1;
     this.render();
     this.onChange();
@@ -206,16 +250,23 @@ export class Queue {
 
   updateCount() {
     const checked = this.checkedIndices().length;
-    this.countEl.textContent = this.items.length ? (checked ? `${checked} of ${this.items.length} selected` : `${this.items.length} file${this.items.length === 1 ? '' : 's'}`) : '';
+    const n = this.items.length;
+    const text = n ? (checked ? `${checked} of ${n} selected` : `${n} file${n === 1 ? '' : 's'}`) : '';
+    this.countEl.textContent = this.scanning ? `Scanning… ${text}`.trim() : text;
+    this.countEl.classList.toggle('scanning', this.scanning > 0);
     this.checkAll.checked = this.items.length > 0 && checked === this.items.length;
     this.checkAll.indeterminate = checked > 0 && checked < this.items.length;
   }
 
   render() {
     this.body.replaceChildren(...this.items.map((it, i) => this.rowEl(it, i)));
+    this.showEmpty();
+    this.updateCount();
+  }
+
+  showEmpty() {
     const empty = this.items.length === 0;
     this.empty.hidden = !empty;
     this.body.hidden = empty;
-    this.updateCount();
   }
 }

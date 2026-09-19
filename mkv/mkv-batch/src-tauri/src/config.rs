@@ -60,6 +60,8 @@ pub struct Settings {
     pub backup_same_dir: bool,
     /// "none" | "trash" - a Windows folder icon to stamp the backup folder with.
     pub backup_icon: String,
+    /// Remove successfully processed files from the queue when a job ends.
+    pub clear_after_finish: bool,
     pub theme: String,
     pub translate: TranslateSettings,
 }
@@ -73,6 +75,7 @@ impl Default for Settings {
             backup_dir: "mkv_old".into(),
             backup_same_dir: false,
             backup_icon: "trash".into(),
+            clear_after_finish: true,
             theme: "dark".into(),
             translate: TranslateSettings::default(),
         }

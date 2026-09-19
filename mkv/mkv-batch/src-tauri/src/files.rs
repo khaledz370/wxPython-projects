@@ -12,10 +12,11 @@ use std::collections::HashSet;
 use std::fs;
 use std::io;
 use std::path::{Component, Path, PathBuf};
+use std::time::{Duration, Instant};
 
 pub const TEMP_MARKER: &str = ".mkvbatch-tmp.";
 
-#[derive(Serialize)]
+#[derive(Serialize, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct FileEntry {
     pub path: String,
@@ -48,60 +49,108 @@ pub fn size_of(p: &Path) -> u64 {
 }
 
 /// Expands files and folders into a sorted, de-duplicated list filtered by extension.
-pub fn scan(paths: &[String], exts: &[String], recursive: bool) -> Vec<FileEntry> {
+/// `on_batch` receives entries as they are found (unsorted), so the UI can show them early.
+pub fn scan(paths: &[String], exts: &[String], recursive: bool, on_batch: &mut dyn FnMut(Vec<FileEntry>)) -> Vec<FileEntry> {
     let exts: Vec<String> = exts
         .iter()
         .map(|e| e.trim_start_matches('.').to_lowercase())
         .collect();
-    let mut out = Vec::new();
-    let mut seen = HashSet::new();
+    let mut sc = Scanner { exts, recursive, out: Vec::new(), seen: HashSet::new(), sent: 0, last_flush: None, on_batch };
     for p in paths {
         let p = PathBuf::from(p);
         if p.is_dir() {
-            walk(&p, recursive, &exts, &mut out, &mut seen);
+            sc.walk(&p);
         } else if p.is_file() {
-            push_entry(&p, &exts, &mut out, &mut seen);
+            sc.push(&p, None);
         }
     }
+    sc.flush(true);
+    let mut out = sc.out;
     out.sort_by(|a, b| natural_cmp(&a.path, &b.path));
     out
 }
 
-fn walk(dir: &Path, recursive: bool, exts: &[String], out: &mut Vec<FileEntry>, seen: &mut HashSet<String>) {
-    let Ok(entries) = fs::read_dir(dir) else { return };
-    for entry in entries.flatten() {
-        let p = entry.path();
-        if p.is_dir() {
-            // never re-import our own backup folders
-            if recursive && !name_of(&p).eq_ignore_ascii_case("_originals") {
-                walk(&p, recursive, exts, out, seen);
-            }
-        } else {
-            push_entry(&p, exts, out, seen);
-        }
-    }
+struct Scanner<'a> {
+    exts: Vec<String>,
+    recursive: bool,
+    out: Vec<FileEntry>,
+    seen: HashSet<String>,
+    /// how many of `out` were already handed to `on_batch`
+    sent: usize,
+    last_flush: Option<Instant>,
+    on_batch: &'a mut dyn FnMut(Vec<FileEntry>),
 }
 
-fn push_entry(p: &Path, exts: &[String], out: &mut Vec<FileEntry>, seen: &mut HashSet<String>) {
-    let name = name_of(p);
-    if name.contains(TEMP_MARKER) {
-        return;
+impl Scanner<'_> {
+    fn walk(&mut self, dir: &Path) {
+        let Ok(entries) = fs::read_dir(dir) else { return };
+        let mut subdirs = Vec::new();
+        for entry in entries.flatten() {
+            let p = entry.path();
+            // file_type/metadata come from the directory listing on Windows: no extra disk hit
+            let is_dir = match entry.file_type() {
+                Ok(t) if t.is_symlink() => p.is_dir(),
+                Ok(t) => t.is_dir(),
+                Err(_) => p.is_dir(),
+            };
+            if is_dir {
+                // never re-import our own backup folders
+                if self.recursive && !name_of(&p).eq_ignore_ascii_case("_originals") {
+                    subdirs.push(p);
+                }
+            } else {
+                self.push(&p, Some(&entry));
+            }
+        }
+        // files of this folder first, so they show up before descending further
+        self.flush(false);
+        subdirs.sort_by(|a, b| natural_cmp(&a.to_string_lossy(), &b.to_string_lossy()));
+        for d in subdirs {
+            self.walk(&d);
+        }
     }
-    let ext = ext_of(p);
-    if !exts.is_empty() && !exts.contains(&ext) {
-        return;
+
+    fn push(&mut self, p: &Path, entry: Option<&fs::DirEntry>) {
+        let name = name_of(p);
+        if name.contains(TEMP_MARKER) {
+            return;
+        }
+        let ext = ext_of(p);
+        if !self.exts.is_empty() && !self.exts.contains(&ext) {
+            return;
+        }
+        let key = p.to_string_lossy().to_lowercase();
+        if !self.seen.insert(key) {
+            return;
+        }
+        let size = match entry.and_then(|e| e.metadata().ok()) {
+            Some(m) if !m.file_type().is_symlink() => m.len(),
+            _ => size_of(p),
+        };
+        self.out.push(FileEntry {
+            path: p.to_string_lossy().into_owned(),
+            name,
+            dir: p.parent().map(|d| d.to_string_lossy().into_owned()).unwrap_or_default(),
+            size,
+            ext,
+        });
     }
-    let key = p.to_string_lossy().to_lowercase();
-    if !seen.insert(key) {
-        return;
+
+    /// Sends new entries; throttled so a huge tree doesn't flood the UI with tiny batches.
+    fn flush(&mut self, force: bool) {
+        if self.sent == self.out.len() {
+            return;
+        }
+        let due = self.last_flush.map_or(true, |t| t.elapsed() >= Duration::from_millis(150));
+        if !force && !due {
+            return;
+        }
+        let mut batch: Vec<FileEntry> = self.out[self.sent..].iter().map(FileEntry::clone).collect();
+        batch.sort_by(|a, b| natural_cmp(&a.path, &b.path));
+        self.sent = self.out.len();
+        self.last_flush = Some(Instant::now());
+        (self.on_batch)(batch);
     }
-    out.push(FileEntry {
-        path: p.to_string_lossy().into_owned(),
-        name,
-        dir: p.parent().map(|d| d.to_string_lossy().into_owned()).unwrap_or_default(),
-        size: size_of(p),
-        ext,
-    });
 }
 
 /// "Episode 2" sorts before "Episode 10".
