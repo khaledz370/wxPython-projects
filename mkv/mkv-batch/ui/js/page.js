@@ -5,15 +5,11 @@ import { Queue } from './queue.js';
 
 const FINAL = new Set(['done', 'warn', 'skipped', 'error', 'cancelled']);
 
-const store = {
-  load(id, defaults) {
-    try { return { ...defaults, ...JSON.parse(localStorage.getItem(`mkvbatch.opts.${id}`) || '{}') }; }
-    catch { return { ...defaults }; }
-  },
-  save(id, values) {
-    try { localStorage.setItem(`mkvbatch.opts.${id}`, JSON.stringify(values)); } catch { /* storage full or blocked */ }
-  },
-};
+// Tool options are not persisted: every app start begins from the defaults.
+// Drop values saved by older versions.
+try {
+  Object.keys(localStorage).filter((k) => k.startsWith('mkvbatch.opts.')).forEach((k) => localStorage.removeItem(k));
+} catch { /* storage blocked */ }
 
 function allFields(fields) {
   return fields.flatMap((f) => (f.type === 'row' ? allFields(f.children) : [f]));
@@ -34,7 +30,7 @@ export class ToolPage {
     this.job = null;
     this.timer = null;
     const defaults = Object.fromEntries(allFields(tool.fields).filter((f) => f.key).map((f) => [f.key, defaultFor(f)]));
-    this.values = store.load(tool.id, defaults);
+    this.values = defaults;
     this.queue = new Queue({
       accept: tool.accept,
       acceptLabel: tool.acceptLabel,
@@ -83,7 +79,6 @@ export class ToolPage {
   renderForm() {
     this.fieldsRoot.replaceChildren();
     this.form = renderFields(this.fieldsRoot, this.tool.fields, this.values, (key, value) => {
-      store.save(this.tool.id, this.values);
       this.tool.onValues?.(this, key, value);
       this.updateRunbar();
     }, { api, langs: this.ctx.langs, page: this });
@@ -92,7 +87,6 @@ export class ToolPage {
   /** Changes option values from code (e.g. a dropped file) and redraws the form. */
   setValues(patch) {
     Object.assign(this.values, patch);
-    store.save(this.tool.id, this.values);
     this.renderForm();
     this.tool.onValues?.(this, Object.keys(patch)[0], Object.values(patch)[0]);
   }

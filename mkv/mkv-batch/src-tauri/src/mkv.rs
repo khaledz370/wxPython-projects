@@ -429,6 +429,8 @@ struct ExtractOpts {
     langs: String,
     audio_as_mka: bool,
     out_dir: String,
+    /// true: every file lands in one shared folder, false: one `<name>_extracted` folder per file.
+    single_folder: bool,
 }
 
 impl Default for ExtractOpts {
@@ -442,6 +444,7 @@ impl Default for ExtractOpts {
             langs: String::new(),
             audio_as_mka: false,
             out_dir: String::new(),
+            single_folder: true,
         }
     }
 }
@@ -502,10 +505,16 @@ fn extract_one(ctx: &JobCtx, t: &Tools, o: &ExtractOpts, index: usize, file: &Pa
     }
     let info = identify(&t.mkvmerge, file)?;
     let stem = files::stem_of(file);
-    let out_dir = if o.out_dir.trim().is_empty() {
-        file.parent().unwrap_or(Path::new(".")).join(format!("{stem}_extracted"))
+    let base = if o.out_dir.trim().is_empty() {
+        file.parent().unwrap_or(Path::new(".")).to_path_buf()
     } else {
-        PathBuf::from(o.out_dir.trim()).join(files::sanitize(&stem))
+        PathBuf::from(o.out_dir.trim())
+    };
+    let out_dir = match (o.single_folder, o.out_dir.trim().is_empty()) {
+        (true, true) => base.join("extracted"),
+        (true, false) => base,
+        (false, true) => base.join(format!("{stem}_extracted")),
+        (false, false) => base.join(files::sanitize(&stem)),
     };
     let wanted = langs::tokens(&o.langs);
     let lang_ok = |t: &Track| wanted.is_empty() || wanted.iter().any(|w| langs::matches(&t.language, w));
@@ -547,9 +556,11 @@ fn extract_one(ctx: &JobCtx, t: &Tools, o: &ExtractOpts, index: usize, file: &Pa
     if o.attachments {
         let mut used = HashSet::new();
         for at in &info.attachments {
-            let mut dest = files::unique_path(&out_dir.join(files::sanitize(&at.name)));
+            // Shared folder: prefix with the file stem so parallel files can't clobber each other.
+            let att_name = if o.single_folder { format!("{stem}.{}", at.name) } else { at.name.clone() };
+            let mut dest = files::unique_path(&out_dir.join(files::sanitize(&att_name)));
             if !used.insert(dest.clone()) {
-                dest = out_dir.join(format!("{}-{}", at.id, files::sanitize(&at.name)));
+                dest = out_dir.join(format!("{}-{}", at.id, files::sanitize(&att_name)));
             }
             attachment_specs.push(format!("{}:{}", at.id, dest.display()));
         }
