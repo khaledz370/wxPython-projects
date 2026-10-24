@@ -240,6 +240,7 @@ input[type="checkbox"].toggle:checked::after { transform: translateX(13px); back
 
 /* ---------- queue ---------- */
 .queue { flex: 1; min-height: 240px; display: flex; flex-direction: column; overflow: hidden; container-type: inline-size; }
+.q-toolbar { display: flex; align-items: center; gap: 4px; padding: 9px 10px; border-bottom: 1px solid var(--line); }
 .q-toolbar .subfolders, .q-toolbar .exclude-mkv, .q-toolbar .exclude-video { margin-left: 8px; }
 .btn-filter.active { color: var(--accent); background: var(--accent-soft); }
 .filter-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); margin-left: 2px; display: inline-block; flex: none; }
