@@ -46,6 +46,7 @@ const PATHS = {
   refresh: '<path d="M20 12a8 8 0 1 1-2.3-5.6M20 4v4h-4"/>',
   chevron: '<path d="M6 9l6 6 6-6"/>',
   info: '<circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/>',
+  filter: '<polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/>',
 };
 
 export function icon(name, cls = 'ico') {

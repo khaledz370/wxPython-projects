@@ -624,7 +624,7 @@ export const TOOLS = [
   },
   {
     id: 'audio', job: 'audio', group: 'Media', label: 'Audio', icon: 'audio', requires: 'ffmpeg',
-    title: 'Audio Converter & Cover Art', startLabel: 'Process',
+    title: 'Audio Converter & Cover Art', startLabel: 'Process', excludeVideoOption: true, fileFilterOption: true,
     blurb: 'Convert audio, or the audio of videos, to MP3, AAC, Opus, Ogg, FLAC, WAV or ALAC, and embed, replace, remove or save cover art. Cover changes only touch the tags, the audio is never re-encoded for them.',
     accept: [...EXT.audio, ...EXT.video], acceptLabel: 'MP3 · M4A · FLAC · WAV · OGG · OPUS · WMA · AIFF · APE… and videos',
     fields: [

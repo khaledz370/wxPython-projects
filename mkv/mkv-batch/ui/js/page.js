@@ -37,6 +37,8 @@ export class ToolPage {
       onFocus: (item) => tool.onFocus?.(item, this),
       onChange: () => { tool.onQueueChange?.(this); this.updateRunbar(); },
       excludeMkvOption: tool.excludeMkvOption,
+      excludeVideoOption: tool.excludeVideoOption,
+      fileFilterOption: tool.fileFilterOption,
     });
     this.el = this.build();
     this.queue.render();
